@@ -1,7 +1,7 @@
 package org.mimmey.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.mimmey.dto.ExtendedUserInfo;
+import org.mimmey.dto.ExtendedUserInfoDto;
 import org.mimmey.entity.Audio;
 import org.mimmey.entity.Image;
 import org.mimmey.repository.ProfileSettingsRepository;
@@ -21,7 +21,7 @@ public class ProfileSettingsServiceImpl implements ProfileSettingsService {
      * {@inheritDoc}
      */
     @Override
-    public ExtendedUserInfo getUserInfo() {
+    public ExtendedUserInfoDto getUserInfo() {
         return null;
     }
 
@@ -37,7 +37,7 @@ public class ProfileSettingsServiceImpl implements ProfileSettingsService {
      * {@inheritDoc}
      */
     @Override
-    public void updateUserInfo(ExtendedUserInfo updatedUserInfo) {
+    public void updateUserInfo(ExtendedUserInfoDto updatedUserInfo) {
 
     }
 

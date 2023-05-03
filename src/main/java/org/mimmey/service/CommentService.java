@@ -12,9 +12,9 @@ public interface CommentService {
 
     /**
      * The function that saves the comment in the database
-     * @param comment comment to be saved
+     * @param commentDto comment to be saved
      */
-    void createComment(Comment comment);
+    void createComment(CommentDto commentDto);
 
     /**
      * The function that returns the list of comments of the given track

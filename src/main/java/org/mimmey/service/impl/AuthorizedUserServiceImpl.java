@@ -1,6 +1,7 @@
 package org.mimmey.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.mimmey.dto.ExtendedTrackDto;
 import org.mimmey.dto.TrackDto;
 import org.mimmey.dto.UserInfoDto;
 import org.mimmey.entity.Track;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class AuthorisedUserServiceImpl implements AuthorizedUserService {
+public class AuthorizedUserServiceImpl implements AuthorizedUserService {
 
     private final UserRepository userRepository;
 
@@ -55,7 +56,7 @@ public class AuthorisedUserServiceImpl implements AuthorizedUserService {
      * {@inheritDoc}
      */
     @Override
-    public List<TrackDto> getPublishedTrackList(long page, long unitsOnPage) {
+    public List<ExtendedTrackDto> getPublishedTrackList(long page, long unitsOnPage) {
         return null;
     }
 
@@ -63,7 +64,7 @@ public class AuthorisedUserServiceImpl implements AuthorizedUserService {
      * {@inheritDoc}
      */
     @Override
-    public List<TrackDto> getPurchasedTrackList(long page, long unitsOnPage) {
+    public List<ExtendedTrackDto> getPurchasedTrackList(long page, long unitsOnPage) {
         return null;
     }
 
@@ -87,7 +88,7 @@ public class AuthorisedUserServiceImpl implements AuthorizedUserService {
      * {@inheritDoc}
      */
     @Override
-    public void publishTrack(Track track) {
+    public void publishTrack(ExtendedTrackDto extendedTrackDto) {
 
     }
 

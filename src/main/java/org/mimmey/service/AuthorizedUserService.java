@@ -1,5 +1,6 @@
 package org.mimmey.service;
 
+import org.mimmey.dto.ExtendedTrackDto;
 import org.mimmey.dto.TrackDto;
 import org.mimmey.dto.UserInfoDto;
 import org.mimmey.entity.Track;
@@ -45,7 +46,7 @@ public interface AuthorizedUserService {
      * @param unitsOnPage number of tracks per one page
      * @return the page of the list of tracks published by user
      */
-    List<TrackDto> getPublishedTrackList(long page, long unitsOnPage);
+    List<ExtendedTrackDto> getPublishedTrackList(long page, long unitsOnPage);
 
     /**
      * The function that returns the page of the list of tracks purchased by the currently authorized user
@@ -53,7 +54,7 @@ public interface AuthorizedUserService {
      * @param unitsOnPage number of tracks per one page
      * @return the page of the list of tracks purchased by user
      */
-    List<TrackDto> getPurchasedTrackList(long page, long unitsOnPage);
+    List<ExtendedTrackDto> getPurchasedTrackList(long page, long unitsOnPage);
 
     /**
      * The function that returns the page of the list of the currently authorized user's favourites tracks
@@ -75,7 +76,7 @@ public interface AuthorizedUserService {
      * The function that publishes the given track if the authorized user is a track author
      * @param track track to be published
      */
-    void publishTrack(Track track);
+    void publishTrack(ExtendedTrackDto extendedTrackDto);
 
     /**
      * The function that makes a purchase

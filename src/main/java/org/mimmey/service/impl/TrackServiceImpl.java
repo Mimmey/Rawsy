@@ -1,6 +1,7 @@
 package org.mimmey.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.mimmey.dto.ExtendedTrackDto;
 import org.mimmey.dto.TrackDto;
 import org.mimmey.entity.Filter;
 import org.mimmey.entity.SortingType;
@@ -91,7 +92,7 @@ public class TrackServiceImpl implements TrackService {
      * {@inheritDoc}
      */
     @Override
-    public void changeTrack(long trackId, TrackDto newTrackInfo) {
+    public void changeTrack(ExtendedTrackDto newTrackInfo) {
 
     }
 

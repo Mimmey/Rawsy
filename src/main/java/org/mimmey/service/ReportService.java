@@ -1,5 +1,6 @@
 package org.mimmey.service;
 
+import org.mimmey.dto.ReportDto;
 import org.mimmey.entity.Report;
 import org.mimmey.entity.TrackReport;
 import org.mimmey.entity.UserReport;
@@ -22,7 +23,7 @@ public interface ReportService {
      * @param reportId ID of the report
      * @return the report with the given ID
      */
-    Report getReport(long reportId);
+    ReportDto getReport(long reportId);
 
     /**
      * The function that removes the report from the database
@@ -37,7 +38,7 @@ public interface ReportService {
      * @param unitsOnPage number of complaints per one page
      * @return the page of the list of complaints against the user
      */
-    List<UserReport> getUserReportList(long userId, long page, long unitsOnPage);
+    List<ReportDto> getUserReportList(long userId, long page, long unitsOnPage);
 
     /**
      * The function that returns the list of complaints against the given track
@@ -46,5 +47,5 @@ public interface ReportService {
      * @param unitsOnPage number of complaints per one page
      * @return the page of the list of complaints against the track
      */
-    List<TrackReport> getTrackReportList(long trackId, long page, long unitsOnPage);
+    List<ReportDto> getTrackReportList(long trackId, long page, long unitsOnPage);
 }

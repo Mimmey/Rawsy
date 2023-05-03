@@ -1,6 +1,7 @@
 package org.mimmey.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.mimmey.dto.ReportDto;
 import org.mimmey.entity.Report;
 import org.mimmey.entity.TrackReport;
 import org.mimmey.entity.UserReport;
@@ -31,7 +32,7 @@ public class ReportServiceImpl implements ReportService {
      * {@inheritDoc}
      */
     @Override
-    public Report getReport(long reportId) {
+    public ReportDto getReport(long reportId) {
         return null;
     }
 
@@ -47,7 +48,7 @@ public class ReportServiceImpl implements ReportService {
      * {@inheritDoc}
      */
     @Override
-    public List<UserReport> getUserReportList(long userId, long page, long unitsOnPage) {
+    public List<ReportDto> getUserReportList(long userId, long page, long unitsOnPage) {
         return null;
     }
 
@@ -55,7 +56,7 @@ public class ReportServiceImpl implements ReportService {
      * {@inheritDoc}
      */
     @Override
-    public List<TrackReport> getTrackReportList(long trackId, long page, long unitsOnPage) {
+    public List<ReportDto> getTrackReportList(long trackId, long page, long unitsOnPage) {
         return null;
     }
 }

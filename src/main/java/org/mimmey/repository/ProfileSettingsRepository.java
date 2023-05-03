@@ -1,13 +1,13 @@
 package org.mimmey.repository;
 
-import org.mimmey.dto.ExtendedUserInfo;
+import org.mimmey.dto.ExtendedUserInfoDto;
 import org.mimmey.entity.Audio;
 import org.mimmey.entity.Image;
 
 public interface ProfileSettingsRepository {
 
-    ExtendedUserInfo getUserInfo(long userId);
-    void updateUserInfo(long userId, ExtendedUserInfo updatedUserInfo);
+    ExtendedUserInfoDto getUserInfo(long userId);
+    void updateUserInfo(long userId, ExtendedUserInfoDto updatedUserInfo);
 
     void setJingle(long userId, Audio jingle);
 

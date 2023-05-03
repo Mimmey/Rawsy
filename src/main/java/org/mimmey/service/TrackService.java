@@ -1,5 +1,6 @@
 package org.mimmey.service;
 
+import org.mimmey.dto.ExtendedTrackDto;
 import org.mimmey.dto.TrackDto;
 import org.mimmey.entity.Filter;
 import org.mimmey.entity.SortingType;
@@ -92,10 +93,9 @@ public interface TrackService {
 
     /**
      * The function that changes the given track
-     * @param trackId ID of the track
      * @param newTrackInfo new track information
      */
-    void changeTrack(long trackId, TrackDto newTrackInfo);
+    void changeTrack(ExtendedTrackDto newTrackInfo);
 
     /**
      * The function that downloads the archive with a multitrack of the given track

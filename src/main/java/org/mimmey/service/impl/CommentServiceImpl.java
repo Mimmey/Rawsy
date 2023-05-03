@@ -22,7 +22,7 @@ public class CommentServiceImpl implements CommentService {
      * {@inheritDoc}
      */
     @Override
-    public void createComment(Comment comment) {
+    public void createComment(CommentDto commentDto) {
 
     }
 

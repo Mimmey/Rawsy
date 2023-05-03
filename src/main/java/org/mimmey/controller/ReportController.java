@@ -5,6 +5,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
+import org.mimmey.dto.ReportDto;
+import org.mimmey.entity.Report;
+import org.mimmey.service.ReportService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("reports")
-@OpenAPIDefinition(info = @Info(title = "RestController для работы со списком подписчиков",
+@OpenAPIDefinition(info = @Info(title = "RestController для работы с жалобами",
         version = "1.0.0"))
 public class ReportController {
 
@@ -35,7 +40,7 @@ public class ReportController {
             method = RequestMethod.POST
     )
     public ResponseEntity<String> publishReport(@RequestBody Report report) {
-        reportService.publishReport(report);
+        reportService.createReport(report);
         return ResponseEntity.ok("OK");
     }
 
@@ -104,7 +109,7 @@ public class ReportController {
             method = RequestMethod.POST
     )
     public ResponseEntity<String> publishReport(@RequestParam long reportId) {
-        reportService.resolve(reportId);
+        reportService.resolveReport(reportId);
         return ResponseEntity.ok("OK");
     }
 }

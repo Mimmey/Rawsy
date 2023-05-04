@@ -98,7 +98,7 @@ public class AuthorizedUserController {
     @Operation(
             summary = "Метод возвращает страницу списка треков, опубликованных авторизованным пользователем",
             parameters = {
-                    @Parameter(name = "unitsOnPage", description = "Количество подписок на странице", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true),
                     @Parameter(name = "page", description = "Номер страницы", required = true)
             }
     )
@@ -235,7 +235,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/delete",
+            path = "/track",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
@@ -251,7 +251,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/delete-from-favourites",
+            path = "/from-favourites",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
@@ -267,7 +267,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/delete-from-basket",
+            path = "/from-basket",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )

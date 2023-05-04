@@ -30,7 +30,7 @@ public class StatisticsController {
             summary = "Метод возвращает страницу списка покупок треков авторизованного пользователя",
             parameters = {
                     @Parameter(name = "userId", description = "Id пользователя", required = true),
-                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество покупок на странице", required = true),
                     @Parameter(name = "page", description = "Номер страницы", required = true)
             }
     )
@@ -49,7 +49,7 @@ public class StatisticsController {
             summary = "Метод возвращает страницу списка добавления в избранное треков авторизованного пользователя",
             parameters = {
                     @Parameter(name = "userId", description = "Id пользователя", required = true),
-                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество добавлени в избранное на странице", required = true),
                     @Parameter(name = "page", description = "Номер страницы", required = true)
             }
     )

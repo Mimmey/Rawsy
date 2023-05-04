@@ -47,7 +47,7 @@ public class CommentController {
             summary = "Метод публикует страницу списка комментариев заданного трека",
             parameters = {
                     @Parameter(name = "trackId", description = "Id трека", required = true),
-                    @Parameter(name = "unitsOnPage", description = "Количество подписок на странице", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество комментариев на странице", required = true),
                     @Parameter(name = "page", description = "Номер страницы", required = true)
             }
     )

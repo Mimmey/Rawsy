@@ -104,11 +104,11 @@ public class ReportController {
             }
     )
     @RequestMapping(
-            path = "/resolve",
+            path = "/report",
             produces = MediaType.APPLICATION_JSON_VALUE,
-            method = RequestMethod.POST
+            method = RequestMethod.DELETE
     )
-    public ResponseEntity<String> publishReport(@RequestParam long reportId) {
+    public ResponseEntity<String> resolveReport(@RequestParam long reportId) {
         reportService.resolveReport(reportId);
         return ResponseEntity.ok("OK");
     }

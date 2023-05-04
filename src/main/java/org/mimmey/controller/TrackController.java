@@ -180,7 +180,7 @@ public class TrackController {
     @RequestMapping(
             path = "/download-multitrack",
             produces = MediaType.APPLICATION_JSON_VALUE,
-            method = RequestMethod.POST
+            method = RequestMethod.GET
     )
     public ResponseEntity<String> downloadMultitrack(@RequestParam("trackId") long trackId) {
         trackService.downloadMultitrack(trackId);

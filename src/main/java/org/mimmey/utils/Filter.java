@@ -1,4 +1,4 @@
-package org.mimmey.entity;
+package org.mimmey.utils;
 
 public abstract class Filter<T> {
     private String type;

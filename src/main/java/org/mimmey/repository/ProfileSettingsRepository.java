@@ -1,8 +1,8 @@
 package org.mimmey.repository;
 
 import org.mimmey.dto.ExtendedUserInfoDto;
-import org.mimmey.entity.Audio;
-import org.mimmey.entity.Image;
+import org.mimmey.utils.Audio;
+import org.mimmey.utils.Image;
 
 public interface ProfileSettingsRepository {
 

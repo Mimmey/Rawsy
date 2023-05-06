@@ -1,7 +1,7 @@
 package org.mimmey.service;
 
-import org.mimmey.entity.FavouriteAddition;
-import org.mimmey.entity.Purchase;
+import org.mimmey.entity.associative.FavouriteAddition;
+import org.mimmey.entity.associative.Purchase;
 
 import java.util.List;
 

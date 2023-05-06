@@ -1,4 +1,4 @@
-package org.mimmey.entity;
+package org.mimmey.entity.associative;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -7,26 +7,21 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.mimmey.entity.embdded_keys.CommentPK;
+import org.mimmey.entity.embdded_keys.FavouriteAdditionPK;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
 
 @Getter
 @Setter
 @RequiredArgsConstructor
 @ToString
 @Entity
-@Table(name = "comment")
-public class Comment implements Serializable {
+@Table(name = "favourites_list")
+public class FavouriteAddition implements Serializable {
 
     @EmbeddedId
-    private CommentPK pk;
-
-    private String content;
-
-    private byte rate;
+    private FavouriteAdditionPK pk;
 
     private LocalDateTime timestamp;
 }

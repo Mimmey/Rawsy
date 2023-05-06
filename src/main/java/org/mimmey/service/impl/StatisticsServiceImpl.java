@@ -1,8 +1,8 @@
 package org.mimmey.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.mimmey.entity.FavouriteAddition;
-import org.mimmey.entity.Purchase;
+import org.mimmey.entity.associative.FavouriteAddition;
+import org.mimmey.entity.associative.Purchase;
 import org.mimmey.repository.StatisticsRepository;
 import org.mimmey.service.StatisticsService;
 import org.springframework.stereotype.Service;

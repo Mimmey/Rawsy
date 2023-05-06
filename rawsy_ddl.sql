@@ -1,4 +1,4 @@
-#\c rawsy
+/*to start \c rawsy*/
 
 CREATE TABLE IF NOT EXISTS country (id SERIAL PRIMARY KEY,
                                     _name VARCHAR(50) UNIQUE NOT NULL);
@@ -7,8 +7,7 @@ CREATE TABLE IF NOT EXISTS _user (id SERIAL PRIMARY KEY,
                                   nickname VARCHAR(30) UNIQUE NOT NULL,
                                   email VARCHAR(100) UNIQUE NOT NULL,
                                   password_hash VARCHAR(100) NOT NULL,
-                                  is_banned BOOLEAN,
-                                  social_network_links VARCHAR(100)[],
+                                  is_banned BOOLEAN DEFAULT FALSE,
                                   country_id INTEGER NOT NULL,
                                   about VARCHAR(500) NOT NULL,
                                   jingle_path VARCHAR(500),
@@ -19,6 +18,12 @@ CREATE TABLE IF NOT EXISTS _user (id SERIAL PRIMARY KEY,
                                   published_tracks_count BIGINT DEFAULT 0 CHECK (published_tracks_count >= 0),
                                   tracks_purchased_by_other_users_count BIGINT DEFAULT 0 CHECK (tracks_purchased_by_other_users_count >= 0),
                                   FOREIGN KEY(country_id) REFERENCES country (id) ON DELETE RESTRICT ON UPDATE CASCADE);
+
+CREATE TABLE IF NOT EXISTS media_link (id BIGSERIAL PRIMARY KEY,
+                                   owner_id BIGINT NOT NULL,
+                                   content VARCHAR(50) NOT NULL,
+                                   FOREIGN KEY(owner_id) REFERENCES _user (id) ON DELETE CASCADE ON UPDATE CASCADE);
+
 
 CREATE TABLE IF NOT EXISTS track_type (id SERIAL PRIMARY KEY,
                                        _name VARCHAR(30) UNIQUE NOT NULL);
@@ -39,10 +44,10 @@ CREATE TABLE IF NOT EXISTS track (id BIGSERIAL PRIMARY KEY,
                                   invoice VARCHAR(500) NOT NULL,
                                   has_vocal BOOLEAN NOT NULL,
                                   is_cycled BOOLEAN NOT NULL,
-                                  bpm INTEGER NOT NULL CHECK (bpm >= 0 AND bpm <= 2147483647),
-                                  duration INTEGER NOT NULL CHECK (duration >= 0 AND bpm <= 2147483647),
-                                  audio_preview VARCHAR(500) NOT NULL,
+                                  bpm INTEGER NOT NULL CHECK (bpm >= 0),
+                                  duration INTEGER NOT NULL CHECK (duration >= 0),
                                   cost BIGINT DEFAULT 0 CHECK (cost >= 0),
+                                  audio_preview_path VARCHAR(500) NOT NULL,
                                   track_archive_path VARCHAR(500) NOT NULL,
                                   comments_count BIGINT DEFAULT 0 CHECK (comments_count >= 0),
                                   purchases_count BIGINT DEFAULT 0 CHECK (purchases_count >= 0),
@@ -117,9 +122,10 @@ CREATE TABLE IF NOT EXISTS track_report (report_id BIGINT NOT NULL,
                                          FOREIGN KEY(track_subject_id) REFERENCES track (id) ON DELETE CASCADE ON UPDATE CASCADE);
 
 
-#Checks
-#Когда автор удален, его треки сносятся, а за них уже заплатили
-#author_id = 0 - deleted
+/*Checks
+Когда автор удален, его треки сносятся, а за них уже заплатили
+author_id = 0 - deleted
+ */
 
 
 CREATE OR REPLACE FUNCTION increment_subscribers_count() RETURNS TRIGGER
@@ -235,7 +241,7 @@ CREATE OR REPLACE FUNCTION increment_in_favourites_count() RETURNS TRIGGER
 CREATE TRIGGER tr_increment_in_favourites_count AFTER INSERT ON favourites_list
     FOR EACH ROW EXECUTE PROCEDURE increment_in_favourites_count();
 
-
+/*TODO: rating func*/
 
 
 

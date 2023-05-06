@@ -2,8 +2,6 @@ package org.mimmey.service;
 
 import org.mimmey.dto.ReportDto;
 import org.mimmey.entity.Report;
-import org.mimmey.entity.TrackReport;
-import org.mimmey.entity.UserReport;
 
 import java.util.List;
 

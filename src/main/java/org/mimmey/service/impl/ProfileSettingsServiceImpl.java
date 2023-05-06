@@ -2,8 +2,8 @@ package org.mimmey.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.mimmey.dto.ExtendedUserInfoDto;
-import org.mimmey.entity.Audio;
-import org.mimmey.entity.Image;
+import org.mimmey.utils.Audio;
+import org.mimmey.utils.Image;
 import org.mimmey.repository.ProfileSettingsRepository;
 import org.mimmey.service.ProfileSettingsService;
 import org.springframework.stereotype.Service;

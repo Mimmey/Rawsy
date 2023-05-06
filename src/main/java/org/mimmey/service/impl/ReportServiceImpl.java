@@ -3,8 +3,6 @@ package org.mimmey.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.mimmey.dto.ReportDto;
 import org.mimmey.entity.Report;
-import org.mimmey.entity.TrackReport;
-import org.mimmey.entity.UserReport;
 import org.mimmey.repository.ReportRepository;
 import org.mimmey.service.ReportService;
 import org.springframework.stereotype.Service;

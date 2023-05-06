@@ -2,8 +2,8 @@ package org.mimmey.service;
 
 import org.mimmey.dto.ExtendedTrackDto;
 import org.mimmey.dto.TrackDto;
-import org.mimmey.entity.Filter;
-import org.mimmey.entity.SortingType;
+import org.mimmey.utils.Filter;
+import org.mimmey.utils.SortingType;
 
 import java.util.List;
 

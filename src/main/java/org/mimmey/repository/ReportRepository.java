@@ -1,8 +1,8 @@
 package org.mimmey.repository;
 
 import org.mimmey.entity.Report;
-import org.mimmey.entity.TrackReport;
-import org.mimmey.entity.UserReport;
+import org.mimmey.entity.associative.TrackReport;
+import org.mimmey.entity.associative.UserReport;
 
 import java.util.List;
 

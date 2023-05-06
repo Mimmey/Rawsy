@@ -1,8 +1,8 @@
 package org.mimmey.service;
 
 import org.mimmey.dto.ExtendedUserInfoDto;
-import org.mimmey.entity.Audio;
-import org.mimmey.entity.Image;
+import org.mimmey.utils.Audio;
+import org.mimmey.utils.Image;
 
 /**
  * @author Olga Motyleva

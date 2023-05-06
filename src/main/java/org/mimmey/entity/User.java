@@ -49,21 +49,18 @@ public class User implements Serializable {
 
     private String avatarPath;
 
-    private long subscribersCount;
-
-    private long subscriptionsCount;
+//    private long subscribersCount;
+//
+//    private long subscriptionsCount;
 
     private long tracksInOtherUsersFavouritesCount;
 
-    private long publishedTracksCount;
+//    private long publishedTracksCount;
 
     private long tracksPurchasedByOtherUsersCount;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<MediaLink> mediaLinks;
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    private List<Track> tracks;
 
     @OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL)
     private List<Comment> commentsAuthoredBy;
@@ -79,6 +76,9 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "subscriber", cascade = CascadeType.ALL)
     private List<Subscription> subscriptions;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    private List<Track> publishedTracks;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<FavouriteAddition> favouritesAdditions;

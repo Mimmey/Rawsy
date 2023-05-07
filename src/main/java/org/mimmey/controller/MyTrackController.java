@@ -43,7 +43,7 @@ public class MyTrackController {
     @Operation(
             summary = "Метод меняет информацию о треке",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
-                    Обновления трека:\s
+                    Обновления трека:
                         id — ID трека;
                         name — новое название трека;
                         typeId — новый ID типа трека;

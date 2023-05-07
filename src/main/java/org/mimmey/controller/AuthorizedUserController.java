@@ -168,7 +168,7 @@ public class AuthorizedUserController {
     @Operation(
             summary = "Метод публикует трек",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
-                    Трек:\s
+                    Трек:
                         name — название трека;
                         typeId — ID типа трека;
                         about — описание трека;

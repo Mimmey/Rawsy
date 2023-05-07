@@ -30,7 +30,7 @@ public class CommentController {
     @Operation(
             summary = "Метод публикует комментарий",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
-                    Комментарий:\s
+                    Комментарий:
                         trackId — ID трека;
                         content — содержимое комментария;
                         rate — оценка трека (целое число от 1 до 5)"""

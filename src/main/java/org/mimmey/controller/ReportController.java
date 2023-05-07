@@ -26,7 +26,7 @@ public class ReportController {
     @Operation(
             summary = "Метод отправляет жалобу на пользователя",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
-                    Жалоба:\s
+                    Жалоба:
                         userSubjectId — ID пользователя-объекта жалобы;
                         content — содержание жалобы"""
             )
@@ -44,8 +44,8 @@ public class ReportController {
     @Operation(
             summary = "Метод отправляет жалобу на трек",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
-                    Жалоба:\s
-                        trackSubjectId — ID пользователя-объекта жалобы;
+                    Жалоба:
+                        trackSubjectId — ID трека-объекта жалобы;
                         content — содержание жалобы"""
             )
     )

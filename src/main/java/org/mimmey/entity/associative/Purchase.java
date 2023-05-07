@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.mimmey.entity.embdded_keys.PurchasePK;
+import org.mimmey.entity.embedded_keys.PurchasePK;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -22,6 +22,8 @@ public class Purchase implements Serializable {
 
     @EmbeddedId
     private PurchasePK pk;
+
+    private Long cost;
 
     private LocalDateTime timestamp;
 }

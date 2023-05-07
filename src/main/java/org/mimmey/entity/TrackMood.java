@@ -24,7 +24,7 @@ import java.util.List;
 public class TrackMood implements Serializable {
 
     @Id
-    private long id;
+    private Long id;
 
     @Column(name = "_name")
     private String name;

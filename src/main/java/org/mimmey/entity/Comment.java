@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.mimmey.entity.embdded_keys.CommentPK;
+import org.mimmey.entity.embedded_keys.CommentPK;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -26,7 +26,7 @@ public class Comment implements Serializable {
 
     private String content;
 
-    private byte rate;
+    private Byte rate;
 
     private LocalDateTime timestamp;
 }

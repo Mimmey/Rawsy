@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 public class Report implements Serializable {
 
     @Id
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "author_id")

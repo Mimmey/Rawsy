@@ -5,9 +5,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
-import org.mimmey.dto.TrackDto;
-import org.mimmey.dto.UserInfoDto;
-import org.mimmey.service.UserService;
+import org.mimmey.dto.response.common.TrackCommonDto;
+import org.mimmey.dto.response.common.UserInfoCommonDto;
+import org.mimmey.service.common.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,24 +37,8 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<UserInfoDto> getUserInfo(@RequestParam("userId") long userId) {
+    public ResponseEntity<UserInfoCommonDto> getUserInfo(@RequestParam("userId") long userId) {
         return ResponseEntity.ok(userService.getUserInfo(userId));
-    }
-
-    @Operation(
-            summary = "Метод отправляет пользователя в бан",
-            parameters = {
-                    @Parameter(name = "userId", description = "Id пользователя", required = true)
-            }
-    )
-    @RequestMapping(
-            path = "/ban",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            method = RequestMethod.POST
-    )
-    public ResponseEntity<String> banUser(@RequestParam("userId") long userId) {
-        userService.banUser(userId);
-        return ResponseEntity.ok("OK");
     }
 
     @Operation(
@@ -70,9 +54,9 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoDto>> getSubscriberList(@RequestParam("userId") long userId,
-                                                               @RequestParam("unitsOnPage") long unitsOnPage,
-                                                               @RequestParam("page") long page) {
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscriberList(@RequestParam("userId") long userId,
+                                                                     @RequestParam("unitsOnPage") long unitsOnPage,
+                                                                     @RequestParam("page") long page) {
         return ResponseEntity.ok(userService.getSubscriberList(userId, unitsOnPage, page));
     }
 
@@ -89,9 +73,9 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoDto>> getSubscriptionList(@RequestParam("userId") long userId,
-                                                                 @RequestParam("unitsOnPage") long unitsOnPage,
-                                                                 @RequestParam("page") long page) {
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscriptionList(@RequestParam("userId") long userId,
+                                                                       @RequestParam("unitsOnPage") long unitsOnPage,
+                                                                       @RequestParam("page") long page) {
         return ResponseEntity.ok(userService.getSubscriptionList(userId, unitsOnPage, page));
     }
 
@@ -108,9 +92,9 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackDto>> getPublishedTrackList(@RequestParam("userId") long userId,
-                                                                @RequestParam("unitsOnPage") long unitsOnPage,
-                                                                @RequestParam("page") long page) {
+    public ResponseEntity<List<TrackCommonDto>> getPublishedTrackList(@RequestParam("userId") long userId,
+                                                                      @RequestParam("unitsOnPage") long unitsOnPage,
+                                                                      @RequestParam("page") long page) {
         return ResponseEntity.ok(userService.getPublishedTrackList(userId, unitsOnPage, page));
     }
 }

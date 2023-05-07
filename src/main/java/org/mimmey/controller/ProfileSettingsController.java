@@ -5,10 +5,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
-import org.mimmey.dto.ExtendedUserInfoDto;
+import org.mimmey.dto.request.update.UserUpdateDto;
+import org.mimmey.dto.response.UserInfoAuthorizedDto;
 import org.mimmey.utils.Audio;
 import org.mimmey.utils.Image;
-import org.mimmey.service.ProfileSettingsService;
+import org.mimmey.service.common.ProfileSettingsService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +35,7 @@ public class ProfileSettingsController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<ExtendedUserInfoDto> getUserInfo() {
+    public ResponseEntity<UserInfoAuthorizedDto> getUserInfo() {
         return ResponseEntity.ok(profileSettingsService.getUserInfo());
     }
 
@@ -52,10 +53,16 @@ public class ProfileSettingsController {
     }
 
     @Operation(
-            summary = "Метод обновляет информацию о пользователе",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Обновляемые поля: " +
-                    "\nUSER_ID - Id пользователя, "
-                    //TODO ПЕРЕДЕЛАТЬ
+            summary = "Метод обновляет информацию об авторизованном пользователе",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
+                    Обновление информации о пользователе:\s
+                        nickname — имя пользователя;
+                        email — электронная почта пользователя;
+                        password — пароль пользователя;
+                        about — описание пользователя;
+                        mediaLinks — ссылки на социальные сети
+                        
+                    Все поля опциональны"""
             )
     )
     @RequestMapping(
@@ -63,13 +70,13 @@ public class ProfileSettingsController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.PATCH
     )
-    public ResponseEntity<String> updateUserInfo(@RequestBody ExtendedUserInfoDto updatedUserInfo) {
-        profileSettingsService.updateUserInfo(updatedUserInfo);
+    public ResponseEntity<String> updateUserInfo(@RequestBody UserUpdateDto userUpdateDto) {
+        profileSettingsService.updateUserInfo(userUpdateDto);
         return ResponseEntity.ok("OK");
     }
 
     @Operation(
-            summary = "Метод устанавливает новый джингл пользователя",
+            summary = "Метод устанавливает новый джингл авторизованного пользователя",
             parameters = {
                     @Parameter(name = "jingle", description = "Новый джингл", required = true)
             }
@@ -85,7 +92,7 @@ public class ProfileSettingsController {
     }
 
     @Operation(
-            summary = "Метод устанавливает новый аватар пользователя",
+            summary = "Метод устанавливает новый аватар авторизованного пользователя",
             parameters = {
                     @Parameter(name = "avatar", description = "Новый аватар", required = true)
             }
@@ -97,38 +104,6 @@ public class ProfileSettingsController {
     )
     public ResponseEntity<String> setAvatar(@RequestParam("avatar") Image avatar) {
         profileSettingsService.setAvatar(avatar);
-        return ResponseEntity.ok("OK");
-    }
-
-    @Operation(
-            summary = "Метод добавляет новую медиа-ссылку в профиль пользователя",
-            parameters = {
-                    @Parameter(name = "link", description = "Медиа-ссылка", required = true)
-            }
-    )
-    @RequestMapping(
-            path = "/media-link",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            method = RequestMethod.POST
-    )
-    public ResponseEntity<String> addMediaLink(@RequestParam("link") String link) {
-        profileSettingsService.addMediaLink(link);
-        return ResponseEntity.ok("OK");
-    }
-
-    @Operation(
-            summary = "Метод удаляет медиа-ссылку из профиля пользователя",
-            parameters = {
-                    @Parameter(name = "linkIndex", description = "Порядковый номер ссылки", required = true)
-            }
-    )
-    @RequestMapping(
-            path = "/media-link",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            method = RequestMethod.DELETE
-    )
-    public ResponseEntity<String> removeMediaLink(@RequestParam("linkIndex") int linkIndex) {
-        profileSettingsService.removeMediaLink(linkIndex);
         return ResponseEntity.ok("OK");
     }
 }

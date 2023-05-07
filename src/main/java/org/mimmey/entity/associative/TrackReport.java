@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.mimmey.entity.embdded_keys.TrackReportPK;
+import org.mimmey.entity.embedded_keys.TrackReportPK;
 
 @Getter
 @Setter

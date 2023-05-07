@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.mimmey.entity.embdded_keys.TrackToGenreMatchingPK;
+import org.mimmey.entity.embedded_keys.TrackToGenreMatchingPK;
 
 @Getter
 @Setter

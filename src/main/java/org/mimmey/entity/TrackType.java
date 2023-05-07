@@ -23,7 +23,7 @@ import java.util.List;
 public class TrackType implements Serializable {
 
     @Id
-    private long id;
+    private Long id;
 
     @Column(name = "_name")
     private String name;

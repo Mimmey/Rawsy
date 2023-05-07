@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
 import org.mimmey.entity.associative.FavouriteAddition;
 import org.mimmey.entity.associative.Purchase;
-import org.mimmey.service.StatisticsService;
+import org.mimmey.service.common.StatisticsService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;

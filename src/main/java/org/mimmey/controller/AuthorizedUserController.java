@@ -5,12 +5,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
-import org.mimmey.dto.ExtendedTrackDto;
-import org.mimmey.dto.TrackDto;
-import org.mimmey.dto.UserInfoDto;
-import org.mimmey.service.AuthorizedUserService;
+import org.mimmey.dto.request.creation.TrackCreationDto;
+import org.mimmey.dto.response.TrackAuthorDto;
+import org.mimmey.dto.response.common.TrackCommonDto;
+import org.mimmey.dto.response.common.UserInfoCommonDto;
+import org.mimmey.service.common.AuthorizedUserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,8 +41,8 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoDto>> getSubscriptionList(@RequestParam("unitsOnPage") long unitsOnPage,
-                                                                 @RequestParam("page") long page) {
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscriptionList(@RequestParam("unitsOnPage") long unitsOnPage,
+                                                                       @RequestParam("page") long page) {
         return ResponseEntity.ok(authorizedUserService.getSubscriptionList(unitsOnPage, page));
     }
 
@@ -56,8 +58,8 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoDto>> getSubscriberList(@RequestParam("unitsOnPage") long unitsOnPage,
-                                                               @RequestParam("page") long page) {
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscriberList(@RequestParam("unitsOnPage") long unitsOnPage,
+                                                                     @RequestParam("page") long page) {
         return ResponseEntity.ok(authorizedUserService.getSubscriberList(unitsOnPage, page));
     }
 
@@ -107,8 +109,8 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<ExtendedTrackDto>> getPublishedTrackList(@RequestParam("unitsOnPage") long unitsOnPage,
-                                                                        @RequestParam("page") long page) {
+    public ResponseEntity<List<TrackAuthorDto>> getPublishedTrackList(@RequestParam("unitsOnPage") long unitsOnPage,
+                                                                      @RequestParam("page") long page) {
         return ResponseEntity.ok(authorizedUserService.getPublishedTrackList(unitsOnPage, page));
     }
 
@@ -124,8 +126,8 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<ExtendedTrackDto>> getPurchasedTrackList(@RequestParam("unitsOnPage") long unitsOnPage,
-                                                                        @RequestParam("page") long page) {
+    public ResponseEntity<List<TrackCommonDto>> getPurchasedTrackList(@RequestParam("unitsOnPage") long unitsOnPage,
+                                                                      @RequestParam("page") long page) {
         return ResponseEntity.ok(authorizedUserService.getPurchasedTrackList(unitsOnPage, page));
     }
 
@@ -141,8 +143,8 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackDto>> getFavouriteTrackList(@RequestParam("unitsOnPage") long unitsOnPage,
-                                                                @RequestParam("page") long page) {
+    public ResponseEntity<List<TrackCommonDto>> getFavouriteTrackList(@RequestParam("unitsOnPage") long unitsOnPage,
+                                                                      @RequestParam("page") long page) {
         return ResponseEntity.ok(authorizedUserService.getFavouriteTrackList(unitsOnPage, page));
     }
 
@@ -158,16 +160,25 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackDto>> getBasketTrackList(@RequestParam("unitsOnPage") long unitsOnPage,
-                                                             @RequestParam("page") long page) {
+    public ResponseEntity<List<TrackCommonDto>> getBasketTrackList(@RequestParam("unitsOnPage") long unitsOnPage,
+                                                                   @RequestParam("page") long page) {
         return ResponseEntity.ok(authorizedUserService.getBasketTrackList(unitsOnPage, page));
     }
 
     @Operation(
             summary = "Метод публикует трек",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Трек: " +
-                    "\nREQUEST_ID - Id заявки, "
-                    //TODO ДОПИСАТЬ
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
+                    Трек:\s
+                        name — название трека;
+                        typeId — ID типа трека;
+                        about — описание трека;
+                        invoice — инвойс (перечень того, какие версии трека входят в покупку);
+                        hasVocal — присутствие вокала;
+                        isCycled — зацикленность;
+                        bpm — BPM трека;
+                        cost — цена трека;
+                        genreIds — список ID жанров трека;
+                        moodIds — список ID настроений трека"""
             )
     )
     @RequestMapping(
@@ -175,8 +186,8 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
-    public ResponseEntity<String> publishTrack(@RequestParam("track") ExtendedTrackDto extendedTrackDto) {
-        authorizedUserService.publishTrack(extendedTrackDto);
+    public ResponseEntity<String> publishTrack(@RequestBody TrackCreationDto trackCreationDto) {
+        authorizedUserService.publishTrack(trackCreationDto);
         return ResponseEntity.ok("OK");
     }
 
@@ -289,5 +300,3 @@ public class AuthorizedUserController {
         return ResponseEntity.ok("OK");
     }
 }
-
-// TODO: ОПЛАТИТЬ КОРЗИНУ?????????????????????

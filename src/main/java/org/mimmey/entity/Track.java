@@ -28,10 +28,9 @@ import java.util.List;
 @Entity
 @Table(name = "track")
 public class Track implements Serializable {
-    //TODO: check if string fields matches varchar array capacity
 
     @Id
-    private long id;
+    private Long id;
 
     private String name;
 
@@ -45,31 +44,31 @@ public class Track implements Serializable {
     @JoinColumn(name = "type_id")
     private TrackType type;
 
-    private double rating;
+    private Double rating;
 
     private String about;
 
     private String invoice;
 
-    private boolean hasVocal;
+    private Boolean hasVocal;
 
-    private boolean isCycled;
+    private Boolean isCycled;
 
-    private int bpm;  //TODO: > 0
+    private Integer bpm;
 
-    private int duration;  //TODO: > 0
+    private Integer duration;
 
-    private long cost; //TODO: > 0
+    private Long cost;
 
-    private String audioPreviewPath; //TODO: add new name to schemas
+    private String audioPreviewPath;
 
     private String trackArchivePath;
 
-//    private long commentsCount;
+//    private Long commentsCount;
 //
-//    private long purchasesCount;
+//    private Long purchasesCount;
 //
-//    private long inFavouritesCount;
+//    private Long inFavouritesCount;
 
     @OneToMany(mappedBy = "track", cascade = CascadeType.ALL)
     private List<TrackToGenreMatching> genres;

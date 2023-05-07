@@ -5,8 +5,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
-import org.mimmey.dto.CommentDto;
-import org.mimmey.service.CommentService;
+import org.mimmey.dto.request.creation.CommentCreationDto;
+import org.mimmey.dto.response.common.CommentCommonDto;
+import org.mimmey.service.common.CommentService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,9 +29,11 @@ public class CommentController {
 
     @Operation(
             summary = "Метод публикует комментарий",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Комментарий: " +
-                    "\nREQUEST_ID - Id заявки, "
-                    //TODO ДОПИСАТЬ
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
+                    Комментарий:\s
+                        trackId — ID трека;
+                        content — содержимое комментария;
+                        rate — оценка трека (целое число от 1 до 5)"""
             )
     )
     @RequestMapping(
@@ -38,13 +41,13 @@ public class CommentController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
-    public ResponseEntity<String> createComment(@RequestBody CommentDto commentDto) {
-        commentService.createComment(commentDto);
+    public ResponseEntity<String> createComment(@RequestBody CommentCreationDto commentCreationDto) {
+        commentService.createComment(commentCreationDto);
         return ResponseEntity.ok("OK");
     }
 
     @Operation(
-            summary = "Метод публикует страницу списка комментариев заданного трека",
+            summary = "Метод возвращает страницу списка комментариев заданного трека",
             parameters = {
                     @Parameter(name = "trackId", description = "Id трека", required = true),
                     @Parameter(name = "unitsOnPage", description = "Количество комментариев на странице", required = true),
@@ -56,9 +59,9 @@ public class CommentController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<CommentDto>> getTrackCommentList(@RequestParam("trackId") long trackId,
-                                                                @RequestParam("unitsOnPage") long unitsOnPage,
-                                                                @RequestParam("page") long page) {
+    public ResponseEntity<List<CommentCommonDto>> getTrackCommentList(@RequestParam("trackId") long trackId,
+                                                                      @RequestParam("unitsOnPage") long unitsOnPage,
+                                                                      @RequestParam("page") long page) {
         return ResponseEntity.ok(commentService.getTrackCommentList(trackId, unitsOnPage, page));
     }
 

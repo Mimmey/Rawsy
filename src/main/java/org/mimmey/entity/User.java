@@ -16,8 +16,11 @@ import org.mimmey.entity.associative.Purchase;
 import org.mimmey.entity.associative.Subscription;
 import org.mimmey.entity.associative.TrackInBasket;
 import org.mimmey.entity.associative.UserReport;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -26,18 +29,20 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "_user")
-public class User implements Serializable {
+public class User implements Serializable, UserDetails {
 
     @Id
-    private long id;
+    private Long id;
 
     private String nickname;
 
     private String email;
 
+    private String password;
+
     private String passwordHash;
 
-    private boolean isBanned;
+    private Boolean isBanned;
 
     @ManyToOne
     @JoinColumn(name = "country_id")
@@ -49,15 +54,15 @@ public class User implements Serializable {
 
     private String avatarPath;
 
-//    private long subscribersCount;
+//    private Long subscribersCount;
 //
-//    private long subscriptionsCount;
+//    private Long subscriptionsCount;
 
-    private long tracksInOtherUsersFavouritesCount;
+    private Long tracksInOtherUsersFavouritesCount;
 
-//    private long publishedTracksCount;
+//    private Long publishedTracksCount;
 
-    private long tracksPurchasedByOtherUsersCount;
+    private Long tracksPurchasedByOtherUsersCount;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<MediaLink> mediaLinks;
@@ -88,4 +93,39 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<TrackInBasket> tracksInBasket;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return nickname;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isBanned;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

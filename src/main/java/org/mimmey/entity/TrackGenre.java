@@ -24,7 +24,7 @@ import java.util.List;
 public class TrackGenre implements Serializable {
 
     @Id
-    private long id;
+    private Long id;
 
     @Column(name = "_name")
     private String name;

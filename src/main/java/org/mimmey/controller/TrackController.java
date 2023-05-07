@@ -5,14 +5,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
-import org.mimmey.dto.ExtendedTrackDto;
-import org.mimmey.dto.TrackDto;
+import org.mimmey.dto.response.common.TrackCommonDto;
+import org.mimmey.service.common.TrackService;
 import org.mimmey.utils.Filter;
 import org.mimmey.utils.SortingType;
-import org.mimmey.service.TrackService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,11 +43,11 @@ public class TrackController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackDto>> getPublishedTrackList(@RequestParam("filterList") List<? extends Filter<?>> filterList,
-                                                                @RequestParam("sortingType") SortingType sortingType,
-                                                                @RequestParam("searchString") String searchString,
-                                                                @RequestParam("unitsOnPage") long unitsOnPage,
-                                                                @RequestParam("page") long page) {
+    public ResponseEntity<List<TrackCommonDto>> getPublishedTrackList(@RequestParam(value = "filterList", required = false) List<? extends Filter<?>> filterList,
+                                                                      @RequestParam(value = "sortingType", required = false) SortingType sortingType,
+                                                                      @RequestParam(value = "searchString", defaultValue = "") String searchString,
+                                                                      @RequestParam("unitsOnPage") long unitsOnPage,
+                                                                      @RequestParam("page") long page) {
         return ResponseEntity.ok(trackService.getGlobalTrackList(filterList, sortingType, searchString, unitsOnPage, page));
     }
 
@@ -69,11 +67,11 @@ public class TrackController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackDto>> getSubscriptionsLastTrackList(@RequestParam("filterList") List<? extends Filter<?>> filterList,
-                                                                        @RequestParam("sortingType") SortingType sortingType,
-                                                                        @RequestParam("searchString") String searchString,
-                                                                        @RequestParam("unitsOnPage") long unitsOnPage,
-                                                                        @RequestParam("page") long page) {
+    public ResponseEntity<List<TrackCommonDto>> getSubscriptionsLastTrackList(@RequestParam(value = "filterList", required = false) List<? extends Filter<?>> filterList,
+                                                                              @RequestParam(value = "sortingType", required = false) SortingType sortingType,
+                                                                              @RequestParam(value = "searchString", defaultValue = "") String searchString,
+                                                                              @RequestParam("unitsOnPage") long unitsOnPage,
+                                                                              @RequestParam("page") long page) {
         return ResponseEntity.ok(trackService.getSubscriptionsLastTrackList(filterList, sortingType, searchString, unitsOnPage, page));
     }
 
@@ -92,10 +90,10 @@ public class TrackController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackDto>> getHottestPerWeek(@RequestParam("filterList") List<? extends Filter<?>> filterList,
-                                                            @RequestParam("searchString") String searchString,
-                                                            @RequestParam("unitsOnPage") long unitsOnPage,
-                                                            @RequestParam("page") long page) {
+    public ResponseEntity<List<TrackCommonDto>> getHottestPerWeek(@RequestParam(value = "filterList", required = false) List<? extends Filter<?>> filterList,
+                                                                  @RequestParam(value = "searchString", defaultValue = "") String searchString,
+                                                                  @RequestParam("unitsOnPage") long unitsOnPage,
+                                                                  @RequestParam("page") long page) {
         return ResponseEntity.ok(trackService.getHottestPerWeek(filterList, searchString, unitsOnPage, page));
     }
 
@@ -114,10 +112,10 @@ public class TrackController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackDto>> getNewPerWeek(@RequestParam("filterList") List<? extends Filter<?>> filterList,
-                                                        @RequestParam("searchString") String searchString,
-                                                        @RequestParam("unitsOnPage") long unitsOnPage,
-                                                        @RequestParam("page") long page) {
+    public ResponseEntity<List<TrackCommonDto>> getNewPerWeek(@RequestParam(value = "filterList", required = false) List<? extends Filter<?>> filterList,
+                                                              @RequestParam(value = "searchString", defaultValue = "") String searchString,
+                                                              @RequestParam("unitsOnPage") long unitsOnPage,
+                                                              @RequestParam("page") long page) {
         return ResponseEntity.ok(trackService.getNewPerWeek(filterList, searchString, unitsOnPage, page));
     }
 
@@ -132,58 +130,7 @@ public class TrackController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<TrackDto> getTrack(@RequestParam("trackId") long trackId) {
+    public ResponseEntity<TrackCommonDto> getTrack(@RequestParam("trackId") long trackId) {
         return ResponseEntity.ok(trackService.getTrack(trackId));
-    }
-
-    @Operation(
-            summary = "Метод меняет цену трека",
-            parameters = {
-                    @Parameter(name = "trackId", description = "Id трека", required = true),
-                    @Parameter(name = "newCost", description = "Новая цена трека", required = true)
-            }
-    )
-    @RequestMapping(
-            path = "/cost",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            method = RequestMethod.PUT
-    )
-    public ResponseEntity<String> changeCost(@RequestParam("trackId") long trackId,
-                                             @RequestParam("newCost") long newCost) {
-        trackService.changeCost(trackId, newCost);
-        return ResponseEntity.ok("OK");
-    }
-
-    @Operation(
-            summary = "Метод меняет информацию о треке",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Обновленная информмация о треке: " +
-                    "\nREQUEST_ID - Id заявки, "
-                    //TODO ДОПИСАТЬ
-            )
-    )
-    @RequestMapping(
-            path = "/track",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            method = RequestMethod.PATCH
-    )
-    public ResponseEntity<String> changeTrack(@RequestBody ExtendedTrackDto newTrackInfo) {
-        trackService.changeTrack(newTrackInfo);
-        return ResponseEntity.ok("OK");
-    }
-
-    @Operation(
-            summary = "Метод скачивает архив с мультитреком",
-            parameters = {
-                    @Parameter(name = "trackId", description = "Id трека", required = true)
-            }
-    )
-    @RequestMapping(
-            path = "/download-multitrack",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            method = RequestMethod.GET
-    )
-    public ResponseEntity<String> downloadMultitrack(@RequestParam("trackId") long trackId) {
-        trackService.downloadMultitrack(trackId);
-        return ResponseEntity.ok("OK");
     }
 }

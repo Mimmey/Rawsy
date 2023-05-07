@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.mimmey.entity.embdded_keys.TrackToMoodMatchingPK;
+import org.mimmey.entity.embedded_keys.TrackToMoodMatchingPK;
 
 @Getter
 @Setter

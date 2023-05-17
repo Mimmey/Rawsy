@@ -1,63 +1,35 @@
 package org.mimmey.service.admin.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.mimmey.dto.request.creation.ReportCreationDto;
-import org.mimmey.dto.response.admin.ReportAdminDto;
-import org.mimmey.dto.response.admin.TrackAdminDto;
-import org.mimmey.dto.response.admin.UserInfoAdminDto;
-import org.mimmey.repository.ReportRepository;
-import org.mimmey.service.admin.AdminReportService;
+import org.mimmey.entity.User;
+import org.mimmey.repository.SubscriptionRepository;
+import org.mimmey.repository.TrackRepository;
+import org.mimmey.repository.UserRepository;
 import org.mimmey.service.admin.AdminUserService;
+import org.mimmey.service.common.impl.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+@Service("admin-user")
+public class AdminUserServiceImpl extends UserServiceImpl implements AdminUserService {
 
-/**
- * {@inheritDoc}
- */
-@Service
-@RequiredArgsConstructor
-public class AdminUserServiceImpl implements AdminUserService {
 
-    private final ReportRepository reportRepository;
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void banUser(long userId) {
-
+    public AdminUserServiceImpl(@Autowired UserRepository userRepository,
+                                @Autowired SubscriptionRepository subscriptionRepository,
+                                @Autowired TrackRepository trackRepository) {
+        super(userRepository, subscriptionRepository, trackRepository);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public UserInfoAdminDto getUserInfo(long userId) {
-        return null;
-    }
+    public void banUser(long id) {
+        User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
+        if (user.getIsBanned()) {
+            throw new RuntimeException("Already banned");
+        }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<UserInfoAdminDto> getSubscriptionList(long userId, long page, long unitsOnPage) {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<UserInfoAdminDto> getSubscriberList(long userId, long page, long unitsOnPage) {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<TrackAdminDto> getPublishedTrackList(long userId, long page, long unitsOnPage) {
-        return null;
+        user.setIsBanned(true);
+        userRepository.save(user);
     }
 }

@@ -4,12 +4,16 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
-import lombok.RequiredArgsConstructor;
 import org.mimmey.dto.request.creation.CommentCreationDto;
+import org.mimmey.dto.request.creation.mappers.CommentCreationDtoMapper;
 import org.mimmey.dto.response.common.CommentCommonDto;
+import org.mimmey.dto.response.common.mapper.CommentCommonDtoMapper;
+import org.mimmey.entity.Comment;
 import org.mimmey.service.common.CommentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,13 +23,24 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("comments")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с комментариями",
         version = "1.0.0"))
 public class CommentController {
 
+    private final CommentCommonDtoMapper commentCommonDtoMapper;
+
+    private final CommentCreationDtoMapper commentCreationDtoMapper;
+
     private final CommentService commentService;
+
+    public CommentController(@Autowired CommentCommonDtoMapper commentCommonDtoMapper,
+                             @Autowired CommentCreationDtoMapper commentCreationDtoMapper,
+                             @Autowired CommentService commentService) {
+        this.commentCommonDtoMapper = commentCommonDtoMapper;
+        this.commentCreationDtoMapper = commentCreationDtoMapper;
+        this.commentService = commentService;
+    }
 
     @Operation(
             summary = "Метод публикует комментарий",
@@ -41,8 +56,10 @@ public class CommentController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
+    @PreAuthorize("hasAuthority('beingAnAuthor')")
     public ResponseEntity<String> createComment(@RequestBody CommentCreationDto commentCreationDto) {
-        commentService.createComment(commentCreationDto);
+        Comment comment = commentCreationDtoMapper.toEntity(commentCreationDto);
+        commentService.createComment(comment);
         return ResponseEntity.ok("OK");
     }
 
@@ -60,16 +77,17 @@ public class CommentController {
             method = RequestMethod.GET
     )
     public ResponseEntity<List<CommentCommonDto>> getTrackCommentList(@RequestParam("trackId") long trackId,
-                                                                      @RequestParam("unitsOnPage") long unitsOnPage,
-                                                                      @RequestParam("page") long page) {
-        return ResponseEntity.ok(commentService.getTrackCommentList(trackId, unitsOnPage, page));
+                                                                      @RequestParam("unitsOnPage") int unitsOnPage,
+                                                                      @RequestParam("page") int page) {
+        List<CommentCommonDto> dtoList = commentCommonDtoMapper.toDtoList(commentService.getTrackComments(trackId, unitsOnPage, page).stream().toList());
+        return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
             summary = "Метод удаляет комментарий",
             parameters = {
-                    @Parameter(name = "trackId", description = "ID трека", required = true),
-                    @Parameter(name = "commentId", description = "ID комментария", required = true)
+                    @Parameter(name = "authorId", description = "ID автора комментария", required = true),
+                    @Parameter(name = "trackId", description = "ID трека", required = true)
             }
     )
     @RequestMapping(
@@ -77,9 +95,10 @@ public class CommentController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
-    public ResponseEntity<String> removeComment(@RequestParam("trackId") long trackId,
-                                                @RequestParam("commentId") long commentId) {
-        commentService.removeComment(trackId, commentId);
+    @PreAuthorize("hasAuthority('beingAnAuthor')")
+    public ResponseEntity<String> removeComment(@RequestParam("authorId") long authorId,
+                                                @RequestParam("trackId") long trackId) {
+        commentService.removeComment(authorId, trackId);
         return ResponseEntity.ok("OK");
     }
 }

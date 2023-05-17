@@ -1,14 +1,24 @@
 package org.mimmey.repository;
 
+import org.jetbrains.annotations.NotNull;
 import org.mimmey.entity.Comment;
+import org.mimmey.entity.embedded_keys.CommentPK;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+public interface CommentRepository extends JpaRepository<Comment, CommentPK>, CrudRepository<Comment, CommentPK> {
 
-public interface CommentRepository {
+    @NotNull <S extends Comment> S save(@NotNull S entity);
 
-     void save(Comment comment);
+    @Query(value = "SELECT * FROM comment WHERE track_id=:track_id", nativeQuery = true)
+    Page<Comment> findAllByTrackId(@Param("track_id") Long trackId,
+                                   Pageable pageable);
 
-     List<Comment> getCommentList(long trackId, long page, long unitsOnPage);
-
-     void remove(long trackId, long commentId);
+    @Query(value = "DELETE FROM comment WHERE author_id=:author_id AND track_id=:track_id", nativeQuery = true)
+    void deleteByAuthorIdAndTrackId(@Param("author_id") Long authorId,
+                                    @Param("track_id") Long trackId);
 }

@@ -27,6 +27,6 @@ public class PurchaseCommonDto {
     private Long cost;
 
     @JsonProperty(value = "timestamp", access = JsonProperty.Access.READ_ONLY)
-    @JsonFormat(pattern="dd.MM.yyyy")
+    @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDateTime timestamp;
 }

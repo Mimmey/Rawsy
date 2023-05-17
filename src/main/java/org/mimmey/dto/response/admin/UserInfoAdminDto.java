@@ -1,6 +1,5 @@
 package org.mimmey.dto.response.admin;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,12 +35,6 @@ public class UserInfoAdminDto {
 
     @JsonProperty(value = "about", access = JsonProperty.Access.READ_ONLY)
     private String about;
-
-    @JsonIgnore
-    private String jinglePath;
-
-    @JsonIgnore
-    private String avatarPath;
 
     @JsonProperty(value = "tracksInOtherUsersFavouritesCount", access = JsonProperty.Access.READ_ONLY)
     private Long tracksInOtherUsersFavouritesCount;

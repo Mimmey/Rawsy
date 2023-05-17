@@ -1,10 +1,8 @@
 package org.mimmey.service.common;
 
-import org.mimmey.dto.response.common.TrackCommonDto;
-import org.mimmey.dto.response.common.UserInfoCommonDto;
+import org.mimmey.entity.Track;
 import org.mimmey.entity.User;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 /**
  * @author Olga Motyleva
@@ -21,10 +19,18 @@ public interface UserService {
     /**
      * The function that returns the information about the given user
      *
-     * @param userId ID of the user to get information about
+     * @param id ID of the user to get information about
      * @return the information about the given user
      */
-    UserInfoCommonDto getUserInfo(long userId);
+    User getUser(long id);
+
+    /**
+     * The function that returns the information about the given user by his nickname
+     *
+     * @param nickname nickname of the user to get information about
+     * @return the information about the given user
+     */
+    User getUserByNickname(String nickname);
 
     /**
      * The function that returns the page of the list of the given user's subscriptions
@@ -34,7 +40,7 @@ public interface UserService {
      * @param unitsOnPage number of subscriptions per one page
      * @return the page of the list of the given user's subscriptions
      */
-    List<UserInfoCommonDto> getSubscriptionList(long userId, long page, long unitsOnPage);
+    Page<User> getSubscriptions(long userId, int page, int unitsOnPage);
 
     /**
      * The function that returns the page of the list of the given user's subscribers
@@ -44,7 +50,7 @@ public interface UserService {
      * @param unitsOnPage number of subscribers per one page
      * @return the page of the list of the given user's subscribers
      */
-    List<UserInfoCommonDto> getSubscriberList(long userId, long page, long unitsOnPage);
+    Page<User> getSubscribers(long userId, int page, int unitsOnPage);
 
 
     /**
@@ -55,5 +61,5 @@ public interface UserService {
      * @param unitsOnPage number of tracks per one page
      * @return the page of the list of tracks published by the given user
      */
-    List<TrackCommonDto> getPublishedTrackList(long userId, long page, long unitsOnPage);
+    Page<Track> getPublishedTracks(long userId, int page, int unitsOnPage);
 }

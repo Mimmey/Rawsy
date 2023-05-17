@@ -1,13 +1,13 @@
 package org.mimmey.dto.response.admin;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.mimmey.dto.response.common.CommentCommonDto;
 import org.mimmey.dto.response.common.TrackGenreCommonDto;
 import org.mimmey.dto.response.common.TrackMoodCommonDto;
 import org.mimmey.dto.response.common.TrackTypeCommonDto;
@@ -29,7 +29,7 @@ public class TrackAdminDto {
     private String name;
 
     @JsonProperty(value = "publishingTimestamp", access = JsonProperty.Access.READ_ONLY)
-    @JsonFormat(pattern="dd.MM.yyyy")
+    @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDateTime publishingTimestamp;
 
     @JsonProperty(value = "authorId", access = JsonProperty.Access.READ_ONLY)
@@ -62,17 +62,14 @@ public class TrackAdminDto {
     @JsonProperty(value = "cost", access = JsonProperty.Access.READ_ONLY)
     private Long cost;
 
-    @JsonIgnore
-    private String audioPreviewPath;
-
-    @JsonIgnore
-    private String trackArchivePath;
-
     @JsonProperty(value = "genres", access = JsonProperty.Access.READ_ONLY)
     private List<TrackGenreCommonDto> genres;
 
     @JsonProperty(value = "moods", access = JsonProperty.Access.READ_ONLY)
     private List<TrackMoodCommonDto> moods;
+
+    @JsonProperty(value = "comments", access = JsonProperty.Access.READ_ONLY)
+    private List<CommentCommonDto> comments;
 
     @JsonProperty(value = "favouriteAdditionsCount", access = JsonProperty.Access.READ_ONLY)
     private Long favouriteAdditionsCount;

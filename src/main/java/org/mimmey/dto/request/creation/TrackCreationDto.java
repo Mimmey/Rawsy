@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class TrackCreationDto {
@@ -54,8 +54,8 @@ public class TrackCreationDto {
     private Long cost;
 
     @JsonProperty(value = "genreIds", access = JsonProperty.Access.WRITE_ONLY)
-    private List<Long> genreIds;
+    private List<Integer> genreIds;
 
     @JsonProperty(value = "moodIds", access = JsonProperty.Access.WRITE_ONLY)
-    private List<Long> moodsIds;
+    private List<Integer> moodIds;
 }

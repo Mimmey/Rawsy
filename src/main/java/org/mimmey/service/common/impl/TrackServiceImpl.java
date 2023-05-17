@@ -1,82 +1,77 @@
 package org.mimmey.service.common.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.mimmey.dto.request.update.TrackUpdateDto;
-import org.mimmey.dto.response.common.TrackCommonDto;
+import org.mimmey.entity.Track;
 import org.mimmey.repository.TrackRepository;
 import org.mimmey.service.common.TrackService;
-import org.mimmey.utils.Filter;
-import org.mimmey.utils.SortingType;
+import org.mimmey.utils.TrackFilter;
+import org.mimmey.utils.TrackSortingTypes;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * {@inheritDoc}
- */
-@Service
+@Service("common-track")
 @RequiredArgsConstructor
 public class TrackServiceImpl implements TrackService {
 
-    private final TrackRepository trackRepository;
+    protected final TrackRepository trackRepository;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<TrackCommonDto> getGlobalTrackList(List<? extends Filter<?>> filterList,
-                                                   SortingType sortingType,
-                                                   String searchString,
-                                                   long page,
-                                                   long unitsOnPage) {
-        return null;
+    public Page<Track> getGlobalTracks(List<TrackFilter> filters,
+                                       TrackSortingTypes sortingType,
+                                       String searchString,
+                                       int page,
+                                       int unitsOnPage) {
+        Pageable pageable = PageRequest.of(page, unitsOnPage, sortingType.getSort());
+        return trackRepository.findAll(getSpecification(filters, searchString), pageable);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<TrackCommonDto> getSubscriptionsLastTrackList(List<? extends Filter<?>> filterList,
-                                                              SortingType sortingType,
-                                                              String searchString,
-                                                              long page,
-                                                              long unitsOnPage) {
-        return null;
+    public Page<Track> getHottestPerWeek(List<TrackFilter> filters,
+                                         String searchString,
+                                         int page,
+                                         int unitsOnPage) {
+        Pageable pageable = PageRequest.of(page, unitsOnPage, TrackSortingTypes.BEST.getSort());
+        return trackRepository.getHottestPerWeek(getSpecification(filters, searchString), pageable);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<TrackCommonDto> getHottestPerWeek(List<? extends Filter<?>> filterList,
-                                                  String searchString,
-                                                  long page,
-                                                  long unitsOnPage) {
-        return null;
+    public Page<Track> getNewPerWeek(List<TrackFilter> filters,
+                                     String searchString,
+                                     int page,
+                                     int unitsOnPage) {
+        Pageable pageable = PageRequest.of(page, unitsOnPage, TrackSortingTypes.NEW.getSort());
+        return trackRepository.getHottestPerWeek(getSpecification(filters, searchString), pageable);
+    }
+
+    private Specification<Track> getSpecification(List<TrackFilter> filters,
+                                                  String searchString) {
+        Specification<Track> specification = (track, cq, cb) -> cb.like(track.get("name"), "%" + searchString + "%");
+        for (TrackFilter filter : filters) {
+            specification.and(filter.getSpecification());
+        }
+
+        return specification;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<TrackCommonDto> getNewPerWeek(List<? extends Filter<?>> filterList,
-                                              String searchString,
-                                              long page,
-                                              long unitsOnPage) {
-        return null;
-    }
-
-    private String getSearchCriteria(List<? extends Filter<?>> filterList,
-                                     SortingType sortingType,
-                                     String searchString) {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public TrackCommonDto getTrack(long trackId) {
-        return null;
+    public Track getTrack(long id) {
+        return trackRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 }

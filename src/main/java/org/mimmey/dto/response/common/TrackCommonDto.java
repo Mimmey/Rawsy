@@ -1,15 +1,12 @@
 package org.mimmey.dto.response.common;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.mimmey.dto.request.creation.CommentCreationDto;
-import org.mimmey.entity.associative.TrackReport;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +25,7 @@ public class TrackCommonDto {
     private String name;
 
     @JsonProperty(value = "publishingTimestamp", access = JsonProperty.Access.READ_ONLY)
-    @JsonFormat(pattern="dd.MM.yyyy")
+    @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDateTime publishingTimestamp;
 
     @JsonProperty(value = "authorId", access = JsonProperty.Access.READ_ONLY)
@@ -68,7 +65,7 @@ public class TrackCommonDto {
     private List<TrackMoodCommonDto> moods;
 
     @JsonProperty(value = "comments", access = JsonProperty.Access.READ_ONLY)
-    private List<CommentCreationDto> comments;
+    private List<CommentCommonDto> comments;
 
     @JsonProperty(value = "favouriteAdditionsCount", access = JsonProperty.Access.READ_ONLY)
     private Long favouriteAdditionsCount;

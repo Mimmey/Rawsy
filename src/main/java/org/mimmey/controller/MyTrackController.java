@@ -6,10 +6,14 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
 import org.mimmey.dto.request.update.TrackUpdateDto;
-import org.mimmey.dto.response.TrackAuthorDto;
-import org.mimmey.service.common.MyTrackService;
+import org.mimmey.dto.request.update.mapper.TrackUpdateDtoMapper;
+import org.mimmey.dto.response.special.TrackAuthorDto;
+import org.mimmey.dto.response.special.mapper.TrackAuthorDtoMapper;
+import org.mimmey.entity.Track;
+import org.mimmey.service.special.MyTrackService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,12 +27,16 @@ import org.springframework.web.bind.annotation.RestController;
         version = "1.0.0"))
 public class MyTrackController {
 
+    private final TrackAuthorDtoMapper trackAuthorDtoMapper;
+
+    private final TrackUpdateDtoMapper trackUpdateDtoMapper;
+
     private final MyTrackService myTrackService;
 
     @Operation(
-            summary = "Метод возвращает трек",
+            summary = "Метод возвращает трек, автором которого является авторизованный пользователь",
             parameters = {
-                    @Parameter(name = "trackId", description = "Id трека", required = true)
+                    @Parameter(name = "id", description = "Id трека", required = true)
             }
     )
     @RequestMapping(
@@ -36,8 +44,10 @@ public class MyTrackController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<TrackAuthorDto> getTrack(@RequestParam("trackId") long trackId) {
-        return ResponseEntity.ok(myTrackService.getTrack(trackId));
+    @PreAuthorize("hasAuthority('myProfileActions')")
+    public ResponseEntity<TrackAuthorDto> getTrack(@RequestParam("id") long id) {
+        TrackAuthorDto dto = trackAuthorDtoMapper.toDto(myTrackService.getTrack(id));
+        return ResponseEntity.ok(dto);
     }
 
     @Operation(
@@ -64,24 +74,10 @@ public class MyTrackController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.PATCH
     )
+    @PreAuthorize("hasAuthority('beingAnAuthor')")
     public ResponseEntity<String> changeTrack(@RequestBody TrackUpdateDto updates) {
-        myTrackService.changeTrack(updates);
-        return ResponseEntity.ok("OK");
-    }
-
-    @Operation(
-            summary = "Метод скачивает архив с мультитреком",
-            parameters = {
-                    @Parameter(name = "trackId", description = "Id трека", required = true)
-            }
-    )
-    @RequestMapping(
-            path = "/download-multitrack",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            method = RequestMethod.GET
-    )
-    public ResponseEntity<String> downloadMultitrack(@RequestParam("trackId") long trackId) {
-        myTrackService.downloadMultitrack(trackId);
+        Track updatedTrack = trackUpdateDtoMapper.toEntity(updates);
+        myTrackService.changeTrack(updatedTrack);
         return ResponseEntity.ok("OK");
     }
 }

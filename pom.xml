@@ -14,16 +14,29 @@
     <artifactId>Rawsy</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.github.classgraph</groupId>
+                <artifactId>classgraph</artifactId>
+                <version>4.8.139</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.mapstruct.version>1.5.4.Final</org.mapstruct.version>
         <org.projectlombok.version>1.18.24</org.projectlombok.version>
-        <com.oracle.jdbc.version>12.2.0.1</com.oracle.jdbc.version>
-        <io.swagger.core.v3.version>2.1.10</io.swagger.core.v3.version>
-        <org.springdoc.version>1.5.10</org.springdoc.version>
+        <com.oracle.jdbc.version>21.9.0.0</com.oracle.jdbc.version>
+        <io.swagger.core.v3.version>2.2.8</io.swagger.core.v3.version>
+        <org.springdoc.version>2.1.0</org.springdoc.version>
         <org.springframework.boot.version>3.0.6</org.springframework.boot.version>
+        <org.springframework.version>5.7.2</org.springframework.version>
+        <javax.servlet.version>3.0.1</javax.servlet.version>
+        <org.hibernate.version>8.0.0.Final</org.hibernate.version>
         <org.apache.maven.plugins.version>3.11.0</org.apache.maven.plugins.version>
     </properties>
 
@@ -52,10 +65,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
         <dependency>
@@ -65,6 +74,20 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-actuator-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${org.hibernate.version}</version>
         </dependency>
 
         <dependency>
@@ -79,13 +102,12 @@
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${org.springdoc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${org.projectlombok.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>

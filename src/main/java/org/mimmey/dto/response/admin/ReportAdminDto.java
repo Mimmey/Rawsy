@@ -27,15 +27,15 @@ import java.time.LocalDateTime;
 public abstract class ReportAdminDto {
 
     @JsonProperty(value = "id", access = JsonProperty.Access.READ_ONLY)
-    private Long id;
+    protected Long id;
 
     @JsonProperty(value = "authorId", access = JsonProperty.Access.READ_ONLY)
-    private Long authorId;
+    protected Long authorId;
 
     @JsonProperty(value = "content", access = JsonProperty.Access.READ_ONLY)
-    private String content;
+    protected String content;
 
     @JsonProperty(value = "timestamp", access = JsonProperty.Access.READ_ONLY)
-    @JsonFormat(pattern="dd.MM.yyyy")
-    private LocalDateTime timestamp;
+    @JsonFormat(pattern = "dd.MM.yyyy")
+    protected LocalDateTime timestamp;
 }

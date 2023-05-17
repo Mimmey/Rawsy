@@ -6,8 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.mimmey.entity.associative.TrackToMoodMatching;
@@ -17,8 +18,9 @@ import java.util.List;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "track_mood")
 public class TrackMood implements Serializable {
@@ -29,6 +31,6 @@ public class TrackMood implements Serializable {
     @Column(name = "_name")
     private String name;
 
-    @OneToMany(mappedBy = "mood", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pk.mood", cascade = CascadeType.ALL)
     private List<TrackToMoodMatching> trackToMoodMatchings;
 }

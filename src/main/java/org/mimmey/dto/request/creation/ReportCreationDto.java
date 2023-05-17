@@ -26,5 +26,5 @@ public abstract class ReportCreationDto {
 
     @NotBlank
     @JsonProperty(value = "content", access = JsonProperty.Access.WRITE_ONLY)
-    private String content;
+    protected String content;
 }

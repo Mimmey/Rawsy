@@ -7,8 +7,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.mimmey.entity.associative.FavouriteAddition;
@@ -23,8 +24,9 @@ import java.util.List;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "track")
 public class Track implements Serializable {
@@ -70,21 +72,21 @@ public class Track implements Serializable {
 //
 //    private Long inFavouritesCount;
 
-    @OneToMany(mappedBy = "track", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pk.track", cascade = CascadeType.ALL)
     private List<TrackToGenreMatching> genres;
 
-    @OneToMany(mappedBy = "track", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pk.track", cascade = CascadeType.ALL)
     private List<TrackToMoodMatching> moods;
 
-    @OneToMany(mappedBy = "track", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pk.track", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "track", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pk.track", cascade = CascadeType.ALL)
     private List<FavouriteAddition> favouriteAdditions;
 
-    @OneToMany(mappedBy = "track", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pk.track", cascade = CascadeType.ALL)
     private List<Purchase> purchases;
 
-    @OneToMany(mappedBy = "trackSubject", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pk.trackSubject", cascade = CascadeType.ALL)
     private List<TrackReport> trackReports;
 }

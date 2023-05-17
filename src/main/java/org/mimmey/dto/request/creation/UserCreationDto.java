@@ -36,7 +36,7 @@ public class UserCreationDto {
 
     @NotNull
     @JsonProperty(value = "countryId", access = JsonProperty.Access.WRITE_ONLY)
-    private Long countryId;
+    private Integer countryId;
 
     @JsonProperty(value = "about", access = JsonProperty.Access.WRITE_ONLY)
     private String about;

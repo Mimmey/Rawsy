@@ -1,12 +1,14 @@
 package org.mimmey.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -15,8 +17,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "report")
 public class Report implements Serializable {
@@ -30,5 +33,6 @@ public class Report implements Serializable {
 
     private String content;
 
+    @Column(name = "_timestamp")
     private LocalDateTime timestamp;
 }

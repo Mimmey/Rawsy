@@ -1,7 +1,5 @@
 package org.mimmey.dto.request.update;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -9,14 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.mimmey.dto.request.creation.CommentCreationDto;
-import org.mimmey.dto.response.common.PurchaseCommonDto;
-import org.mimmey.dto.response.common.TrackGenreCommonDto;
-import org.mimmey.dto.response.common.TrackMoodCommonDto;
-import org.mimmey.dto.response.common.TrackTypeCommonDto;
-import org.mimmey.entity.associative.TrackReport;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -33,7 +24,7 @@ public class TrackUpdateDto {
     private String name;
 
     @JsonProperty(value = "type", access = JsonProperty.Access.WRITE_ONLY)
-    private Long typeId;
+    private Integer typeId;
 
     @JsonProperty(value = "about", access = JsonProperty.Access.WRITE_ONLY)
     private String about;
@@ -56,8 +47,8 @@ public class TrackUpdateDto {
     private Long cost;
 
     @JsonProperty(value = "genreIds", access = JsonProperty.Access.WRITE_ONLY)
-    private List<Long> genreIds;
+    private List<Integer> genreIds;
 
     @JsonProperty(value = "moodIds", access = JsonProperty.Access.WRITE_ONLY)
-    private List<Long> moodIds;
+    private List<Integer> moodIds;
 }

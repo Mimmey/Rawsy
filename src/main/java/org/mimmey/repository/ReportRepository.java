@@ -1,20 +1,17 @@
 package org.mimmey.repository;
 
+import org.jetbrains.annotations.NotNull;
 import org.mimmey.entity.Report;
-import org.mimmey.entity.associative.TrackReport;
-import org.mimmey.entity.associative.UserReport;
+import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface ReportRepository {
+public interface ReportRepository extends CrudRepository<Report, Long> {
 
-    void save(Report report);
+    @NotNull <S extends Report> S save(@NotNull S entity);
 
-    Report getReport(long reportId);
+    @NotNull
+    Optional<Report> findById(@NotNull Long id);
 
-    void resolveReport(long reportId);
-
-    List<UserReport> getUserReportList(long userId, long page, long unitsOnPage);
-
-    List<TrackReport> getTrackReportList(long trackId, long page, long unitsOnPage);
+    void deleteById(@NotNull Long id);
 }

@@ -4,14 +4,21 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
-import lombok.RequiredArgsConstructor;
 import org.mimmey.dto.request.creation.TrackCreationDto;
-import org.mimmey.dto.response.TrackAuthorDto;
+import org.mimmey.dto.request.creation.mappers.TrackCreationDtoMapper;
 import org.mimmey.dto.response.common.TrackCommonDto;
 import org.mimmey.dto.response.common.UserInfoCommonDto;
-import org.mimmey.service.common.AuthorizedUserService;
+import org.mimmey.dto.response.common.mapper.TrackCommonDtoMapper;
+import org.mimmey.dto.response.common.mapper.UserInfoCommonDtoMapper;
+import org.mimmey.dto.response.special.TrackAuthorDto;
+import org.mimmey.dto.response.special.mapper.TrackAuthorDtoMapper;
+import org.mimmey.entity.Track;
+import org.mimmey.service.special.AuthorizedUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,13 +28,32 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("authorized-user")
+@RequestMapping("authorized")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с авторизованным пользователем",
         version = "1.0.0"))
 public class AuthorizedUserController {
 
+    private final UserInfoCommonDtoMapper userInfoCommonDtoMapper;
+
+    private final TrackAuthorDtoMapper trackAuthorDtoMapper;
+
+    private final TrackCommonDtoMapper trackCommonDtoMapper;
+
+    private final TrackCreationDtoMapper trackCreationDtoMapper;
+
     private final AuthorizedUserService authorizedUserService;
+
+    public AuthorizedUserController(@Autowired UserInfoCommonDtoMapper userInfoCommonDtoMapper,
+                                    @Autowired TrackAuthorDtoMapper trackAuthorDtoMapper,
+                                    @Autowired TrackCommonDtoMapper trackCommonDtoMapper,
+                                    @Autowired TrackCreationDtoMapper trackCreationDtoMapper,
+                                    @Autowired @Qualifier("authorized-user") AuthorizedUserService authorizedUserService) {
+        this.userInfoCommonDtoMapper = userInfoCommonDtoMapper;
+        this.trackAuthorDtoMapper = trackAuthorDtoMapper;
+        this.trackCommonDtoMapper = trackCommonDtoMapper;
+        this.trackCreationDtoMapper = trackCreationDtoMapper;
+        this.authorizedUserService = authorizedUserService;
+    }
 
     @Operation(
             summary = "Метод возвращает страницу списка подписок авторизованного пользователя",
@@ -41,9 +67,10 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoCommonDto>> getSubscriptionList(@RequestParam("unitsOnPage") long unitsOnPage,
-                                                                       @RequestParam("page") long page) {
-        return ResponseEntity.ok(authorizedUserService.getSubscriptionList(unitsOnPage, page));
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscriptions(@RequestParam("unitsOnPage") int unitsOnPage,
+                                                                    @RequestParam("page") int page) {
+        List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(authorizedUserService.getSubscriptions(unitsOnPage, page).stream().toList());
+        return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
@@ -58,15 +85,17 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoCommonDto>> getSubscriberList(@RequestParam("unitsOnPage") long unitsOnPage,
-                                                                     @RequestParam("page") long page) {
-        return ResponseEntity.ok(authorizedUserService.getSubscriberList(unitsOnPage, page));
+    @PreAuthorize("hasAuthority('myProfileActions')")
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscribers(@RequestParam("unitsOnPage") int unitsOnPage,
+                                                                  @RequestParam("page") int page) {
+        List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(authorizedUserService.getSubscribers(unitsOnPage, page).stream().toList());
+        return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
             summary = "Метод подписывает авторизованного пользователя на другого пользователя",
             parameters = {
-                    @Parameter(name = "subscriptionUserId", description = "Id пользователя, на которого" +
+                    @Parameter(name = "id", description = "Id пользователя, на которого" +
                             "необходимо подписаться", required = true)
             }
     )
@@ -75,15 +104,16 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
-    public ResponseEntity<String> subscribe(@RequestParam("subscriptionUserId") long subscriptionUserId) {
-        authorizedUserService.subscribe(subscriptionUserId);
+    @PreAuthorize("hasAuthority('myProfileActions')")
+    public ResponseEntity<String> subscribe(@RequestParam("id") long id) {
+        authorizedUserService.subscribe(id);
         return ResponseEntity.ok("OK");
     }
 
     @Operation(
             summary = "Метод отписывает авторизованного пользователя от другого пользователя",
             parameters = {
-                    @Parameter(name = "subscriptionUserId", description = "Id пользователя, от которого" +
+                    @Parameter(name = "id", description = "Id пользователя, от которого" +
                             "необходимо отписаться", required = true)
             }
     )
@@ -92,8 +122,9 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
-    public ResponseEntity<String> unsubscribe(@RequestParam("subscriptionUserId") long subscriptionUserId) {
-        authorizedUserService.unsubscribe(subscriptionUserId);
+    @PreAuthorize("hasAuthority('myProfileActions')")
+    public ResponseEntity<String> unsubscribe(@RequestParam("id") long id) {
+        authorizedUserService.unsubscribe(id);
         return ResponseEntity.ok("OK");
     }
 
@@ -109,9 +140,11 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackAuthorDto>> getPublishedTrackList(@RequestParam("unitsOnPage") long unitsOnPage,
-                                                                      @RequestParam("page") long page) {
-        return ResponseEntity.ok(authorizedUserService.getPublishedTrackList(unitsOnPage, page));
+    @PreAuthorize("hasAuthority('myProfileActions')")
+    public ResponseEntity<List<TrackAuthorDto>> getPublishedTracks(@RequestParam("unitsOnPage") int unitsOnPage,
+                                                                   @RequestParam("page") int page) {
+        List<TrackAuthorDto> dtoList = trackAuthorDtoMapper.toDtoList(authorizedUserService.getPublishedTracks(unitsOnPage, page).stream().toList());
+        return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
@@ -126,9 +159,11 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackCommonDto>> getPurchasedTrackList(@RequestParam("unitsOnPage") long unitsOnPage,
-                                                                      @RequestParam("page") long page) {
-        return ResponseEntity.ok(authorizedUserService.getPurchasedTrackList(unitsOnPage, page));
+    @PreAuthorize("hasAuthority('myProfileActions')")
+    public ResponseEntity<List<TrackCommonDto>> getPurchasedTracks(@RequestParam("unitsOnPage") int unitsOnPage,
+                                                                   @RequestParam("page") int page) {
+        List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(authorizedUserService.getPurchasedTracks(unitsOnPage, page).stream().toList());
+        return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
@@ -143,9 +178,11 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackCommonDto>> getFavouriteTrackList(@RequestParam("unitsOnPage") long unitsOnPage,
-                                                                      @RequestParam("page") long page) {
-        return ResponseEntity.ok(authorizedUserService.getFavouriteTrackList(unitsOnPage, page));
+    @PreAuthorize("hasAuthority('myProfileActions')")
+    public ResponseEntity<List<TrackCommonDto>> getFavouriteTracks(@RequestParam("unitsOnPage") int unitsOnPage,
+                                                                   @RequestParam("page") int page) {
+        List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(authorizedUserService.getFavouriteTracks(unitsOnPage, page).stream().toList());
+        return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
@@ -160,9 +197,11 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackCommonDto>> getBasketTrackList(@RequestParam("unitsOnPage") long unitsOnPage,
-                                                                   @RequestParam("page") long page) {
-        return ResponseEntity.ok(authorizedUserService.getBasketTrackList(unitsOnPage, page));
+    @PreAuthorize("hasAuthority('myProfileActions')")
+    public ResponseEntity<List<TrackCommonDto>> getBasketTracks(@RequestParam("unitsOnPage") int unitsOnPage,
+                                                                @RequestParam("page") int page) {
+        List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(authorizedUserService.getBasketTracks(unitsOnPage, page).stream().toList());
+        return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
@@ -186,8 +225,10 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
+    @PreAuthorize("hasAuthority('beingAnAuthor')")
     public ResponseEntity<String> publishTrack(@RequestBody TrackCreationDto trackCreationDto) {
-        authorizedUserService.publishTrack(trackCreationDto);
+        Track track = trackCreationDtoMapper.toEntity(trackCreationDto);
+        authorizedUserService.publishTrack(track);
         return ResponseEntity.ok("OK");
     }
 
@@ -202,6 +243,7 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
+    @PreAuthorize("hasAuthority('myProfileActions')")
     public ResponseEntity<String> purchaseTrack(@RequestParam("trackId") long trackId) {
         authorizedUserService.purchaseTrack(trackId);
         return ResponseEntity.ok("OK");
@@ -218,6 +260,7 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
+    @PreAuthorize("hasAuthority('myProfileActions')")
     public ResponseEntity<String> addTrackToFavorites(@RequestParam("trackId") long trackId) {
         authorizedUserService.addTrackToFavorites(trackId);
         return ResponseEntity.ok("OK");
@@ -234,6 +277,7 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
+    @PreAuthorize("hasAuthority('myProfileActions')")
     public ResponseEntity<String> addTrackToBasket(@RequestParam("trackId") long trackId) {
         authorizedUserService.addTrackToBasket(trackId);
         return ResponseEntity.ok("OK");
@@ -250,6 +294,7 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
+    @PreAuthorize("hasAuthority('beingAnAuthor')")
     public ResponseEntity<String> deletePublishedTrack(@RequestParam("trackId") long trackId) {
         authorizedUserService.deletePublishedTrack(trackId);
         return ResponseEntity.ok("OK");
@@ -266,6 +311,7 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
+    @PreAuthorize("hasAuthority('myProfileActions')")
     public ResponseEntity<String> removeTrackFromFavourites(@RequestParam("trackId") long trackId) {
         authorizedUserService.removeTrackFromFavourites(trackId);
         return ResponseEntity.ok("OK");
@@ -282,6 +328,7 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
+    @PreAuthorize("hasAuthority('myProfileActions')")
     public ResponseEntity<String> removeTrackFromBasket(@RequestParam("trackId") long trackId) {
         authorizedUserService.removeTrackFromBasket(trackId);
         return ResponseEntity.ok("OK");
@@ -295,6 +342,7 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
+    @PreAuthorize("hasAuthority('myProfileActions')")
     public ResponseEntity<String> clearBasket() {
         authorizedUserService.clearBasket();
         return ResponseEntity.ok("OK");

@@ -1,37 +1,33 @@
 package org.mimmey.repository;
 
-import org.mimmey.entity.Track;
+import org.jetbrains.annotations.NotNull;
+import org.mimmey.entity.Country;
 import org.mimmey.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface UserRepository {
+public interface UserRepository extends JpaRepository<User, Long>, CrudRepository<User, Long> {
 
-    void save(User user);
-    User getById(long userId);
-    void deleteById(long userId);
-    void banUser(long userId);
+    @NotNull <S extends User> S save(@NotNull S entity);
 
-    List<User> getSubscriptionList(long userId, long page, long unitsOnPage);
-    List<User> getSubscriberList(long userId, long page, long unitsOnPage);
-    void subscribe(long userId, long subscriptionUserId);
-    void unsubscribe(long userId, long subscriptionUserId);
+    @NotNull
+    Optional<User> findById(@NotNull Long id);
 
-    List<Track> getPublishedTrackList(long userId, long page, long unitsOnPage);
-    List<Track> getPurchasedTrackList(long userId, long page, long unitsOnPage);
-    List<Track> getFavouriteTrackList(long userId, long page, long unitsOnPage);
-    List<Track> getBasketTrackList(long userId, long page, long unitsOnPage);
+    @NotNull
+    Optional<User> findByNickname(@NotNull String nickname);
 
-    void publishTrack(long userId, Track track);
-    void purchaseTrack(long userId, long trackId);
-    void addTrackToFavorites(long userId, long trackId);
-    void addTrackToBasket(long userId, long trackId);
+    void deleteById(@NotNull Long id);
 
-    void removePublishedTrack(long userId, long trackId);
-    void removeTrackFromFavourites(long userId, long trackId);
-    void removeTrackFromBasket(long userId, long trackId);
+    @Query(value = "SELECT * FROM country", nativeQuery = true)
+    List<Country> findAllCountries();
 
-    void clearBasket(long userId);
+    @Query(value = "SELECT * FROM country WHERE id=:id", nativeQuery = true)
+    Country findCountryById(@Param("id") Integer id);
 }
 
 

@@ -14,15 +14,14 @@ import org.mimmey.service.special.MyTrackService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("my/tracks")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с треками",
         version = "1.0.0"))
 public class MyTrackController {
@@ -40,12 +39,12 @@ public class MyTrackController {
             }
     )
     @RequestMapping(
-            path = "/track",
+            path = "my/track/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<TrackAuthorDto> getTrack(@RequestParam("id") long id) {
+    public ResponseEntity<TrackAuthorDto> getTrack(@PathVariable("id") long id) {
         TrackAuthorDto dto = trackAuthorDtoMapper.toDto(myTrackService.getTrack(id));
         return ResponseEntity.ok(dto);
     }
@@ -54,17 +53,29 @@ public class MyTrackController {
             summary = "Метод меняет информацию о треке",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
                     Обновления трека:
+                                        
                         id — ID трека;
+                        
                         name — новое название трека;
+                        
                         typeId — новый ID типа трека;
+                        
                         about — новое описание трека;
+                        
                         invoice — новый инвойс (перечень того, какие версии трека входят в покупку);
+                        
                         hasVocal — новое значение присутствия вокала;
+                        
                         isCycled — новое значение зацикленности;
+                        
                         bpm — новые BPM трека;
+                        
                         cost — новая стоимость трека;
+                        
                         genreIds — новый список ID жанров трека;
+                        
                         moodIds — новый список ID настроений трека.
+                        
                         
                     Все поля, кроме ID трека, опциональны"""
             )

@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.mimmey.entity.embedded_keys.PurchasePK;
+import org.mimmey.entity.embedded_keys.FavouriteAdditionPK;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,13 +20,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "purchase_list")
-public class Purchase implements Serializable {
+@Table(name = "favourites_list")
+public class FavouriteAddition implements Serializable {
 
     @EmbeddedId
-    private PurchasePK pk;
-
-    private Long cost;
+    private FavouriteAdditionPK pk;
 
     @Column(name = "_timestamp")
     private LocalDateTime timestamp = LocalDateTime.now();

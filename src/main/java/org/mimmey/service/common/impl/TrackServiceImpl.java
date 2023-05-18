@@ -54,7 +54,7 @@ public class TrackServiceImpl implements TrackService {
                                      int page,
                                      int unitsOnPage) {
         Pageable pageable = PageRequest.of(page, unitsOnPage, TrackSortingTypes.NEW.getSort());
-        return trackRepository.getHottestPerWeek(getSpecification(filters, searchString), pageable);
+        return trackRepository.getNewPerWeek(getSpecification(filters, searchString), pageable);
     }
 
     private Specification<Track> getSpecification(List<TrackFilter> filters,

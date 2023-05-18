@@ -41,19 +41,19 @@ public abstract class TrackCreationDtoMapper {
     public abstract List<Track> toEntityList(List<TrackCreationDto> trackCreationDtoList);
 
     @Named("typeIdToType")
-    public TrackType typeIdToType(Integer typeId) {
+    protected TrackType typeIdToType(Integer typeId) {
         return trackTypeService.getType(typeId);
     }
 
     @Named("genreIdsToGenres")
-    public List<TrackToGenreMatching> genreIdsToGenres(List<Integer> genreIds) {
+    protected List<TrackToGenreMatching> genreIdsToGenres(List<Integer> genreIds) {
         return genreIds.stream()
                 .map((it) -> new TrackToGenreMatching(new TrackToGenreMatchingPK(null, trackGenreService.getGenre(it))))
                 .collect(Collectors.toList());
     }
 
     @Named("moodIdsToMoods")
-    public List<TrackToMoodMatching> moodIdsToMoods(List<Integer> moodIds) {
+    protected List<TrackToMoodMatching> moodIdsToMoods(List<Integer> moodIds) {
         return moodIds.stream()
                 .map((it) -> new TrackToMoodMatching(new TrackToMoodMatchingPK(null, trackMoodService.getMood(it))))
                 .collect(Collectors.toList());

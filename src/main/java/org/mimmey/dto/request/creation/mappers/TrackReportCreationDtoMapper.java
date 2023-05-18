@@ -26,7 +26,7 @@ public abstract class TrackReportCreationDtoMapper {
     public abstract List<TrackReport> toEntityList(List<TrackReportCreationDto> trackReportCreationDto);
 
     @Named("dtoToPk")
-    public TrackReportPK dtoToPk(Long trackSubjectId) {
+    protected TrackReportPK dtoToPk(Long trackSubjectId) {
         return new TrackReportPK(null, trackService.getTrack(trackSubjectId));
     }
 }

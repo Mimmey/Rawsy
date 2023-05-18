@@ -1,6 +1,7 @@
 package org.mimmey.service.admin.impl;
 
 import org.mimmey.entity.User;
+import org.mimmey.repository.MediaLinkRepository;
 import org.mimmey.repository.SubscriptionRepository;
 import org.mimmey.repository.TrackRepository;
 import org.mimmey.repository.UserRepository;
@@ -15,8 +16,9 @@ public class AdminUserServiceImpl extends UserServiceImpl implements AdminUserSe
 
     public AdminUserServiceImpl(@Autowired UserRepository userRepository,
                                 @Autowired SubscriptionRepository subscriptionRepository,
-                                @Autowired TrackRepository trackRepository) {
-        super(userRepository, subscriptionRepository, trackRepository);
+                                @Autowired TrackRepository trackRepository,
+                                @Autowired MediaLinkRepository mediaLinkRepository) {
+        super(userRepository, subscriptionRepository, trackRepository, mediaLinkRepository);
     }
 
     /**

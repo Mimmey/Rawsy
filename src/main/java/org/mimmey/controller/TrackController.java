@@ -16,16 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("tracks")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с треками",
         version = "1.0.0"))
 public class TrackController {
@@ -53,21 +52,30 @@ public class TrackController {
                     "При этом применяются фильтры и сортировка",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
                     Запрос на поиск:
+                                        
                         filters — список фильтров;
+                        
                         sortingType — тип сортировки;
-                        searchString — строка поиска
+                        
+                        searchString — строка поиска;
+                        
                         page — номер страницы;
+                        
                         unitsOnPage — количество треков на странице.
                         
+                        
                     Каждый фильтр включает в себя следующие поля:
+                        
                         property — название поля, для которого задается фильтр;
+                        
                         value — необходимое значение поля.
+                        
                         
                     Тип сортировки может иметь значения "new" (по убыванию даты и времени публикации) и "best" (по убыванию рейтинга)"""
             )
     )
     @RequestMapping(
-            path = "/global",
+            path = "/tracks/global",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -78,7 +86,7 @@ public class TrackController {
         List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(trackService.getGlobalTracks(filters,
                         sortingType,
                         trackSearchDto.getSearchString(),
-                        trackSearchDto.getPage(),
+                        trackSearchDto.getPage() - 1,
                         trackSearchDto.getUnitsOnPage())
                 .stream().toList());
 
@@ -90,18 +98,25 @@ public class TrackController {
                     "содержат строку поиска. При этом применяются фильтры",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
                     Запрос на поиск:
+                        
                         filters — список фильтров;
+                        
                         searchString — строка поиска
+                        
                         page — номер страницы;
+                        
                         unitsOnPage — количество треков на странице.
                         
+                        
                     Каждый фильтр включает в себя следующие поля:
+                        
                         property — название поля, для которого задается фильтр;
+                        
                         value — необходимое значение поля"""
             )
     )
     @RequestMapping(
-            path = "/week-hottest",
+            path = "/tracks/week-hottest",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -110,7 +125,7 @@ public class TrackController {
 
         List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(trackService.getHottestPerWeek(filters,
                         trackSearchDto.getSearchString(),
-                        trackSearchDto.getPage(),
+                        trackSearchDto.getPage() - 1,
                         trackSearchDto.getUnitsOnPage())
                 .stream().toList());
 
@@ -122,18 +137,25 @@ public class TrackController {
                     "содержат строку поиска. При этом применяются фильтры",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
                     Запрос на поиск:
+                        
                         filters — список фильтров;
+                        
                         searchString — строка поиска
+                        
                         page — номер страницы;
+                        
                         unitsOnPage — количество треков на странице.
                         
+                        
                     Каждый фильтр включает в себя следующие поля:
+                        
                         property — название поля, для которого задается фильтр;
+                        
                         value — необходимое значение поля"""
             )
     )
     @RequestMapping(
-            path = "/week-new",
+            path = "/tracks/week-new",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -142,7 +164,7 @@ public class TrackController {
 
         List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(trackService.getNewPerWeek(filters,
                         trackSearchDto.getSearchString(),
-                        trackSearchDto.getPage(),
+                        trackSearchDto.getPage() - 1,
                         trackSearchDto.getUnitsOnPage())
                 .stream().toList());
 
@@ -152,16 +174,16 @@ public class TrackController {
     @Operation(
             summary = "Метод возвращает трек",
             parameters = {
-                    @Parameter(name = "trackId", description = "Id трека", required = true)
+                    @Parameter(name = "id", description = "Id трека", required = true)
             }
     )
     @RequestMapping(
-            path = "/track",
+            path = "/track/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<TrackCommonDto> getTrack(@RequestParam("trackId") long trackId) {
-        TrackCommonDto dto = trackCommonDtoMapper.toDto(trackService.getTrack(trackId));
+    public ResponseEntity<TrackCommonDto> getTrack(@PathVariable("id") long id) {
+        TrackCommonDto dto = trackCommonDtoMapper.toDto(trackService.getTrack(id));
         return ResponseEntity.ok(dto);
     }
 }

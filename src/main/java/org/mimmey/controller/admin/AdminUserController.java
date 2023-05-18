@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("admin/users")
+@RequestMapping("admin")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с профилями от лица администратора",
         version = "1.0.0"))
 public class AdminUserController {
@@ -49,11 +50,11 @@ public class AdminUserController {
     )
     @PreAuthorize("hasAuthority('adminActions')")
     @RequestMapping(
-            path = "/user-info",
+            path = "user/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<UserInfoAdminDto> getUserInfo(@RequestParam("id") long id) {
+    public ResponseEntity<UserInfoAdminDto> getUser(@PathVariable("id") long id) {
         UserInfoAdminDto dto = userInfoAdminDtoMapper.toDto(adminUserService.getUser(id));
         return ResponseEntity.ok(dto);
     }
@@ -66,11 +67,11 @@ public class AdminUserController {
     )
     @PreAuthorize("hasAuthority('adminActions')")
     @RequestMapping(
-            path = "/ban",
+            path = "user/{id}/ban",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
-    public ResponseEntity<String> banUser(@RequestParam("id") long id) {
+    public ResponseEntity<String> banUser(@PathVariable("id") long id) {
         adminUserService.banUser(id);
         return ResponseEntity.ok("OK");
     }
@@ -78,63 +79,69 @@ public class AdminUserController {
     @Operation(
             summary = "Метод возвращает страницу списка подписчиков пользователя",
             parameters = {
-                    @Parameter(name = "userId", description = "Id пользователя", required = true),
-                    @Parameter(name = "unitsOnPage", description = "Количество подписчиков на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "id", description = "Id пользователя", required = true),
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество подписчиков на странице", required = true)
             }
     )
     @PreAuthorize("hasAuthority('adminActions')")
     @RequestMapping(
-            path = "/subscribers",
+            path = "user/{id}/subscribers",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoAdminDto>> getSubscriberList(@RequestParam("userId") long userId,
-                                                                    @RequestParam("unitsOnPage") int unitsOnPage,
-                                                                    @RequestParam("page") int page) {
-        List<UserInfoAdminDto> dtoList = userInfoAdminDtoMapper.toDtoList(adminUserService.getSubscribers(userId, unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<UserInfoAdminDto>> getSubscriberList(@PathVariable("id") long id,
+                                                                    @RequestParam("page") int page,
+                                                                    @RequestParam("unitsOnPage") int unitsOnPage) {
+        List<UserInfoAdminDto> dtoList = userInfoAdminDtoMapper.toDtoList(
+                adminUserService.getSubscribers(id, page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
             summary = "Метод возвращает страницу списка аккаунтов-подписок пользователя",
             parameters = {
-                    @Parameter(name = "userId", description = "Id пользователя", required = true),
-                    @Parameter(name = "unitsOnPage", description = "Количество подписок на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "id", description = "Id пользователя", required = true),
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество подписок на странице", required = true)
             }
     )
     @RequestMapping(
-            path = "/subscriptions",
+            path = "user/{id}/subscriptions",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('adminActions')")
-    public ResponseEntity<List<UserInfoAdminDto>> getSubscriptionList(@RequestParam("userId") long userId,
-                                                                      @RequestParam("unitsOnPage") int unitsOnPage,
-                                                                      @RequestParam("page") int page) {
-        List<UserInfoAdminDto> dtoList = userInfoAdminDtoMapper.toDtoList(adminUserService.getSubscriptions(userId, unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<UserInfoAdminDto>> getSubscriptionList(@PathVariable("id") long id,
+                                                                      @RequestParam("page") int page,
+                                                                      @RequestParam("unitsOnPage") int unitsOnPage) {
+        List<UserInfoAdminDto> dtoList = userInfoAdminDtoMapper.toDtoList(
+                adminUserService.getSubscriptions(id, page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
             summary = "Метод возвращает страницу списка треков, опубликованных пользователем",
             parameters = {
-                    @Parameter(name = "userId", description = "Id пользователя", required = true),
-                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "id", description = "Id пользователя", required = true),
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true)
             }
     )
     @RequestMapping(
-            path = "/published-tracks",
+            path = "user/{id}/published-tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('adminActions')")
-    public ResponseEntity<List<TrackAdminDto>> getPublishedTrackList(@RequestParam("userId") long userId,
-                                                                     @RequestParam("unitsOnPage") int unitsOnPage,
-                                                                     @RequestParam("page") int page) {
-        List<TrackAdminDto> dtoList = trackAdminDtoMapper.toDtoList(adminUserService.getPublishedTracks(userId, unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<TrackAdminDto>> getPublishedTrackList(@PathVariable("id") long id,
+                                                                     @RequestParam("page") int page,
+                                                                     @RequestParam("unitsOnPage") int unitsOnPage) {
+        List<TrackAdminDto> dtoList = trackAdminDtoMapper.toDtoList(
+                adminUserService.getPublishedTracks(id, page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
     }
 }

@@ -2,7 +2,7 @@ package org.mimmey.service.common.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.mimmey.entity.Country;
-import org.mimmey.repository.UserRepository;
+import org.mimmey.repository.CountryRepository;
 import org.mimmey.service.common.CountryService;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +12,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CountryServiceImpl implements CountryService {
 
-    private final UserRepository userRepository;
+    private final CountryRepository countryRepository;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Country getCountry(int id) {
-        return userRepository.findCountryById(id);
+        return countryRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
     /**
@@ -27,6 +27,6 @@ public class CountryServiceImpl implements CountryService {
      */
     @Override
     public List<Country> getCountries() {
-        return userRepository.findAllCountries();
+        return countryRepository.findAll();
     }
 }

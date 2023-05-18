@@ -13,6 +13,7 @@ import org.mimmey.entity.embedded_keys.SubscriptionPK;
 import org.mimmey.entity.embedded_keys.TrackInBasketPK;
 import org.mimmey.repository.BasketRepository;
 import org.mimmey.repository.FavouriteRepository;
+import org.mimmey.repository.MediaLinkRepository;
 import org.mimmey.repository.PurchaseRepository;
 import org.mimmey.repository.SubscriptionRepository;
 import org.mimmey.repository.TrackRepository;
@@ -43,11 +44,12 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
     public AuthorizedUserServiceImpl(@Autowired UserRepository userRepository,
                                      @Autowired SubscriptionRepository subscriptionRepository,
                                      @Autowired TrackRepository trackRepository,
+                                     @Autowired MediaLinkRepository mediaLinkRepository,
                                      @Autowired AuthorizedUserGetter authorizedUserGetter,
                                      @Autowired PurchaseRepository purchaseRepository,
                                      @Autowired FavouriteRepository favouriteRepository,
                                      @Autowired BasketRepository basketRepository) {
-        super(userRepository, subscriptionRepository, trackRepository);
+        super(userRepository, subscriptionRepository, trackRepository, mediaLinkRepository);
 
         this.authorizedUserGetter = authorizedUserGetter;
         this.purchaseRepository = purchaseRepository;

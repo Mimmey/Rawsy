@@ -2,6 +2,8 @@ package org.mimmey.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -32,11 +34,12 @@ import java.util.List;
 public class Track implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
-    private LocalDateTime publishingTimestamp;
+    private LocalDateTime publishingTimestamp = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "author_id")
@@ -46,7 +49,7 @@ public class Track implements Serializable {
     @JoinColumn(name = "type_id")
     private TrackType type;
 
-    private Double rating;
+    private Double rating = 0.0;
 
     private String about;
 
@@ -60,7 +63,7 @@ public class Track implements Serializable {
 
     private Integer duration;
 
-    private Long cost;
+    private Long cost = 0L;
 
     private String audioPreviewPath;
 

@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.mimmey.entity.Report;
-import org.mimmey.entity.Track;
+import org.mimmey.entity.User;
 
 import java.io.Serializable;
 
@@ -16,13 +16,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class TrackReportPK implements Serializable {
+public class UserReportPK implements Serializable {
 
     @OneToOne
     @JoinColumn(name = "report_id")
     private Report report;
 
     @ManyToOne
-    @JoinColumn(name = "track_subject_id")
-    private Track trackSubject;
+    @JoinColumn(name = "user_subject_id")
+    private User userSubject;
 }

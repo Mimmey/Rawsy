@@ -2,7 +2,7 @@ package org.mimmey.service.common.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.mimmey.entity.TrackGenre;
-import org.mimmey.repository.TrackRepository;
+import org.mimmey.repository.TrackGenreRepository;
 import org.mimmey.service.common.TrackGenreService;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TrackGenreServiceImpl implements TrackGenreService {
 
-    private final TrackRepository trackRepository;
+    private final TrackGenreRepository trackGenreRepository;
 
 
     /**
@@ -20,7 +20,7 @@ public class TrackGenreServiceImpl implements TrackGenreService {
      */
     @Override
     public TrackGenre getGenre(int id) {
-        return trackRepository.findGenreById(id);
+        return trackGenreRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
     /**
@@ -28,6 +28,6 @@ public class TrackGenreServiceImpl implements TrackGenreService {
      */
     @Override
     public List<TrackGenre> getGenres() {
-        return trackRepository.findAllGenres();
+        return trackGenreRepository.findAll();
     }
 }

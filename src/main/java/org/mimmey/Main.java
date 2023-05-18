@@ -25,6 +25,7 @@ package org.mimmey;
 //TODO: выход во время удаления
 //TODO: во время апдейта пользователя обновлять данные во всех сессиях
 //TODO: проверка принадлежности трека юзеру
+//TODO: required в описании dto
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

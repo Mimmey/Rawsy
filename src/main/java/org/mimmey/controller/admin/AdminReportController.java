@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("admin/reports")
+@RequestMapping("admin")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с жалобами от лица администратора",
         version = "1.0.0"))
 public class AdminReportController {
@@ -50,42 +51,46 @@ public class AdminReportController {
     @Operation(
             summary = "Метод возвращает страницу списка жалоб на пользователя",
             parameters = {
-                    @Parameter(name = "userId", description = "Id пользователя", required = true),
-                    @Parameter(name = "unitsOnPage", description = "Количество жалоб на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "id", description = "Id пользователя", required = true),
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество жалоб на странице", required = true)
             }
     )
     @PreAuthorize("hasAuthority('adminActions')")
     @RequestMapping(
-            path = "/user-reports",
+            path = "/user/{id}/reports",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserReportAdminDto>> getUserReportList(@RequestParam("userId") long userId,
-                                                                      @RequestParam("unitsOnPage") int unitsOnPage,
-                                                                      @RequestParam("page") int page) {
-        List<UserReportAdminDto> dtoList = userReportAdminDtoMapper.toDtoList(adminReportService.getUserReports(userId, unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<UserReportAdminDto>> getUserReportList(@PathVariable("id") long id,
+                                                                      @RequestParam("page") int page,
+                                                                      @RequestParam("unitsOnPage") int unitsOnPage) {
+        List<UserReportAdminDto> dtoList = userReportAdminDtoMapper.toDtoList(
+                adminReportService.getUserReports(id, page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
             summary = "Метод возвращает страницу списка жалоб на трек",
             parameters = {
-                    @Parameter(name = "trackId", description = "Id трека", required = true),
-                    @Parameter(name = "unitsOnPage", description = "Количество жалоб на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "id", description = "Id трека", required = true),
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество жалоб на странице", required = true)
             }
     )
     @RequestMapping(
-            path = "/track-reports",
+            path = "/track/{id}/reports",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('adminActions')")
-    public ResponseEntity<List<TrackReportAdminDto>> getTrackReportList(@RequestParam("trackId") long trackId,
-                                                                        @RequestParam("unitsOnPage") long unitsOnPage,
-                                                                        @RequestParam("page") long page) {
-        List<TrackReportAdminDto> dtoList = trackReportAdminDtoMapper.toDtoList(adminReportService.getTrackReports(trackId, unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<TrackReportAdminDto>> getTrackReportList(@PathVariable("id") long id,
+                                                                        @RequestParam("page") long page,
+                                                                        @RequestParam("unitsOnPage") long unitsOnPage) {
+        List<TrackReportAdminDto> dtoList = trackReportAdminDtoMapper.toDtoList(
+                adminReportService.getTrackReports(id, page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
     }
 
@@ -96,12 +101,12 @@ public class AdminReportController {
             }
     )
     @RequestMapping(
-            path = "/report",
+            path = "report/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('adminActions')")
-    public ResponseEntity<ReportAdminDto> getReport(@RequestParam("id") long id) {
+    public ResponseEntity<ReportAdminDto> getReport(@PathVariable("id") long id) {
         ReportAdminDto dto = reportAdminDtoMapper.toDto(adminReportService.getReport(id));
         return ResponseEntity.ok(dto);
     }
@@ -113,12 +118,12 @@ public class AdminReportController {
             }
     )
     @RequestMapping(
-            path = "/report",
+            path = "report/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
     @PreAuthorize("hasAuthority('adminActions')")
-    public ResponseEntity<String> resolveReport(@RequestParam("id") long id) {
+    public ResponseEntity<String> resolveReport(@PathVariable("id") long id) {
         adminReportService.resolveReport(id);
         return ResponseEntity.ok("OK");
     }

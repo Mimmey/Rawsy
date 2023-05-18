@@ -26,7 +26,7 @@ public abstract class UserReportCreationDtoMapper {
     public abstract List<UserReport> toEntityList(List<UserReportCreationDto> trackReportCreationDto);
 
     @Named("dtoToPk")
-    public UserReportPK dtoToPk(Long userSubjectId) {
+    protected UserReportPK dtoToPk(Long userSubjectId) {
         return new UserReportPK(null, userService.getUser(userSubjectId));
     }
 }

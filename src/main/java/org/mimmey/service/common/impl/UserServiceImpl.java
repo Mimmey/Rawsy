@@ -1,9 +1,11 @@
 package org.mimmey.service.common.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.mimmey.entity.MediaLink;
 import org.mimmey.entity.Track;
 import org.mimmey.entity.User;
 import org.mimmey.entity.associative.Subscription;
+import org.mimmey.repository.MediaLinkRepository;
 import org.mimmey.repository.SubscriptionRepository;
 import org.mimmey.repository.TrackRepository;
 import org.mimmey.repository.UserRepository;
@@ -26,12 +28,18 @@ public class UserServiceImpl implements UserService {
 
     protected final TrackRepository trackRepository;
 
+    protected final MediaLinkRepository mediaLinkRepository;
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void createUser(User user) {
+        List<MediaLink> mediaLinks = user.getMediaLinks();
+        mediaLinks.forEach(link -> link.setOwner(user));
+        user.setMediaLinks(mediaLinks);
         userRepository.save(user);
+        mediaLinkRepository.saveAll(mediaLinks);
     }
 
     /**

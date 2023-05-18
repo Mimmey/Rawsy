@@ -26,7 +26,7 @@ public abstract class CommentCreationDtoMapper {
     public abstract List<Comment> toEntityList(List<CommentCreationDto> commentCreationDtoList);
 
     @Named("trackToCommentPk")
-    public CommentPK trackToCommentPk(Long trackId) {
+    protected CommentPK trackToCommentPk(Long trackId) {
         return new CommentPK(null, trackService.getTrack(trackId));
     }
 }

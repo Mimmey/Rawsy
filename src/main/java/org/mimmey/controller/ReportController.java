@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("reports")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с жалобами",
         version = "1.0.0"))
 public class ReportController {
@@ -44,12 +43,14 @@ public class ReportController {
             summary = "Метод отправляет жалобу на пользователя",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
                     Жалоба:
+                                        
                         userSubjectId — ID пользователя-объекта жалобы;
+                        
                         content — содержание жалобы"""
             )
     )
     @RequestMapping(
-            path = "/publish-user-report",
+            path = "/track-report/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
@@ -64,12 +65,14 @@ public class ReportController {
             summary = "Метод отправляет жалобу на трек",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
                     Жалоба:
+                                        
                         trackSubjectId — ID трека-объекта жалобы;
+                        
                         content — содержание жалобы"""
             )
     )
     @RequestMapping(
-            path = "/publish-track-report",
+            path = "/user-report/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )

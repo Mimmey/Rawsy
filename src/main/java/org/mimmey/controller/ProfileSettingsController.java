@@ -47,7 +47,7 @@ public class ProfileSettingsController {
             summary = "Метод возвращает расширенную информацию об авторизованном пользователе"
     )
     @RequestMapping(
-            path = "/info",
+            path = "/user",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -75,11 +75,17 @@ public class ProfileSettingsController {
             summary = "Метод обновляет информацию об авторизованном пользователе",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
                     Обновление информации о пользователе:
+                                        
                         nickname — имя пользователя;
+                                        
                         email — электронная почта пользователя;
+                                        
                         password — пароль пользователя;
+                                        
                         about — описание пользователя;
-                        mediaLinks — ссылки на социальные сети
+                                        
+                        mediaLinks — ссылки на социальные сети.
+                        
                         
                     Все поля опциональны"""
             )

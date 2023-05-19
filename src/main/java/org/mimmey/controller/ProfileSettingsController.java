@@ -10,8 +10,6 @@ import org.mimmey.dto.response.special.UserInfoAuthorizedDto;
 import org.mimmey.dto.response.special.mapper.UserInfoAuthorizedDtoMapper;
 import org.mimmey.entity.User;
 import org.mimmey.service.special.ProfileSettingsService;
-import org.mimmey.utils.Audio;
-import org.mimmey.utils.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -27,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("settings")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с настройками профиля",
         version = "1.0.0"))
-public final class ProfileSettingsController {
+public class ProfileSettingsController {
 
     private final UserInfoAuthorizedDtoMapper userInfoAuthorizedDtoMapper;
 
@@ -114,7 +112,7 @@ public final class ProfileSettingsController {
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<String> setJingle(@RequestParam("jingle") Audio jingle) {
+    public ResponseEntity<String> setJingle(@RequestParam("jingle") byte[] jingle) {
         profileSettingsService.setJingle(jingle);
         return ResponseEntity.ok("OK");
     }
@@ -131,7 +129,7 @@ public final class ProfileSettingsController {
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<String> setAvatar(@RequestParam("avatar") Image avatar) {
+    public ResponseEntity<String> setAvatar(@RequestParam("avatar") byte[] avatar) {
         profileSettingsService.setAvatar(avatar);
         return ResponseEntity.ok("OK");
     }

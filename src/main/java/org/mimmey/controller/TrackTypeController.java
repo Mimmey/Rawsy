@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с типами треков",
         version = "1.0.0"))
-public final class TrackTypeController {
+public class TrackTypeController {
 
     private final TrackTypeCommonDtoMapper trackTypeCommonDtoMapper;
 

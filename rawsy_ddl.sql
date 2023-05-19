@@ -212,8 +212,31 @@ CREATE TRIGGER tr_increment_tracks_purchased_by_other_users_count
     FOR EACH ROW
 EXECUTE PROCEDURE increment_tracks_purchased_by_other_users_count();
 
+CREATE INDEX user_nickname_idx_hash ON _user USING hash (nickname);
+
+CREATE INDEX media_link_owner_id_idx_hash ON media_link USING hash (owner_id);
+
+CREATE INDEX track_author_id_idx_hash ON track USING hash (author_id);
+CREATE INDEX track_rating_idx_hash ON track USING hash (rating);
+CREATE INDEX track_type_id_idx_hash ON track USING hash (type_id);
+CREATE INDEX track_has_vocal_idx_hash ON track USING hash (has_vocal);
+CREATE INDEX track_is_cycled_idx_hash ON track USING hash (is_cycled);
+CREATE INDEX track_bpm_idx_hash ON track USING hash (bpm);
+CREATE INDEX track_duration_idx_hash ON track USING hash (duration);
+
+CREATE INDEX purchase_list_timestamp_idx_hash ON purchase_list USING hash (_timestamp);
+CREATE INDEX purchase_list_purchaser_id_idx_hash ON purchase_list USING hash (purchaser_id);
+
+CREATE INDEX favourites_list_owner_id_idx_hash ON favourites_list USING hash (owner_id);
+CREATE INDEX tracks_in_basket_list_owner_id_idx_hash ON tracks_in_basket_list USING hash (owner_id);
+CREATE INDEX subscription_list_subscriber_idx_hash ON subscription_list USING hash (subject_id);
+CREATE INDEX subscription_list_subscription_id_idx_hash ON subscription_list USING hash (subscriber_id);
+
+CREATE INDEX comment_track_id_idx_hash ON comment USING hash (track_id);
+CREATE INDEX user_report_user_subject_id_idx_hash ON user_report USING hash (user_subject_id);
+CREATE INDEX track_report_track_subject_id_idx_hash ON track_report USING hash (track_subject_id);
+
 /*TODO: rating func*/
-/*TODO: new table for roles*/
 
 
 

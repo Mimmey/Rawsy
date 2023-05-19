@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с комментариями",
         version = "1.0.0"))
-public final class CommentController {
+public class CommentController {
 
     private final CommentCommonDtoMapper commentCommonDtoMapper;
 

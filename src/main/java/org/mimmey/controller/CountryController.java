@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @OpenAPIDefinition(info = @Info(title = "RestController для работы со странами",
         version = "1.0.0"))
-public final class CountryController {
+public class CountryController {
 
     private final CountryCommonDtoMapper countryCommonDtoMapper;
 

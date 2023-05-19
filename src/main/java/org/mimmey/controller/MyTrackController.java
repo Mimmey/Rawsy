@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с треками",
         version = "1.0.0"))
-public final class MyTrackController {
+public class MyTrackController {
 
     private final TrackAuthorDtoMapper trackAuthorDtoMapper;
 

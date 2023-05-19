@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.mimmey.service.common.MultitrackDownloadingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с мультитреками",
         version = "1.0.0"))
-public final class MultitrackDownloadingController {
+public class MultitrackDownloadingController {
 
     private final MultitrackDownloadingService multitrackDownloadingService;
 
@@ -26,19 +25,19 @@ public final class MultitrackDownloadingController {
     }
 
     @Operation(
-            summary = "Метод скачивает архив с мультитреком",
+            summary = "Метод возвращает архив с мультитреком",
             parameters = {
                     @Parameter(name = "id", description = "Id трека", required = true)
             }
     )
     @RequestMapping(
-            path = "track/{id}/multitrack/download",
-            produces = MediaType.APPLICATION_JSON_VALUE,
+            path = "track/{id}/multitrack",
+            produces = "application/zip",
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<String> downloadMultitrack(@PathVariable("id") long id) {
-        multitrackDownloadingService.downloadMultitrack(id);
+    public ResponseEntity<String> getMultitrack(@PathVariable("id") long id) {
+        multitrackDownloadingService.getMultitrack(id);
         return ResponseEntity.ok("OK");
     }
 }

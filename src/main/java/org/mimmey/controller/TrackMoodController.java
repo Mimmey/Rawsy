@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с настроениями треков",
         version = "1.0.0"))
-public final class TrackMoodController {
+public class TrackMoodController {
 
     private final TrackMoodCommonDtoMapper trackMoodCommonDtoMapper;
 

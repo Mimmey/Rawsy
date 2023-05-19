@@ -1,5 +1,6 @@
 package org.mimmey.service.special.impl;
 
+import org.mimmey.config.exception.FileException;
 import org.mimmey.config.security.utils.AuthorizedUserGetter;
 import org.mimmey.dto.request.update.mapper.UserUpdateMapper;
 import org.mimmey.entity.MediaLink;
@@ -12,11 +13,11 @@ import org.mimmey.repository.SubscriptionRepository;
 import org.mimmey.repository.TrackRepository;
 import org.mimmey.repository.UserRepository;
 import org.mimmey.service.special.ProfileSettingsService;
-import org.mimmey.utils.Audio;
-import org.mimmey.utils.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 @Service("settings-user")
@@ -73,15 +74,27 @@ public final class ProfileSettingsServiceImpl extends AuthorizedUserServiceImpl 
      * {@inheritDoc}
      */
     @Override
-    public void setJingle(Audio jingle) {
+    public void setJingle(byte[] jingle) {
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
 
+        try (FileOutputStream fos = new FileOutputStream(currentUser.getJinglePath())) {
+            fos.write(jingle);
+        } catch (IOException e) {
+            throw new FileException();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setAvatar(Image avatar) {
+    public void setAvatar(byte[] avatar) {
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
 
+        try (FileOutputStream fos = new FileOutputStream(currentUser.getAvatarPath())) {
+            fos.write(avatar);
+        } catch (IOException e) {
+            throw new FileException();
+        }
     }
 }

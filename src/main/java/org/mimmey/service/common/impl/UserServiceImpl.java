@@ -2,7 +2,7 @@ package org.mimmey.service.common.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.mimmey.config.exception.UnauthorizedException;
+import org.mimmey.config.exception.FileException;
 import org.mimmey.entity.MediaLink;
 import org.mimmey.entity.Track;
 import org.mimmey.entity.User;
@@ -18,6 +18,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 @Service("common-user")
@@ -38,9 +41,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(User user) {
         List<MediaLink> mediaLinks = user.getMediaLinks();
-        mediaLinks.forEach(link -> link.setOwner(user));
         user.setMediaLinks(mediaLinks);
         userRepository.save(user);
+
+        User createdUser = userRepository.findByNickname(user.getNickname()).orElseThrow(RuntimeException::new);
+        mediaLinks.forEach(link -> link.setOwner(createdUser));
         mediaLinkRepository.saveAll(mediaLinks);
     }
 
@@ -52,12 +57,18 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public User getUserByNickname(String nickname) {
-        return userRepository.findByNickname(nickname).orElseThrow(UnauthorizedException::new);
+    public byte[] getAvatar(long id) {
+        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        try {
+            return Files.readAllBytes(Path.of(user.getAvatarPath()));
+        } catch (IOException e) {
+            throw new FileException();
+        }
     }
 
     /**

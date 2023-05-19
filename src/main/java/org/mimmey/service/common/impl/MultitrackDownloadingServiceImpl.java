@@ -15,7 +15,7 @@ public final class MultitrackDownloadingServiceImpl implements MultitrackDownloa
      * {@inheritDoc}
      */
     @Override
-    public void downloadMultitrack(long trackId) {
-
+    public byte[] getMultitrack(long trackId) {
+        return null;
     }
 }

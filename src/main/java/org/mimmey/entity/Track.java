@@ -69,12 +69,6 @@ public class Track implements Serializable {
 
     private String trackArchivePath;
 
-//    private Long commentsCount;
-//
-//    private Long purchasesCount;
-//
-//    private Long inFavouritesCount;
-
     @OneToMany(mappedBy = "pk.track", cascade = CascadeType.ALL)
     private List<TrackToGenreMatching> genres;
 

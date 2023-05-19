@@ -1,8 +1,6 @@
 package org.mimmey.service.special;
 
 import org.mimmey.entity.User;
-import org.mimmey.utils.Audio;
-import org.mimmey.utils.Image;
 
 /**
  * @author Olga Motyleva
@@ -26,12 +24,12 @@ public interface ProfileSettingsService extends AuthorizedUserService {
      *
      * @param jingle the new jingle
      */
-    void setJingle(Audio jingle);
+    void setJingle(byte[] jingle);
 
     /**
      * The function that sets the avatar to the currently authorized user's profile
      *
      * @param avatar the new avatar
      */
-    void setAvatar(Image avatar);
+    void setAvatar(byte[] avatar);
 }

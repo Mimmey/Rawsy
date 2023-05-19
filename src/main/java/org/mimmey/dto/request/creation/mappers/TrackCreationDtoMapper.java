@@ -3,6 +3,7 @@ package org.mimmey.dto.request.creation.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import org.mimmey.dto.request.creation.TrackCreationDto;
 import org.mimmey.entity.Track;
 import org.mimmey.entity.TrackType;
@@ -18,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class TrackCreationDtoMapper {
 
     @Autowired

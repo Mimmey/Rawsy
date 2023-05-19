@@ -38,10 +38,24 @@ public final class ExceptionController {
         return new ExceptionResponse(message);
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ExceptionResponse error(EntityNotFoundException e) {
+        String message = "Не найдено";
+        return new ExceptionResponse(message);
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(FileException.class)
+    public ExceptionResponse error(FileException e) {
+        String message = "Ошибка работы с файлом";
+        return new ExceptionResponse(message);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ExceptionResponse error(MissingServletRequestParameterException e) {
-        String message = "Ошибка выполнения запроса. Обратитесь к системному администратору";
+        String message = "Ошибка выполнения запроса";
         return new ExceptionResponse(message);
     }
 
@@ -62,28 +76,21 @@ public final class ExceptionController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ExceptionResponse error(MethodArgumentTypeMismatchException e) {
-        String message = "Ошибка. Обратитесь к системному администратору";
+        String message = "Ошибка";
         return new ExceptionResponse(message);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(PersistenceException.class)
     public ExceptionResponse error(PersistenceException e) {
-        String message = "Ошибка получения данных. Обратитесь к системному администратору";
+        String message = "Ошибка получения данных";
         return new ExceptionResponse(message);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
     public ExceptionResponse error(RuntimeException e) {
-        String message = "Ошибка. Обратитесь к системному администратору";
-        return new ExceptionResponse(message);
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ExceptionResponse error(EntityNotFoundException e) {
-        String message = "Не найдено";
+        String message = "Ошибка";
         return new ExceptionResponse(message);
     }
 }

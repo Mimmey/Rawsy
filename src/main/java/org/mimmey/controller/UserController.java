@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с профилями",
         version = "1.0.0"))
-public final class UserController {
+public class UserController {
 
     private final UserInfoCommonDtoMapper userInfoCommonDtoMapper;
 
@@ -120,5 +120,20 @@ public final class UserController {
                 userService.getPublishedTracks(id, page - 1, unitsOnPage).stream().toList()
         );
         return ResponseEntity.ok(dtoList);
+    }
+
+    @Operation(
+            summary = "Метод возвращает аватар пользователя",
+            parameters = {
+                    @Parameter(name = "id", description = "ID пользователя", required = true)
+            }
+    )
+    @RequestMapping(
+            path = "{id}/avatar",
+            produces = MediaType.IMAGE_JPEG_VALUE,
+            method = RequestMethod.GET
+    )
+    public ResponseEntity<byte[]> getAvatar(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getAvatar(id));
     }
 }

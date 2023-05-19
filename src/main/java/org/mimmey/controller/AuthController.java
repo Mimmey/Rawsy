@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("auth")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с аутентификацией",
         version = "1.0.0"))
-public final class AuthController {
+public class AuthController {
 
     private final UserCreationDtoMapper userCreationDtoMapper;
 

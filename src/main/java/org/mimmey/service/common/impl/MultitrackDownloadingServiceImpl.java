@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MultitrackDownloadingServiceImpl implements MultitrackDownloadingService {
+public final class MultitrackDownloadingServiceImpl implements MultitrackDownloadingService {
 
     private final TrackRepository trackRepository;
 

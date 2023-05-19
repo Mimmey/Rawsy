@@ -139,4 +139,9 @@ public interface AuthorizedUserService extends UserService {
      * The function that clears the basket of the currently authorized user
      */
     void clearBasket();
+
+    /**
+     * The function that makes a payment for all tracks in the basket
+     */
+    void payForBasket();
 }

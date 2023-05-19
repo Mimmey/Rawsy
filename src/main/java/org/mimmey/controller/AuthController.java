@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("auth")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с аутентификацией",
         version = "1.0.0"))
-public class AuthController {
+public final class AuthController {
 
     private final UserCreationDtoMapper userCreationDtoMapper;
 
@@ -40,6 +40,8 @@ public class AuthController {
                         nickname — никнейм пользователя;
                         
                         email — адрес электронной почты;
+                        
+                        password — пароль;
                         
                         countryId — ID страны, в которой пользователь проживает;
                         

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с мультитреками",
         version = "1.0.0"))
-public class MultitrackDownloadingController {
+public final class MultitrackDownloadingController {
 
     private final MultitrackDownloadingService multitrackDownloadingService;
 

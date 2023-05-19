@@ -1,7 +1,7 @@
 package org.mimmey.service.common.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.mimmey.config.security.AuthorizedUserGetter;
+import org.mimmey.config.security.utils.AuthorizedUserGetter;
 import org.mimmey.entity.Report;
 import org.mimmey.entity.User;
 import org.mimmey.entity.associative.TrackReport;
@@ -30,7 +30,8 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public void createUserReport(UserReport userReport) {
-        User currentUser = userRepository.findById(authorizedUserGetter.getAuthorizedUser().getId()).orElseThrow(RuntimeException::new);
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
+
         Report report = userReport.getPk().getReport();
         report.setAuthor(currentUser);
         reportRepository.save(report);
@@ -44,7 +45,8 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public void createTrackReport(TrackReport trackReport) {
-        User currentUser = userRepository.findById(authorizedUserGetter.getAuthorizedUser().getId()).orElseThrow(RuntimeException::new);
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
+
         Report report = trackReport.getPk().getReport();
         report.setAuthor(currentUser);
         reportRepository.save(report);

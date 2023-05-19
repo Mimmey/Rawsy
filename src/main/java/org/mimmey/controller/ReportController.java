@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с жалобами",
         version = "1.0.0"))
-public class ReportController {
+public final class ReportController {
 
     private final UserReportCreationDtoMapper userReportCreationDtoMapper;
 

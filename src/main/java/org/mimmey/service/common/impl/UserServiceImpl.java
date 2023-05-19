@@ -1,6 +1,8 @@
 package org.mimmey.service.common.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.mimmey.config.exception.UnauthorizedException;
 import org.mimmey.entity.MediaLink;
 import org.mimmey.entity.Track;
 import org.mimmey.entity.User;
@@ -47,7 +49,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User getUser(long id) {
-        return userRepository.findById(id).orElseThrow(RuntimeException::new);
+        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     /**
@@ -55,7 +57,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User getUserByNickname(String nickname) {
-        return userRepository.findByNickname(nickname).orElseThrow(RuntimeException::new);
+        return userRepository.findByNickname(nickname).orElseThrow(UnauthorizedException::new);
     }
 
     /**
@@ -67,7 +69,8 @@ public class UserServiceImpl implements UserService {
         Page<Subscription> subscriptions = subscriptionRepository.findAllBySubscriberId(userId, pageable);
 
         List<User> userSubscriptions = subscriptions.stream()
-                .map(sub -> userRepository.findById(sub.getPk().getSubject().getId()).orElseThrow(RuntimeException::new))
+                .map(sub -> userRepository.findById(sub.getPk().getSubject().getId())
+                        .orElseThrow(EntityNotFoundException::new))
                 .toList();
 
         return new PageImpl<>(userSubscriptions);
@@ -82,7 +85,8 @@ public class UserServiceImpl implements UserService {
         Page<Subscription> subscriptions = subscriptionRepository.findAllBySubjectId(userId, pageable);
 
         List<User> userSubscribers = subscriptions.stream()
-                .map(sub -> userRepository.findById(sub.getPk().getSubscriber().getId()).orElseThrow(RuntimeException::new))
+                .map(sub -> userRepository.findById(sub.getPk().getSubscriber().getId())
+                        .orElseThrow(EntityNotFoundException::new))
                 .toList();
 
         return new PageImpl<>(userSubscribers);

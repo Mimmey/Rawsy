@@ -1,5 +1,6 @@
 package org.mimmey.service.common.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.mimmey.entity.Track;
 import org.mimmey.repository.TrackRepository;
@@ -72,6 +73,6 @@ public class TrackServiceImpl implements TrackService {
      */
     @Override
     public Track getTrack(long id) {
-        return trackRepository.findById(id).orElseThrow(RuntimeException::new);
+        return trackRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 }

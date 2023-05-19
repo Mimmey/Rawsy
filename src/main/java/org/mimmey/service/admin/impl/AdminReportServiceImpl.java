@@ -1,6 +1,7 @@
 package org.mimmey.service.admin.impl;
 
-import org.mimmey.config.security.AuthorizedUserGetter;
+import jakarta.persistence.EntityNotFoundException;
+import org.mimmey.config.security.utils.AuthorizedUserGetter;
 import org.mimmey.entity.Report;
 import org.mimmey.entity.associative.TrackReport;
 import org.mimmey.entity.associative.UserReport;
@@ -17,7 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service("admin-report")
-public class AdminReportServiceImpl extends ReportServiceImpl implements AdminReportService {
+public final class AdminReportServiceImpl extends ReportServiceImpl implements AdminReportService {
 
     public AdminReportServiceImpl(@Autowired UserRepository userRepository,
                                   @Autowired ReportRepository reportRepository,
@@ -33,7 +34,7 @@ public class AdminReportServiceImpl extends ReportServiceImpl implements AdminRe
      */
     @Override
     public Report getReport(long id) {
-        return reportRepository.findById(id).orElseThrow(RuntimeException::new);
+        return reportRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     /**
@@ -41,7 +42,7 @@ public class AdminReportServiceImpl extends ReportServiceImpl implements AdminRe
      */
     @Override
     public UserReport getUserReport(long id) {
-        return userReportRepository.findById(id).orElseThrow(RuntimeException::new);
+        return userReportRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     /**
@@ -49,7 +50,7 @@ public class AdminReportServiceImpl extends ReportServiceImpl implements AdminRe
      */
     @Override
     public TrackReport getTrackReport(long id) {
-        return trackReportRepository.findById(id).orElseThrow(RuntimeException::new);
+        return trackReportRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     /**

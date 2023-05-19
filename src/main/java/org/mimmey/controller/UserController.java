@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с профилями",
         version = "1.0.0"))
-public class UserController {
+public final class UserController {
 
     private final UserInfoCommonDtoMapper userInfoCommonDtoMapper;
 

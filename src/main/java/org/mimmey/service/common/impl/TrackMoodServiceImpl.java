@@ -1,5 +1,6 @@
 package org.mimmey.service.common.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.mimmey.entity.TrackMood;
 import org.mimmey.repository.TrackMoodRepository;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TrackMoodServiceImpl implements TrackMoodService {
+public final class TrackMoodServiceImpl implements TrackMoodService {
 
     private final TrackMoodRepository trackMoodRepository;
 
@@ -19,7 +20,7 @@ public class TrackMoodServiceImpl implements TrackMoodService {
      */
     @Override
     public TrackMood getMood(int id) {
-        return trackMoodRepository.findById(id).orElseThrow(RuntimeException::new);
+        return trackMoodRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     /**

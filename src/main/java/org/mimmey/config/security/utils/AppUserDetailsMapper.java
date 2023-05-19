@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class AppUserDetailsMapper {
+public final class AppUserDetailsMapper {
 
     private final UserRepository userRepository;
 

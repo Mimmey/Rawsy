@@ -1,5 +1,6 @@
 package org.mimmey.service.admin.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.mimmey.entity.User;
 import org.mimmey.repository.MediaLinkRepository;
 import org.mimmey.repository.SubscriptionRepository;
@@ -11,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("admin-user")
-public class AdminUserServiceImpl extends UserServiceImpl implements AdminUserService {
+public final class AdminUserServiceImpl extends UserServiceImpl implements AdminUserService {
 
 
     public AdminUserServiceImpl(@Autowired UserRepository userRepository,
@@ -26,7 +27,7 @@ public class AdminUserServiceImpl extends UserServiceImpl implements AdminUserSe
      */
     @Override
     public void banUser(long id) {
-        User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
+        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         if (user.getIsBanned()) {
             throw new RuntimeException("Already banned");
         }

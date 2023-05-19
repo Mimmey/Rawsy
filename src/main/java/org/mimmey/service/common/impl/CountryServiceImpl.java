@@ -1,5 +1,6 @@
 package org.mimmey.service.common.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.mimmey.entity.Country;
 import org.mimmey.repository.CountryRepository;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CountryServiceImpl implements CountryService {
+public final class CountryServiceImpl implements CountryService {
 
     private final CountryRepository countryRepository;
 
@@ -19,7 +20,7 @@ public class CountryServiceImpl implements CountryService {
      */
     @Override
     public Country getCountry(int id) {
-        return countryRepository.findById(id).orElseThrow(RuntimeException::new);
+        return countryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     /**

@@ -26,7 +26,7 @@ import java.util.List;
 @RequestMapping("admin")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с профилями от лица администратора",
         version = "1.0.0"))
-public class AdminUserController {
+public final class AdminUserController {
 
     private final UserInfoAdminDtoMapper userInfoAdminDtoMapper;
 

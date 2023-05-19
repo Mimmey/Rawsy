@@ -1,6 +1,7 @@
 package org.mimmey.service.special.impl;
 
-import org.mimmey.config.security.AuthorizedUserGetter;
+import jakarta.persistence.EntityNotFoundException;
+import org.mimmey.config.security.utils.AuthorizedUserGetter;
 import org.mimmey.entity.Track;
 import org.mimmey.entity.User;
 import org.mimmey.entity.associative.FavouriteAddition;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -94,8 +96,8 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
      */
     @Override
     public void subscribe(long subscriptionUserId) {
-        User currentUser = userRepository.findById(authorizedUserGetter.getAuthorizedUser().getId()).orElseThrow(RuntimeException::new);
-        User subscriptionUser = userRepository.findById(subscriptionUserId).orElseThrow(RuntimeException::new);
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
+        User subscriptionUser = userRepository.findById(subscriptionUserId).orElseThrow(EntityNotFoundException::new);
 
         Subscription subscription = new Subscription(new SubscriptionPK(currentUser, subscriptionUser));
         subscriptionRepository.save(subscription);
@@ -106,8 +108,8 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
      */
     @Override
     public void unsubscribe(long subscriptionUserId) {
-        User currentUser = userRepository.findById(authorizedUserGetter.getAuthorizedUser().getId()).orElseThrow(RuntimeException::new);
-        User subscriptionUser = userRepository.findById(subscriptionUserId).orElseThrow(RuntimeException::new);
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
+        User subscriptionUser = userRepository.findById(subscriptionUserId).orElseThrow(EntityNotFoundException::new);
 
         subscriptionRepository.deleteByPk(new SubscriptionPK(currentUser, subscriptionUser));
     }
@@ -118,10 +120,13 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
     @Override
     public Page<Track> getPurchasedTracks(int page, int unitsOnPage) {
         Pageable pageable = PageRequest.of(page, unitsOnPage);
-        Page<Purchase> purchases = purchaseRepository.findAllByPurchaserId(authorizedUserGetter.getAuthorizedUser().getId(), pageable);
+        Page<Purchase> purchases = purchaseRepository.findAllByPurchaserId(
+                authorizedUserGetter.getAuthorizedUser().getId(), pageable
+        );
 
         List<Track> purchasedTracks = purchases.stream()
-                .map(p -> trackRepository.findById(p.getPk().getTrack().getId()).orElseThrow(RuntimeException::new))
+                .map(p -> trackRepository.findById(p.getPk().getTrack().getId())
+                        .orElseThrow(() -> new EntityNotFoundException("Found purchase but not found track")))
                 .toList();
 
         return new PageImpl<>(purchasedTracks);
@@ -136,7 +141,8 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
         Page<FavouriteAddition> favouriteAdditions = favouriteRepository.findAllByOwnerId(authorizedUserGetter.getAuthorizedUser().getId(), pageable);
 
         List<Track> favouriteTracks = favouriteAdditions.stream()
-                .map(p -> trackRepository.findById(p.getPk().getTrack().getId()).orElseThrow(RuntimeException::new))
+                .map(p -> trackRepository.findById(p.getPk().getTrack().getId())
+                        .orElseThrow(() -> new EntityNotFoundException("Found favorite addition but not found track")))
                 .toList();
 
         return new PageImpl<>(favouriteTracks);
@@ -151,7 +157,8 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
         Page<TrackInBasket> tracksInBasket = basketRepository.findAllByOwnerId(authorizedUserGetter.getAuthorizedUser().getId(), pageable);
 
         List<Track> basketTracks = tracksInBasket.stream()
-                .map(p -> trackRepository.findById(p.getPk().getTrack().getId()).orElseThrow(RuntimeException::new))
+                .map(p -> trackRepository.findById(p.getPk().getTrack().getId())
+                        .orElseThrow(() -> new EntityNotFoundException("Found basket addition but not found track")))
                 .toList();
 
         return new PageImpl<>(basketTracks);
@@ -162,7 +169,7 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
      */
     @Override
     public void publishTrack(Track track) {
-        User currentUser = userRepository.findById(authorizedUserGetter.getAuthorizedUser().getId()).orElseThrow(RuntimeException::new);
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
         track.setAuthor(currentUser);
         trackRepository.save(track);
     }
@@ -172,9 +179,8 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
      */
     @Override
     public void purchaseTrack(long trackId) {
-        User currentUser = userRepository.findById(authorizedUserGetter.getAuthorizedUser().getId()).orElseThrow(RuntimeException::new);
-        Track track = trackRepository.findById(trackId).orElseThrow(RuntimeException::new);
-
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
+        Track track = trackRepository.findById(trackId).orElseThrow(EntityNotFoundException::new);
         purchaseRepository.save(new Purchase(new PurchasePK(currentUser, track), track.getCost(), LocalDateTime.now()));
     }
 
@@ -183,9 +189,8 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
      */
     @Override
     public void addTrackToFavorites(long trackId) {
-        User currentUser = userRepository.findById(authorizedUserGetter.getAuthorizedUser().getId()).orElseThrow(RuntimeException::new);
-        Track track = trackRepository.findById(trackId).orElseThrow(RuntimeException::new);
-
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
+        Track track = trackRepository.findById(trackId).orElseThrow(EntityNotFoundException::new);
         favouriteRepository.save(new FavouriteAddition(new FavouriteAdditionPK(currentUser, track), LocalDateTime.now()));
     }
 
@@ -194,9 +199,8 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
      */
     @Override
     public void addTrackToBasket(long trackId) {
-        User currentUser = userRepository.findById(authorizedUserGetter.getAuthorizedUser().getId()).orElseThrow(RuntimeException::new);
-        Track track = trackRepository.findById(trackId).orElseThrow(RuntimeException::new);
-
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
+        Track track = trackRepository.findById(trackId).orElseThrow(EntityNotFoundException::new);
         basketRepository.save(new TrackInBasket(new TrackInBasketPK(currentUser, track)));
     }
 
@@ -205,6 +209,13 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
      */
     @Override
     public void deletePublishedTrack(long trackId) {
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
+        Track track = trackRepository.findById(trackId).orElseThrow(EntityNotFoundException::new);
+
+        if (!currentUser.getId().equals(track.getAuthor().getId())) {
+            throw new AccessDeniedException("Access is denied");
+        }
+
         trackRepository.deleteById(trackId);
     }
 
@@ -213,9 +224,8 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
      */
     @Override
     public void removeTrackFromFavourites(long trackId) {
-        User currentUser = userRepository.findById(authorizedUserGetter.getAuthorizedUser().getId()).orElseThrow(RuntimeException::new);
-        Track track = trackRepository.findById(trackId).orElseThrow(RuntimeException::new);
-
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
+        Track track = trackRepository.findById(trackId).orElseThrow(EntityNotFoundException::new);
         favouriteRepository.deleteByPk(new FavouriteAdditionPK(currentUser, track));
     }
 
@@ -224,9 +234,8 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
      */
     @Override
     public void removeTrackFromBasket(long trackId) {
-        User currentUser = userRepository.findById(authorizedUserGetter.getAuthorizedUser().getId()).orElseThrow(RuntimeException::new);
-        Track track = trackRepository.findById(trackId).orElseThrow(RuntimeException::new);
-
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
+        Track track = trackRepository.findById(trackId).orElseThrow(EntityNotFoundException::new);
         basketRepository.deleteByPk(new TrackInBasketPK(currentUser, track));
     }
 
@@ -236,5 +245,21 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
     @Override
     public void clearBasket() {
         basketRepository.deleteByOwnerId(authorizedUserGetter.getAuthorizedUser().getId());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void payForBasket() {
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
+        List<TrackInBasket> basketTracks = basketRepository.findAllByOwnerId(
+                currentUser.getId(), Pageable.unpaged()
+        ).stream().toList();
+
+        List<Track> tracks = basketTracks.stream().map(tr -> tr.getPk().getTrack()).toList();
+        tracks.forEach(track -> purchaseRepository.save(
+                new Purchase(new PurchasePK(currentUser, track), track.getCost(), LocalDateTime.now())
+        ));
     }
 }

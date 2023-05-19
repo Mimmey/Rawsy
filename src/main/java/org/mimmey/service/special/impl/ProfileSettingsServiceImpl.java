@@ -1,6 +1,6 @@
 package org.mimmey.service.special.impl;
 
-import org.mimmey.config.security.AuthorizedUserGetter;
+import org.mimmey.config.security.utils.AuthorizedUserGetter;
 import org.mimmey.dto.request.update.mapper.UserUpdateMapper;
 import org.mimmey.entity.MediaLink;
 import org.mimmey.entity.User;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service("settings-user")
-public class ProfileSettingsServiceImpl extends AuthorizedUserServiceImpl implements ProfileSettingsService {
+public final class ProfileSettingsServiceImpl extends AuthorizedUserServiceImpl implements ProfileSettingsService {
 
     private final UserUpdateMapper userUpdateMapper;
 
@@ -52,7 +52,7 @@ public class ProfileSettingsServiceImpl extends AuthorizedUserServiceImpl implem
      */
     @Override
     public void updateUser(User updatedUser) {
-        User currentUser = userRepository.findById(authorizedUserGetter.getAuthorizedUser().getId()).orElseThrow(RuntimeException::new);
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
         List<MediaLink> newMediaLinks = updatedUser.getMediaLinks();
 
         if (newMediaLinks != null) {

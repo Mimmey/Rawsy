@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class AppUserDetails implements UserDetails {
+public final class AppUserDetails implements UserDetails {
 
     private final String username;
     private final String password;

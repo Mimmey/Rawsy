@@ -31,7 +31,7 @@ import java.util.List;
 @RestController
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с авторизованным пользователем",
         version = "1.0.0"))
-public class AuthorizedUserController {
+public final class AuthorizedUserController {
 
     private final UserInfoCommonDtoMapper userInfoCommonDtoMapper;
 
@@ -367,6 +367,20 @@ public class AuthorizedUserController {
     @PreAuthorize("hasAuthority('myProfileActions')")
     public ResponseEntity<String> clearBasket() {
         authorizedUserService.clearBasket();
+        return ResponseEntity.ok("OK");
+    }
+
+    @Operation(
+            summary = "Метод производит покупку всех треков в корзине"
+    )
+    @RequestMapping(
+            path = "/basket/pay",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.POST
+    )
+    @PreAuthorize("hasAuthority('myProfileActions')")
+    public ResponseEntity<String> payForBasket() {
+        authorizedUserService.payForBasket();
         return ResponseEntity.ok("OK");
     }
 }

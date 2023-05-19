@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("settings")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с настройками профиля",
         version = "1.0.0"))
-public class ProfileSettingsController {
+public final class ProfileSettingsController {
 
     private final UserInfoAuthorizedDtoMapper userInfoAuthorizedDtoMapper;
 

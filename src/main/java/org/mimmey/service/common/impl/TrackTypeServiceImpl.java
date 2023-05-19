@@ -1,5 +1,6 @@
 package org.mimmey.service.common.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.mimmey.entity.TrackType;
 import org.mimmey.repository.TrackTypeRepository;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TrackTypeServiceImpl implements TrackTypeService {
+public final class TrackTypeServiceImpl implements TrackTypeService {
 
     private final TrackTypeRepository trackTypeRepository;
 
@@ -19,7 +20,7 @@ public class TrackTypeServiceImpl implements TrackTypeService {
      */
     @Override
     public TrackType getType(int id) {
-        return trackTypeRepository.findById(id).orElseThrow(RuntimeException::new);
+        return trackTypeRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     /**

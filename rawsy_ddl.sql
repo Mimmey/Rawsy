@@ -16,12 +16,9 @@ CREATE TABLE IF NOT EXISTS _user
     role                                   VARCHAR(10)         NOT NULL,
     country_id                             INTEGER             NOT NULL,
     about                                  VARCHAR(500),
-    jingle_path                            VARCHAR(500) /*NOT NULL*/,
-    avatar_path                            VARCHAR(500) /*NOT NULL*/,
---                                   subscribers_count BIGINT DEFAULT 0 CHECK (subscribers_count >= 0),
---                                   subscriptions_count BIGINT DEFAULT 0 CHECK (subscriptions_count >= 0),
+    jingle_path                            VARCHAR(500)        NOT NULL,
+    avatar_path                            VARCHAR(500)        NOT NULL,
     tracks_in_other_users_favourites_count BIGINT              NOT NULL CHECK (tracks_in_other_users_favourites_count >= 0),
---                                   published_tracks_count BIGINT DEFAULT 0 CHECK (published_tracks_count >= 0),
     tracks_purchased_by_other_users_count  BIGINT              NOT NULL CHECK (tracks_purchased_by_other_users_count >= 0),
     FOREIGN KEY (country_id) REFERENCES country (id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
@@ -71,9 +68,6 @@ CREATE TABLE IF NOT EXISTS track
     cost                 BIGINT,
     audio_preview_path   VARCHAR(500)/*      NOT NULL*/,
     track_archive_path   VARCHAR(500)/*       NOT NULL*/,
---                                   comments_count BIGINT DEFAULT 0 CHECK (comments_count >= 0),
---                                   purchases_count BIGINT DEFAULT 0 CHECK (purchases_count >= 0),
---                                   in_favourites_count BIGINT DEFAULT 0 CHECK (in_favourites_count >= 0),
     FOREIGN KEY (author_id) REFERENCES _user (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (type_id) REFERENCES track_type (id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
@@ -138,7 +132,7 @@ CREATE TABLE IF NOT EXISTS subscription_list
 
 CREATE TABLE IF NOT EXISTS comment
 (
-    author_id  BIGINT DEFAULT 0,
+    author_id  BIGINT,
     track_id   BIGINT       NOT NULL,
     content    VARCHAR(100) NOT NULL,
     rate       SMALLINT     NOT NULL,
@@ -177,32 +171,6 @@ CREATE TABLE IF NOT EXISTS track_report
 
 
 -- Когда автор удален, его треки сносятся, а за них уже заплатили
--- author_id = 0 - deleted
-
-
--- CREATE OR REPLACE FUNCTION increment_subscribers_count() RETURNS TRIGGER
---     AS $$
---         BEGIN
---             UPDATE _user SET subscribers_count=subscribers_count + 1 WHERE id=NEW.subject_id;
---             return NEW;
---         END;
---     $$ LANGUAGE plpgsql;
---
--- CREATE TRIGGER tr_increment_subscribers_count AFTER INSERT ON subscription_list
---     FOR EACH ROW EXECUTE PROCEDURE increment_subscribers_count();
---
---
--- CREATE OR REPLACE FUNCTION increment_subscriptions_count() RETURNS TRIGGER
---     AS $$
---         BEGIN
---             UPDATE _user SET subscriptions_count=subscriptions_count + 1 WHERE id=NEW.subscriber_id;
---             return NEW;
---         END;
---     $$ LANGUAGE plpgsql;
---
--- CREATE TRIGGER tr_increment_subscriptions_count AFTER INSERT ON subscription_list
---     FOR EACH ROW EXECUTE PROCEDURE increment_subscriptions_count();
-
 
 CREATE OR REPLACE FUNCTION increment_tracks_in_other_users_favourites_count() RETURNS TRIGGER
 AS
@@ -224,19 +192,6 @@ CREATE TRIGGER tr_increment_tracks_in_other_users_favourites_count
     FOR EACH ROW
 EXECUTE PROCEDURE increment_tracks_in_other_users_favourites_count();
 
-
--- CREATE OR REPLACE FUNCTION increment_published_tracks_count() RETURNS TRIGGER
---     AS $$
---         BEGIN
---             UPDATE _user SET published_tracks_count=published_tracks_count + 1 WHERE id=NEW.author_id;
---             return NEW;
---         END;
---     $$ LANGUAGE plpgsql;
---
--- CREATE TRIGGER tr_increment_published_tracks_count AFTER INSERT ON track
---     FOR EACH ROW EXECUTE PROCEDURE increment_published_tracks_count();
-
-
 CREATE OR REPLACE FUNCTION increment_tracks_purchased_by_other_users_count() RETURNS TRIGGER
 AS
 $$
@@ -256,42 +211,6 @@ CREATE TRIGGER tr_increment_tracks_purchased_by_other_users_count
     ON purchase_list
     FOR EACH ROW
 EXECUTE PROCEDURE increment_tracks_purchased_by_other_users_count();
-
-
--- CREATE OR REPLACE FUNCTION increment_comments_count() RETURNS TRIGGER
---     AS $$
---         BEGIN
---         UPDATE track SET comments_count=comments_count + 1 WHERE id=NEW.track_id;
---         return NEW;
---     END;
---     $$ LANGUAGE plpgsql;
---
--- CREATE TRIGGER tr_increment_comments_count AFTER INSERT ON comment
---     FOR EACH ROW EXECUTE PROCEDURE increment_comments_count();
-
-
--- CREATE OR REPLACE FUNCTION increment_purchases_count() RETURNS TRIGGER
---     AS $$
---         BEGIN
---             UPDATE track SET purchases_count=purchases_count + 1 WHERE id=NEW.track_id;
---             return NEW;
---         END;
---     $$ LANGUAGE plpgsql;
---
--- CREATE TRIGGER tr_increment_purchases_count AFTER INSERT ON favourites_list
---     FOR EACH ROW EXECUTE PROCEDURE increment_purchases_count();
---
---
--- CREATE OR REPLACE FUNCTION increment_in_favourites_count() RETURNS TRIGGER
---     AS $$
---         BEGIN
---             UPDATE track SET in_favourites_count=in_favourites_count + 1 WHERE id=NEW.track_id;
---             return NEW;
---         END;
---     $$ LANGUAGE plpgsql;
---
--- CREATE TRIGGER tr_increment_in_favourites_count AFTER INSERT ON favourites_list
---     FOR EACH ROW EXECUTE PROCEDURE increment_in_favourites_count();
 
 /*TODO: rating func*/
 /*TODO: new table for roles*/

@@ -21,4 +21,7 @@ public interface UserReportRepository extends JpaRepository<UserReport, UserRepo
 
     @Query(value = "SELECT * FROM user_report WHERE report_id=:report_id", nativeQuery = true)
     Optional<UserReport> findById(@Param("report_id") Long id);
+
+    @NotNull
+    Page<UserReport> findAll(@NotNull Pageable pageable);
 }

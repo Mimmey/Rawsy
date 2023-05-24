@@ -47,7 +47,7 @@ public class UserController {
             }
     )
     @RequestMapping(
-            path = "/user/{id}",
+            path = "/users/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -65,13 +65,13 @@ public class UserController {
             }
     )
     @RequestMapping(
-            path = "/user/{id}/subscribers",
+            path = "/users/{id}/subscribers",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     public ResponseEntity<List<UserInfoCommonDto>> getSubscriberList(@PathVariable("id") long id,
-                                                                     @RequestParam("page") int page,
-                                                                     @RequestParam("unitsOnPage") int unitsOnPage) {
+                                                                     @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                     @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(
                 userService.getSubscribers(id, page - 1, unitsOnPage).stream().toList()
         );
@@ -87,13 +87,13 @@ public class UserController {
             }
     )
     @RequestMapping(
-            path = "/user/{id}/subscriptions",
+            path = "/users/{id}/subscriptions",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     public ResponseEntity<List<UserInfoCommonDto>> getSubscriptionList(@PathVariable("id") long id,
-                                                                       @RequestParam("page") int page,
-                                                                       @RequestParam("unitsOnPage") int unitsOnPage) {
+                                                                       @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                       @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(
                 userService.getSubscriptions(id, page - 1, unitsOnPage).stream().toList()
         );
@@ -109,13 +109,13 @@ public class UserController {
             }
     )
     @RequestMapping(
-            path = "user/{id}/tracks/published",
+            path = "users/{id}/published/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     public ResponseEntity<List<TrackCommonDto>> getPublishedTrackList(@PathVariable("id") long id,
-                                                                      @RequestParam("page") int page,
-                                                                      @RequestParam("unitsOnPage") int unitsOnPage) {
+                                                                      @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                      @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(
                 userService.getPublishedTracks(id, page - 1, unitsOnPage).stream().toList()
         );
@@ -129,11 +129,26 @@ public class UserController {
             }
     )
     @RequestMapping(
-            path = "{id}/avatar",
+            path = "users/{id}/avatar",
             produces = MediaType.IMAGE_JPEG_VALUE,
             method = RequestMethod.GET
     )
     public ResponseEntity<byte[]> getAvatar(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getAvatar(id));
+    }
+
+    @Operation(
+            summary = "Метод возвращает джингл пользователя",
+            parameters = {
+                    @Parameter(name = "id", description = "Джингл пользователя", required = true)
+            }
+    )
+    @RequestMapping(
+            path = "users/{id}/jingle",
+            produces = "audio/wav",
+            method = RequestMethod.GET
+    )
+    public ResponseEntity<byte[]> getJingle(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getJingle(id));
     }
 }

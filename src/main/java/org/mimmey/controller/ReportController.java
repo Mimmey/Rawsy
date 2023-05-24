@@ -3,6 +3,7 @@ package org.mimmey.controller;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
+import jakarta.validation.Valid;
 import org.mimmey.dto.request.creation.TrackReportCreationDto;
 import org.mimmey.dto.request.creation.UserReportCreationDto;
 import org.mimmey.dto.request.creation.mappers.TrackReportCreationDtoMapper;
@@ -50,12 +51,12 @@ public class ReportController {
             )
     )
     @RequestMapping(
-            path = "/track-report/publish",
+            path = "reports/user/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('beingAnAuthor')")
-    public ResponseEntity<String> publishUserReport(@RequestBody UserReportCreationDto userReportDto) {
+    public ResponseEntity<String> publishUserReport(@Valid @RequestBody UserReportCreationDto userReportDto) {
         UserReport userReport = userReportCreationDtoMapper.toEntity(userReportDto);
         reportService.createUserReport(userReport);
         return ResponseEntity.ok("OK");
@@ -72,12 +73,12 @@ public class ReportController {
             )
     )
     @RequestMapping(
-            path = "/user-report/publish",
+            path = "reports/track/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('beingAnAuthor')")
-    public ResponseEntity<String> publishTrackReport(@RequestBody TrackReportCreationDto trackReportDto) {
+    public ResponseEntity<String> publishTrackReport(@Valid @RequestBody TrackReportCreationDto trackReportDto) {
         TrackReport trackReport = trackReportCreationDtoMapper.toEntity(trackReportDto);
         reportService.createTrackReport(trackReport);
         return ResponseEntity.ok("OK");

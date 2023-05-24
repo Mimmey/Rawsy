@@ -35,4 +35,18 @@ public final class AdminUserServiceImpl extends UserServiceImpl implements Admin
         user.setIsBanned(true);
         userRepository.save(user);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void unbanUser(long id) {
+        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        if (!user.getIsBanned()) {
+            throw new RuntimeException("Already unbanned");
+        }
+
+        user.setIsBanned(false);
+        userRepository.save(user);
+    }
 }

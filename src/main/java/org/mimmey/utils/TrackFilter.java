@@ -13,7 +13,6 @@ public class TrackFilter {
     private Object value;
 
     public Specification<Track> getSpecification() {
-        return (track, cq, cb) -> cb.equal(track.get(this.filterType.getProperty()),
-                this.filterType.getValueClass().cast(value));
+        return TrackFilterTypes.getSpecification(filterType, value);
     }
 }

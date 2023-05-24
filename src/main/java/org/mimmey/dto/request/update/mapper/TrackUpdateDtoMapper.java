@@ -43,11 +43,19 @@ public abstract class TrackUpdateDtoMapper {
 
     @Named("typeIdToType")
     protected TrackType typeIdToType(Integer typeId) {
+        if (typeId == null) {
+            return null;
+        }
+
         return trackTypeService.getType(typeId);
     }
 
     @Named("genreIdsToGenres")
     protected List<TrackToGenreMatching> genreIdsToGenres(List<Integer> genreIds) {
+        if (genreIds == null) {
+            return null;
+        }
+
         return genreIds.stream()
                 .map((it) -> new TrackToGenreMatching(new TrackToGenreMatchingPK(null, trackGenreService.getGenre(it))))
                 .collect(Collectors.toList());
@@ -55,6 +63,10 @@ public abstract class TrackUpdateDtoMapper {
 
     @Named("moodIdsToMoods")
     protected List<TrackToMoodMatching> moodIdsToMoods(List<Integer> moodIds) {
+        if (moodIds == null) {
+            return null;
+        }
+
         return moodIds.stream()
                 .map((it) -> new TrackToMoodMatching(new TrackToMoodMatchingPK(null, trackMoodService.getMood(it))))
                 .collect(Collectors.toList());

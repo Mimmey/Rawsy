@@ -1,6 +1,5 @@
 package org.mimmey.service.special.impl;
 
-import org.mimmey.config.exception.FileException;
 import org.mimmey.config.security.utils.AuthorizedUserGetter;
 import org.mimmey.dto.request.update.mapper.UserUpdateMapper;
 import org.mimmey.entity.MediaLink;
@@ -13,11 +12,12 @@ import org.mimmey.repository.SubscriptionRepository;
 import org.mimmey.repository.TrackRepository;
 import org.mimmey.repository.UserRepository;
 import org.mimmey.service.special.ProfileSettingsService;
+import org.mimmey.utils.FileTypes;
+import org.mimmey.utils.FileWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 @Service("settings-user")
@@ -57,17 +57,16 @@ public final class ProfileSettingsServiceImpl extends AuthorizedUserServiceImpl 
         List<MediaLink> newMediaLinks = updatedUser.getMediaLinks();
 
         if (newMediaLinks != null) {
-            mediaLinkRepository.deleteAllByOwnerId(currentUser.getId());
+            try {
+                mediaLinkRepository.deleteAllByOwnerId(currentUser.getId());
+            } catch (JpaSystemException ignored) {
+            }
             newMediaLinks.forEach(link -> link.setOwner(currentUser));
             updatedUser.setMediaLinks(newMediaLinks);
         }
 
         userUpdateMapper.updateUser(updatedUser, currentUser);
         userRepository.save(currentUser);
-
-        if (newMediaLinks != null) {
-            mediaLinkRepository.saveAll(newMediaLinks);
-        }
     }
 
     /**
@@ -76,12 +75,7 @@ public final class ProfileSettingsServiceImpl extends AuthorizedUserServiceImpl 
     @Override
     public void setJingle(byte[] jingle) {
         User currentUser = authorizedUserGetter.getAuthorizedUser();
-
-        try (FileOutputStream fos = new FileOutputStream(currentUser.getJinglePath())) {
-            fos.write(jingle);
-        } catch (IOException e) {
-            throw new FileException();
-        }
+        FileWorker.tryWriteToFile(currentUser.getJinglePath(), jingle, FileTypes.JINGLE);
     }
 
     /**
@@ -90,11 +84,6 @@ public final class ProfileSettingsServiceImpl extends AuthorizedUserServiceImpl 
     @Override
     public void setAvatar(byte[] avatar) {
         User currentUser = authorizedUserGetter.getAuthorizedUser();
-
-        try (FileOutputStream fos = new FileOutputStream(currentUser.getAvatarPath())) {
-            fos.write(avatar);
-        } catch (IOException e) {
-            throw new FileException();
-        }
+        FileWorker.tryWriteToFile(currentUser.getAvatarPath(), avatar, FileTypes.AVATAR);
     }
 }

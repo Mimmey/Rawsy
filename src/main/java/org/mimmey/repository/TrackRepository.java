@@ -24,15 +24,8 @@ public interface TrackRepository extends JpaRepository<Track, Long>, CrudReposit
     @NotNull
     Optional<Track> findById(@NotNull Long id);
 
+    @NotNull
+    Optional<Track> findByName(@NotNull String name);
+
     void deleteById(@NotNull Long id);
-
-    @Query(value = "SELECT * FROM track WHERE publishing_timestamp >= NOW() - 7 * interval '1 day' " +
-            "ORDER BY rating DESC LIMIT 100",
-            nativeQuery = true)
-    Page<Track> getHottestPerWeek(Specification<Track> specification, Pageable pageable);
-
-    @Query(value = "SELECT * FROM track WHERE publishing_timestamp >= NOW() - 7 * interval '1 day' " +
-            "ORDER BY publishing_timestamp DESC LIMIT 100",
-            nativeQuery = true)
-    Page<Track> getNewPerWeek(Specification<Track> specification, Pageable pageable);
 }

@@ -33,6 +33,14 @@ public interface UserService {
     byte[] getAvatar(long id);
 
     /**
+     * The function that returns the jingle of the given user
+     *
+     * @param id ID of the user to get information about
+     * @return the jingle of the given user
+     */
+    byte[] getJingle(long id);
+
+    /**
      * The function that returns the page of the list of the given user's subscriptions
      *
      * @param userId      ID of the user to get subscriptions of

@@ -19,8 +19,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        uses = {TrackTypeCommonDtoMapper.class,
-                CommentCommonDtoMapper.class})
+        uses = {TrackTypeCommonDtoMapper.class})
 public abstract class TrackCommonDtoMapper {
 
     @Autowired

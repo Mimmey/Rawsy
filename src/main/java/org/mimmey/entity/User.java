@@ -95,4 +95,13 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "pk.owner", cascade = CascadeType.ALL)
     private List<TrackInBasket> tracksInBasket;
+
+    public static User createEmpty() {
+        User user = new User();
+        user.setIsBanned(null);
+        user.setRole(null);
+        user.setTracksInOtherUsersFavouritesCount(null);
+        user.setTracksPurchasedByOtherUsersCount(null);
+        return user;
+    }
 }

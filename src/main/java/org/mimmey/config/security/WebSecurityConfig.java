@@ -27,7 +27,7 @@ public class WebSecurityConfig {
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/**").permitAll()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .logout(LogoutConfigurer::permitAll)

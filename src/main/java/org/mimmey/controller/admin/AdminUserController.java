@@ -50,7 +50,7 @@ public class AdminUserController {
     )
     @PreAuthorize("hasAuthority('adminActions')")
     @RequestMapping(
-            path = "user/{id}",
+            path = "users/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -60,19 +60,36 @@ public class AdminUserController {
     }
 
     @Operation(
-            summary = "Метод отправляет пользователя в бан",
+            summary = "Метод отправляет пользователя в бан-лист",
             parameters = {
                     @Parameter(name = "id", description = "Id пользователя", required = true)
             }
     )
     @PreAuthorize("hasAuthority('adminActions')")
     @RequestMapping(
-            path = "user/{id}/ban",
+            path = "users/{id}/ban",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
     public ResponseEntity<String> banUser(@PathVariable("id") long id) {
         adminUserService.banUser(id);
+        return ResponseEntity.ok("OK");
+    }
+
+    @Operation(
+            summary = "Метод удаляет пользователя из бан-листа",
+            parameters = {
+                    @Parameter(name = "id", description = "Id пользователя", required = true)
+            }
+    )
+    @PreAuthorize("hasAuthority('adminActions')")
+    @RequestMapping(
+            path = "users/{id}/unban",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.POST
+    )
+    public ResponseEntity<String> unbanUser(@PathVariable("id") long id) {
+        adminUserService.unbanUser(id);
         return ResponseEntity.ok("OK");
     }
 
@@ -86,13 +103,13 @@ public class AdminUserController {
     )
     @PreAuthorize("hasAuthority('adminActions')")
     @RequestMapping(
-            path = "user/{id}/subscribers",
+            path = "users/{id}/subscribers",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     public ResponseEntity<List<UserInfoAdminDto>> getSubscriberList(@PathVariable("id") long id,
-                                                                    @RequestParam("page") int page,
-                                                                    @RequestParam("unitsOnPage") int unitsOnPage) {
+                                                                    @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                    @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<UserInfoAdminDto> dtoList = userInfoAdminDtoMapper.toDtoList(
                 adminUserService.getSubscribers(id, page - 1, unitsOnPage).stream().toList()
         );
@@ -108,14 +125,14 @@ public class AdminUserController {
             }
     )
     @RequestMapping(
-            path = "user/{id}/subscriptions",
+            path = "users/{id}/subscriptions",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('adminActions')")
     public ResponseEntity<List<UserInfoAdminDto>> getSubscriptionList(@PathVariable("id") long id,
-                                                                      @RequestParam("page") int page,
-                                                                      @RequestParam("unitsOnPage") int unitsOnPage) {
+                                                                      @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                      @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<UserInfoAdminDto> dtoList = userInfoAdminDtoMapper.toDtoList(
                 adminUserService.getSubscriptions(id, page - 1, unitsOnPage).stream().toList()
         );
@@ -131,14 +148,14 @@ public class AdminUserController {
             }
     )
     @RequestMapping(
-            path = "user/{id}/published-tracks",
+            path = "users/{id}/published/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('adminActions')")
     public ResponseEntity<List<TrackAdminDto>> getPublishedTrackList(@PathVariable("id") long id,
-                                                                     @RequestParam("page") int page,
-                                                                     @RequestParam("unitsOnPage") int unitsOnPage) {
+                                                                     @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                     @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<TrackAdminDto> dtoList = trackAdminDtoMapper.toDtoList(
                 adminUserService.getPublishedTracks(id, page - 1, unitsOnPage).stream().toList()
         );

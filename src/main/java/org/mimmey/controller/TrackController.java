@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
+import jakarta.validation.Valid;
 import org.mimmey.dto.request.search.TrackSearchDto;
 import org.mimmey.dto.request.search.mapper.TrackFilterDtoMapper;
 import org.mimmey.dto.request.search.mapper.TrackSortingTypeDtoMapper;
@@ -75,11 +76,11 @@ public class TrackController {
             )
     )
     @RequestMapping(
-            path = "/tracks/global",
+            path = "/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackCommonDto>> getPublishedTrackList(@RequestBody TrackSearchDto trackSearchDto) {
+    public ResponseEntity<List<TrackCommonDto>> getPublishedTrackList(@Valid @RequestBody TrackSearchDto trackSearchDto) {
         List<TrackFilter> filters = trackFilterDtoMapper.toEntityList(trackSearchDto.getFilters());
         TrackSortingTypes sortingType = trackSortingTypeDtoMapper.toEntity(trackSearchDto.getSortingType());
 
@@ -120,7 +121,7 @@ public class TrackController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackCommonDto>> getHottestPerWeek(@RequestBody TrackSearchDto trackSearchDto) {
+    public ResponseEntity<List<TrackCommonDto>> getHottestPerWeek(@Valid @RequestBody TrackSearchDto trackSearchDto) {
         List<TrackFilter> filters = trackFilterDtoMapper.toEntityList(trackSearchDto.getFilters());
 
         List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(trackService.getHottestPerWeek(filters,
@@ -159,7 +160,7 @@ public class TrackController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackCommonDto>> getNewPerWeek(@RequestBody TrackSearchDto trackSearchDto) {
+    public ResponseEntity<List<TrackCommonDto>> getNewPerWeek(@Valid @RequestBody TrackSearchDto trackSearchDto) {
         List<TrackFilter> filters = trackFilterDtoMapper.toEntityList(trackSearchDto.getFilters());
 
         List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(trackService.getNewPerWeek(filters,
@@ -178,12 +179,28 @@ public class TrackController {
             }
     )
     @RequestMapping(
-            path = "/track/{id}",
+            path = "/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     public ResponseEntity<TrackCommonDto> getTrack(@PathVariable("id") long id) {
         TrackCommonDto dto = trackCommonDtoMapper.toDto(trackService.getTrack(id));
         return ResponseEntity.ok(dto);
+    }
+
+    @Operation(
+            summary = "Метод возвращает аудио превью трека",
+            parameters = {
+                    @Parameter(name = "id", description = "Id трека", required = true)
+            }
+    )
+    @RequestMapping(
+            path = "/tracks/{id}/preview",
+            produces = "audio/wav",
+            method = RequestMethod.GET
+    )
+    public ResponseEntity<byte[]> getTrackPreview(@PathVariable("id") long id) {
+        byte[] preview = trackService.getTrackPreview(id);
+        return ResponseEntity.ok(preview);
     }
 }

@@ -39,7 +39,7 @@ public class Track implements Serializable {
 
     private String name;
 
-    private LocalDateTime publishingTimestamp = LocalDateTime.now();
+    private LocalDateTime timestamp = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "author_id")

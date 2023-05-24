@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface CommentRepository extends JpaRepository<Comment, CommentPK>, CrudRepository<Comment, CommentPK> {
 
     @NotNull <S extends Comment> S save(@NotNull S entity);
@@ -21,4 +23,8 @@ public interface CommentRepository extends JpaRepository<Comment, CommentPK>, Cr
     @Query(value = "DELETE FROM comment WHERE author_id=:author_id AND track_id=:track_id", nativeQuery = true)
     void deleteByAuthorIdAndTrackId(@Param("author_id") Long authorId,
                                     @Param("track_id") Long trackId);
+
+    @Query(value = "SELECT * FROM comment WHERE author_id=:author_id AND track_id=:track_id", nativeQuery = true)
+    Optional<Comment> findByAuthorIdAndTrackId(@Param("author_id") Long authorId,
+                                               @Param("track_id") Long trackId);
 }

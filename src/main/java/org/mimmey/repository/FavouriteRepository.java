@@ -14,9 +14,11 @@ public interface FavouriteRepository extends JpaRepository<FavouriteAddition, Fa
         CrudRepository<FavouriteAddition, FavouriteAdditionPK> {
 
     @Query(value = "SELECT * FROM favourites_list WHERE owner_id=:owner_id", nativeQuery = true)
-    <S extends FavouriteAddition> Page<FavouriteAddition> findAllByOwnerId(@Param("owner_id") Long ownerId, Pageable pageable);
+    Page<FavouriteAddition> findAllByOwnerId(@Param("owner_id") Long ownerId, Pageable pageable);
 
     @NotNull <S extends FavouriteAddition> S save(@NotNull S entity);
 
-    void deleteByPk(@NotNull FavouriteAdditionPK id);
+    @Query(value = "DELETE FROM favourites_list WHERE owner_id=:owner_id AND track_id=:track_id", nativeQuery = true)
+    void deleteByOwnerIdAndTrackId(@Param("owner_id") Long ownerId,
+                                   @Param("track_id") Long trackId);
 }

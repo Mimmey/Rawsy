@@ -6,8 +6,6 @@ import org.mimmey.entity.Report;
 import org.mimmey.entity.User;
 import org.mimmey.entity.associative.TrackReport;
 import org.mimmey.entity.associative.UserReport;
-import org.mimmey.entity.embedded_keys.TrackReportPK;
-import org.mimmey.entity.embedded_keys.UserReportPK;
 import org.mimmey.repository.ReportRepository;
 import org.mimmey.repository.TrackReportRepository;
 import org.mimmey.repository.UserReportRepository;
@@ -36,7 +34,7 @@ public class ReportServiceImpl implements ReportService {
         report.setAuthor(currentUser);
         reportRepository.save(report);
 
-        userReport.setPk(new UserReportPK(report, userReport.getPk().getUserSubject()));
+//        userReport.setPk(new UserReportPK(report, userReport.getPk().getUserSubject()));
         userReportRepository.save(userReport);
     }
 
@@ -51,7 +49,7 @@ public class ReportServiceImpl implements ReportService {
         report.setAuthor(currentUser);
         reportRepository.save(report);
 
-        trackReport.setPk(new TrackReportPK(report, trackReport.getPk().getTrackSubject()));
+        //trackReport.setPk(new TrackReportPK(report, trackReport.getPk().getTrackSubject()));
         trackReportRepository.save(trackReport);
     }
 }

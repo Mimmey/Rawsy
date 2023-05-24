@@ -8,15 +8,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.TransactionSystemException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+@SuppressWarnings("unused")
 @RestControllerAdvice
 @RequiredArgsConstructor
 public final class ExceptionController {
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnauthorizedException.class)
+    public ExceptionResponse error(UnauthorizedException e) {
+        String message = "Пользователь не авторизован";
+        return new ExceptionResponse(message);
+    }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(AccessDeniedException.class)
@@ -45,16 +54,23 @@ public final class ExceptionController {
         return new ExceptionResponse(message);
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(FileException.class)
-    public ExceptionResponse error(FileException e) {
-        String message = "Ошибка работы с файлом";
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ExceptionResponse error(MissingServletRequestParameterException e) {
+        String message = "Ошибка выполнения запроса";
         return new ExceptionResponse(message);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ExceptionResponse error(MissingServletRequestParameterException e) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ExceptionResponse error(MethodArgumentNotValidException e) {
+        String message = "Введенные данные некорректны";
+        return new ExceptionResponse(message);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ExceptionResponse error(IllegalArgumentException e) {
         String message = "Ошибка выполнения запроса";
         return new ExceptionResponse(message);
     }
@@ -70,6 +86,13 @@ public final class ExceptionController {
     @ExceptionHandler(TransactionSystemException.class)
     public ExceptionResponse error(TransactionSystemException e) {
         String message = "Входящие значения не соответствуют предъявленным к ним требованиям";
+        return new ExceptionResponse(message);
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(FileException.class)
+    public ExceptionResponse error(FileException e) {
+        String message = "Ошибка работы с файлом";
         return new ExceptionResponse(message);
     }
 

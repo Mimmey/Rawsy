@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
+import jakarta.validation.Valid;
 import org.mimmey.dto.request.creation.CommentCreationDto;
 import org.mimmey.dto.request.creation.mappers.CommentCreationDtoMapper;
 import org.mimmey.dto.response.common.CommentCommonDto;
@@ -56,12 +57,12 @@ public class CommentController {
             )
     )
     @RequestMapping(
-            path = "comment/publish",
+            path = "comments/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('beingAnAuthor')")
-    public ResponseEntity<String> createComment(@RequestBody CommentCreationDto commentCreationDto) {
+    public ResponseEntity<String> createComment(@Valid @RequestBody CommentCreationDto commentCreationDto) {
         Comment comment = commentCreationDtoMapper.toEntity(commentCreationDto);
         commentService.createComment(comment);
         return ResponseEntity.ok("OK");
@@ -76,13 +77,13 @@ public class CommentController {
             }
     )
     @RequestMapping(
-            path = "/track/{id}/comments",
+            path = "/tracks/{id}/comments",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     public ResponseEntity<List<CommentCommonDto>> getTrackCommentList(@PathVariable("id") long id,
-                                                                      @RequestParam("page") int page,
-                                                                      @RequestParam("unitsOnPage") int unitsOnPage) {
+                                                                      @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                      @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<CommentCommonDto> dtoList = commentCommonDtoMapper.toDtoList(
                 commentService.getTrackComments(id, page - 1, unitsOnPage).stream().toList()
         );
@@ -90,21 +91,19 @@ public class CommentController {
     }
 
     @Operation(
-            summary = "Метод удаляет комментарий",
+            summary = "Метод удаляет комментарий авторизованного пользователя",
             parameters = {
-                    @Parameter(name = "trackId", description = "ID трека", required = true),
-                    @Parameter(name = "authorId", description = "ID автора комментария", required = true)
+                    @Parameter(name = "trackId", description = "ID трека", required = true)
             }
     )
     @RequestMapping(
-            path = "/track/{trackId}/comment",
+            path = "/tracks/{trackId}/comment/my",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
     @PreAuthorize("hasAuthority('beingAnAuthor')")
-    public ResponseEntity<String> removeComment(@PathVariable("trackId") long trackId,
-                                                @RequestParam("authorId") long authorId) {
-        commentService.removeComment(authorId, trackId);
+    public ResponseEntity<String> removeComment(@PathVariable("trackId") long trackId) {
+        commentService.removeComment(trackId);
         return ResponseEntity.ok("OK");
     }
 }

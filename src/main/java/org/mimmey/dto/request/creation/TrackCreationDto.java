@@ -50,6 +50,11 @@ public class TrackCreationDto {
     private Integer bpm;
 
     @NotNull
+    @Positive
+    @JsonProperty(value = "duration", access = JsonProperty.Access.WRITE_ONLY)
+    private Integer duration;
+
+    @NotNull
     @PositiveOrZero
     @JsonProperty(value = "cost", access = JsonProperty.Access.WRITE_ONLY)
     private Long cost;

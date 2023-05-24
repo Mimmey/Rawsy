@@ -8,6 +8,8 @@ import org.mimmey.entity.User;
 import org.mimmey.repository.TrackRepository;
 import org.mimmey.service.common.impl.TrackServiceImpl;
 import org.mimmey.service.special.MyTrackService;
+import org.mimmey.utils.FileTypes;
+import org.mimmey.utils.FileWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -33,14 +35,39 @@ public final class MyTrackServiceImpl extends TrackServiceImpl implements MyTrac
     @Override
     public void changeTrack(Track trackUpdate) {
         Track track = trackRepository.findById(trackUpdate.getId()).orElseThrow(EntityNotFoundException::new);
+        checkIfAuthorizedHasAccess(track);
 
+        trackUpdateMapper.updateTrack(trackUpdate, track);
+        trackRepository.save(track);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setPreview(long trackId, byte[] preview) {
+        Track track = trackRepository.findById(trackId).orElseThrow(EntityNotFoundException::new);
+        checkIfAuthorizedHasAccess(track);
+
+        FileWorker.tryWriteToFile(track.getAudioPreviewPath(), preview, FileTypes.PREVIEW);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setMultitrack(long trackId, byte[] multitrack) {
+        Track track = trackRepository.findById(trackId).orElseThrow(EntityNotFoundException::new);
+        checkIfAuthorizedHasAccess(track);
+
+        FileWorker.tryWriteToFile(track.getTrackArchivePath(), multitrack, FileTypes.ARCHIVE);
+    }
+
+    private void checkIfAuthorizedHasAccess(Track track) {
         User currentUser = authorizedUserGetter.getAuthorizedUser();
 
         if (!currentUser.getId().equals(track.getAuthor().getId())) {
             throw new AccessDeniedException("Access is denied");
         }
-
-        trackUpdateMapper.updateTrack(trackUpdate, track);
-        trackRepository.save(track);
     }
 }

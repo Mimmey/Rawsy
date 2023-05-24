@@ -3,6 +3,7 @@ package org.mimmey.controller;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
+import jakarta.validation.Valid;
 import org.mimmey.dto.request.creation.UserCreationDto;
 import org.mimmey.dto.request.creation.mappers.UserCreationDtoMapper;
 import org.mimmey.service.common.UserService;
@@ -55,7 +56,7 @@ public class AuthController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
-    public ResponseEntity<String> register(@RequestBody UserCreationDto userCreationDto) {
+    public ResponseEntity<String> register(@Valid @RequestBody UserCreationDto userCreationDto) {
         userService.createUser(userCreationDtoMapper.toEntity(userCreationDto));
         return ResponseEntity.ok("OK");
     }

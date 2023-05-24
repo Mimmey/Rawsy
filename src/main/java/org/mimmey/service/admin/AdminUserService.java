@@ -10,4 +10,11 @@ public interface AdminUserService extends UserService {
      * @param id ID of the user to be banned
      */
     void banUser(long id);
+
+    /**
+     * The function that unbans the given user
+     *
+     * @param id ID of the user to be banned
+     */
+    void unbanUser(long id);
 }

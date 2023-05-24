@@ -53,22 +53,22 @@ CREATE TABLE IF NOT EXISTS track_mood
 
 CREATE TABLE IF NOT EXISTS track
 (
-    id                   BIGSERIAL PRIMARY KEY,
-    name                 VARCHAR(40) UNIQUE NOT NULL,
-    publishing_timestamp TIMESTAMP          NOT NULL,
-    author_id            BIGINT             NOT NULL,
-    type_id              INTEGER            NOT NULL,
-    rating               REAL CHECK (rating >= 0 AND rating <= 5),
-    about                VARCHAR(500)       NOT NULL,
-    invoice              VARCHAR(500)       NOT NULL,
-    has_vocal            BOOLEAN,
-    is_cycled            BOOLEAN,
-    bpm                  INTEGER            NOT NULL,
-    duration             INTEGER            NOT NULL CHECK (duration >= 0),
-    cost                 BIGINT,
-    audio_preview_path   VARCHAR(500)/*      NOT NULL*/,
-    track_archive_path   VARCHAR(500)/*       NOT NULL*/,
-    FOREIGN KEY (author_id) REFERENCES _user (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    id                 BIGSERIAL PRIMARY KEY,
+    name               VARCHAR(40) UNIQUE NOT NULL,
+    timestamp          TIMESTAMP          NOT NULL,
+    author_id          BIGINT             NOT NULL DEFAULT 0,
+    type_id            INTEGER            NOT NULL,
+    rating             REAL CHECK (rating >= 0 AND rating <= 5),
+    about              VARCHAR(500)       NOT NULL,
+    invoice            VARCHAR(500)       NOT NULL,
+    has_vocal          BOOLEAN,
+    is_cycled          BOOLEAN,
+    bpm                INTEGER            NOT NULL,
+    duration           INTEGER            NOT NULL CHECK (duration >= 0),
+    cost               BIGINT             NOT NULL,
+    audio_preview_path VARCHAR(500)       NOT NULL,
+    track_archive_path VARCHAR(500)       NOT NULL,
+    FOREIGN KEY (author_id) REFERENCES _user (id) ON DELETE SET DEFAULT ON UPDATE CASCADE,
     FOREIGN KEY (type_id) REFERENCES track_type (id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS subscription_list
 
 CREATE TABLE IF NOT EXISTS comment
 (
-    author_id  BIGINT,
+    author_id  BIGINT       NOT NULL DEFAULT 0,
     track_id   BIGINT       NOT NULL,
     content    VARCHAR(100) NOT NULL,
     rate       SMALLINT     NOT NULL,
@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS comment
 CREATE TABLE IF NOT EXISTS report
 (
     id         BIGSERIAL PRIMARY KEY,
-    author_id  BIGINT        NOT NULL,
+    author_id  BIGINT        NOT NULL DEFAULT 0,
     content    VARCHAR(1000) NOT NULL,
     _timestamp TIMESTAMP,
     FOREIGN KEY (author_id) REFERENCES _user (id) ON DELETE SET DEFAULT ON UPDATE CASCADE
@@ -192,6 +192,26 @@ CREATE TRIGGER tr_increment_tracks_in_other_users_favourites_count
     FOR EACH ROW
 EXECUTE PROCEDURE increment_tracks_in_other_users_favourites_count();
 
+CREATE OR REPLACE FUNCTION decrement_tracks_in_other_users_favourites_count() RETURNS TRIGGER
+AS
+$$
+DECLARE
+    track_author_id INTEGER;
+BEGIN
+    SELECT author_id INTO track_author_id FROM track WHERE id = OLD.track_id;
+    UPDATE _user
+    SET tracks_in_other_users_favourites_count=tracks_in_other_users_favourites_count - 1
+    WHERE id = track_author_id;
+    return OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tr_decrement_tracks_in_other_users_favourites_count
+    AFTER DELETE
+    ON favourites_list
+    FOR EACH ROW
+EXECUTE PROCEDURE decrement_tracks_in_other_users_favourites_count();
+
 CREATE OR REPLACE FUNCTION increment_tracks_purchased_by_other_users_count() RETURNS TRIGGER
 AS
 $$
@@ -211,6 +231,67 @@ CREATE TRIGGER tr_increment_tracks_purchased_by_other_users_count
     ON purchase_list
     FOR EACH ROW
 EXECUTE PROCEDURE increment_tracks_purchased_by_other_users_count();
+
+CREATE OR REPLACE FUNCTION update_rating_while_commenting() RETURNS TRIGGER
+AS
+$$
+DECLARE
+    comments_count INTEGER;
+    new_rating     REAL;
+    old_avg        REAL;
+BEGIN
+    SELECT COUNT(*) INTO comments_count FROM comment WHERE comment.track_id = NEW.track_id;
+    IF
+        comments_count = 1
+    THEN
+        SELECT NEW.rate INTO new_rating;
+    ELSE
+        SELECT rating * (comments_count - 1) INTO old_avg FROM track WHERE track.id = NEW.track_id;
+        SELECT (old_avg + NEW.rate) / comments_count INTO new_rating;
+    END IF;
+    UPDATE track
+    SET rating=new_rating
+    WHERE track.id = NEW.track_id;
+    return NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tr_update_rating_while_commenting
+    AFTER INSERT
+    ON comment
+    FOR EACH ROW
+EXECUTE PROCEDURE update_rating_while_commenting();
+
+CREATE OR REPLACE FUNCTION update_rating_while_deleting_comment() RETURNS TRIGGER
+AS
+$$
+DECLARE
+    comments_count INTEGER;
+    new_rating     REAL;
+    old_avg        REAL;
+BEGIN
+    SELECT COUNT(*) INTO comments_count FROM comment WHERE comment.track_id = OLD.track_id;
+    IF
+        comments_count = 0
+    THEN
+        SELECT 0 INTO new_rating;
+    ELSE
+        SELECT rating * (comments_count + 1) INTO old_avg FROM track WHERE track.id = OLD.track_id;
+        SELECT (old_avg - OLD.rate) / comments_count INTO new_rating;
+    END IF;
+    UPDATE track
+    SET rating=new_rating
+    WHERE track.id = OLD.track_id;
+    return OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tr_update_rating_while_deleting_comment
+    AFTER DELETE
+    ON comment
+    FOR EACH ROW
+EXECUTE PROCEDURE update_rating_while_deleting_comment();
+
 
 CREATE INDEX user_nickname_idx_hash ON _user USING hash (nickname);
 
@@ -235,8 +316,5 @@ CREATE INDEX subscription_list_subscription_id_idx_hash ON subscription_list USI
 CREATE INDEX comment_track_id_idx_hash ON comment USING hash (track_id);
 CREATE INDEX user_report_user_subject_id_idx_hash ON user_report USING hash (user_subject_id);
 CREATE INDEX track_report_track_subject_id_idx_hash ON track_report USING hash (track_subject_id);
-
-/*TODO: rating func*/
-
 
 

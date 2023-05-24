@@ -2,7 +2,6 @@ package org.mimmey.service.common.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.mimmey.config.exception.FileException;
 import org.mimmey.entity.MediaLink;
 import org.mimmey.entity.Track;
 import org.mimmey.entity.User;
@@ -12,15 +11,15 @@ import org.mimmey.repository.SubscriptionRepository;
 import org.mimmey.repository.TrackRepository;
 import org.mimmey.repository.UserRepository;
 import org.mimmey.service.common.UserService;
+import org.mimmey.utils.FileTypes;
+import org.mimmey.utils.FileWorker;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 @Service("common-user")
@@ -41,12 +40,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(User user) {
         List<MediaLink> mediaLinks = user.getMediaLinks();
-        user.setMediaLinks(mediaLinks);
+        user.setAvatarPath("temp");
+        user.setJinglePath("temp");
+        user.setMediaLinks(Collections.emptyList());
         userRepository.save(user);
 
         User createdUser = userRepository.findByNickname(user.getNickname()).orElseThrow(RuntimeException::new);
+
+        String avatarPath = FileWorker.getAvatarPath(createdUser.getId());
+        String jinglePath = FileWorker.getJinglePath(createdUser.getId());
+
+        createdUser.setAvatarPath(avatarPath);
+        createdUser.setJinglePath(jinglePath);
         mediaLinks.forEach(link -> link.setOwner(createdUser));
-        mediaLinkRepository.saveAll(mediaLinks);
+        createdUser.setMediaLinks(mediaLinks);
+        userRepository.save(createdUser);
+
+        FileWorker.tryCreateDefault(avatarPath, FileTypes.AVATAR);
+        FileWorker.tryCreateDefault(jinglePath, FileTypes.JINGLE);
     }
 
     /**
@@ -64,11 +75,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public byte[] getAvatar(long id) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        try {
-            return Files.readAllBytes(Path.of(user.getAvatarPath()));
-        } catch (IOException e) {
-            throw new FileException();
-        }
+        return FileWorker.tryReadFile(user.getAvatarPath());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public byte[] getJingle(long id) {
+        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return FileWorker.tryReadFile(user.getJinglePath());
     }
 
     /**

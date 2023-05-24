@@ -7,7 +7,6 @@ import org.mapstruct.Named;
 import org.mimmey.dto.response.admin.TrackAdminDto;
 import org.mimmey.dto.response.common.TrackGenreCommonDto;
 import org.mimmey.dto.response.common.TrackMoodCommonDto;
-import org.mimmey.dto.response.common.mapper.CommentCommonDtoMapper;
 import org.mimmey.dto.response.common.mapper.TrackGenreCommonDtoMapper;
 import org.mimmey.dto.response.common.mapper.TrackMoodCommonDtoMapper;
 import org.mimmey.dto.response.common.mapper.TrackTypeCommonDtoMapper;
@@ -23,8 +22,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        uses = {TrackTypeCommonDtoMapper.class,
-                CommentCommonDtoMapper.class})
+        uses = {TrackTypeCommonDtoMapper.class})
 public abstract class TrackAdminDtoMapper {
 
     @Autowired

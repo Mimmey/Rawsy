@@ -65,7 +65,7 @@ public final class AdminReportServiceImpl extends ReportServiceImpl implements A
      * {@inheritDoc}
      */
     @Override
-    public Page<UserReport> getUserReports(long userId, long page, long unitsOnPage) {
+    public Page<UserReport> getReportsAgainstUser(long userId, long page, long unitsOnPage) {
         Pageable pageable = PageRequest.of((int) page, (int) unitsOnPage);
         return userReportRepository.getUserReportsByUserSubjectId(userId, pageable);
     }
@@ -74,8 +74,26 @@ public final class AdminReportServiceImpl extends ReportServiceImpl implements A
      * {@inheritDoc}
      */
     @Override
-    public Page<TrackReport> getTrackReports(long trackId, long page, long unitsOnPage) {
+    public Page<TrackReport> getReportsAgainstTrack(long trackId, long page, long unitsOnPage) {
         Pageable pageable = PageRequest.of((int) page, (int) unitsOnPage);
         return trackReportRepository.findAllByTrackSubjectId(trackId, pageable);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Page<UserReport> getUserReports(long page, long unitsOnPage) {
+        Pageable pageable = PageRequest.of((int) page, (int) unitsOnPage);
+        return userReportRepository.findAll(pageable);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Page<TrackReport> getTrackReports(long page, long unitsOnPage) {
+        Pageable pageable = PageRequest.of((int) page, (int) unitsOnPage);
+        return trackReportRepository.findAll(pageable);
     }
 }

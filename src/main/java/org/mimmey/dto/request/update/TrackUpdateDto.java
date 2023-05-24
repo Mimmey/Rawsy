@@ -1,7 +1,8 @@
 package org.mimmey.dto.request.update;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -38,11 +39,15 @@ public class TrackUpdateDto {
     @JsonProperty(value = "isCycled", access = JsonProperty.Access.WRITE_ONLY)
     private Boolean isCycled;
 
-    @Min(0)
+    @Positive
     @JsonProperty(value = "bpm", access = JsonProperty.Access.WRITE_ONLY)
     private Integer bpm;
 
-    @Min(0)
+    @Positive
+    @JsonProperty(value = "duration", access = JsonProperty.Access.WRITE_ONLY)
+    private Integer duration;
+
+    @PositiveOrZero
     @JsonProperty(value = "cost", access = JsonProperty.Access.WRITE_ONLY)
     private Long cost;
 

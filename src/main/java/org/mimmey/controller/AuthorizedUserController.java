@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
+import jakarta.validation.Valid;
 import org.mimmey.dto.request.creation.TrackCreationDto;
 import org.mimmey.dto.request.creation.mappers.TrackCreationDtoMapper;
 import org.mimmey.dto.response.common.TrackCommonDto;
@@ -63,12 +64,12 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "my/subscriptions",
+            path = "/subscriptions",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoCommonDto>> getSubscriptions(@RequestParam("page") int page,
-                                                                    @RequestParam("unitsOnPage") int unitsOnPage) {
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscriptions(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                    @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(
                 authorizedUserService.getSubscriptions(page - 1, unitsOnPage).stream().toList()
         );
@@ -83,13 +84,13 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "my/subscribers",
+            path = "/subscribers",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<List<UserInfoCommonDto>> getSubscribers(@RequestParam("page") int page,
-                                                                  @RequestParam("unitsOnPage") int unitsOnPage) {
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscribers(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                  @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(
                 authorizedUserService.getSubscribers(page - 1, unitsOnPage).stream().toList()
         );
@@ -140,13 +141,13 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "my/published",
+            path = "/published/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<List<TrackAuthorDto>> getPublishedTracks(@RequestParam("page") int page,
-                                                                   @RequestParam("unitsOnPage") int unitsOnPage) {
+    public ResponseEntity<List<TrackAuthorDto>> getPublishedTracks(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                   @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<TrackAuthorDto> dtoList = trackAuthorDtoMapper.toDtoList(
                 authorizedUserService.getPublishedTracks(page - 1, unitsOnPage).stream().toList()
         );
@@ -161,13 +162,13 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "my/purchased",
+            path = "/purchased/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<List<TrackCommonDto>> getPurchasedTracks(@RequestParam("page") int page,
-                                                                   @RequestParam("unitsOnPage") int unitsOnPage) {
+    public ResponseEntity<List<TrackCommonDto>> getPurchasedTracks(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                   @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(
                 authorizedUserService.getPurchasedTracks(page - 1, unitsOnPage).stream().toList()
         );
@@ -182,13 +183,13 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "my/favourites",
+            path = "/favourite/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<List<TrackCommonDto>> getFavouriteTracks(@RequestParam("page") int page,
-                                                                   @RequestParam("unitsOnPage") int unitsOnPage) {
+    public ResponseEntity<List<TrackCommonDto>> getFavouriteTracks(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                   @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(
                 authorizedUserService.getFavouriteTracks(page - 1, unitsOnPage).stream().toList()
         );
@@ -203,13 +204,13 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "my/basket",
+            path = "/basket/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<List<TrackCommonDto>> getBasketTracks(@RequestParam("page") int page,
-                                                                @RequestParam("unitsOnPage") int unitsOnPage) {
+    public ResponseEntity<List<TrackCommonDto>> getBasketTracks(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(
                 authorizedUserService.getBasketTracks(page - 1, unitsOnPage).stream().toList()
         );
@@ -243,12 +244,12 @@ public class AuthorizedUserController {
             )
     )
     @RequestMapping(
-            path = "track/publish",
+            path = "tracks/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('beingAnAuthor')")
-    public ResponseEntity<String> publishTrack(@RequestBody TrackCreationDto trackCreationDto) {
+    public ResponseEntity<String> publishTrack(@Valid @RequestBody TrackCreationDto trackCreationDto) {
         Track track = trackCreationDtoMapper.toEntity(trackCreationDto);
         authorizedUserService.publishTrack(track);
         return ResponseEntity.ok("OK");
@@ -261,7 +262,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "track/{id}/purchase",
+            path = "tracks/{id}/purchase",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
@@ -278,7 +279,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/track/{id}/add-to-favourites",
+            path = "/tracks/{id}/add-to-favourites",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
@@ -295,7 +296,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/track/{id}/add-to-basket",
+            path = "/tracks/{id}/add-to-basket",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
@@ -312,7 +313,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/track/{id}",
+            path = "/published/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
@@ -329,7 +330,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/favourites/{id}",
+            path = "/favourite/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
@@ -346,7 +347,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/basket/{id}",
+            path = "/basket/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
@@ -368,6 +369,19 @@ public class AuthorizedUserController {
     public ResponseEntity<String> clearBasket() {
         authorizedUserService.clearBasket();
         return ResponseEntity.ok("OK");
+    }
+
+    @Operation(
+            summary = "Метод получает общую стоимость треков в корзине"
+    )
+    @RequestMapping(
+            path = "/basket/cost",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.GET
+    )
+    @PreAuthorize("hasAuthority('myProfileActions')")
+    public ResponseEntity<Long> getBasketCost() {
+        return ResponseEntity.ok(authorizedUserService.getBasketCost());
     }
 
     @Operation(

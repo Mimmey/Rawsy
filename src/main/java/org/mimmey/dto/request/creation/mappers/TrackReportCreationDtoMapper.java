@@ -1,32 +1,34 @@
 package org.mimmey.dto.request.creation.mappers;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mimmey.dto.request.creation.TrackReportCreationDto;
+import org.mimmey.entity.Report;
 import org.mimmey.entity.associative.TrackReport;
 import org.mimmey.entity.embedded_keys.TrackReportPK;
 import org.mimmey.service.common.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
-public abstract class TrackReportCreationDtoMapper {
+@Component
+public class TrackReportCreationDtoMapper {
 
     @Autowired
     @Qualifier("common-track")
     protected TrackService trackService;
 
-    @Mapping(source = "trackSubjectId", target = "pk", qualifiedByName = "dtoToPk")
-    public abstract TrackReport toEntity(TrackReportCreationDto trackReportCreationDto);
+    public TrackReport toEntity(TrackReportCreationDto trackReportCreationDto) {
+        Report report = new Report();
+        report.setContent(trackReportCreationDto.getContent());
 
-    @Mapping(source = "trackSubjectId", target = "pk", qualifiedByName = "dtoToPk")
-    public abstract List<TrackReport> toEntityList(List<TrackReportCreationDto> trackReportCreationDto);
+        TrackReport trackReport = new TrackReport();
+        trackReport.setPk(new TrackReportPK(report, trackService.getTrack(trackReportCreationDto.getTrackSubjectId())));
 
-    @Named("dtoToPk")
-    protected TrackReportPK dtoToPk(Long trackSubjectId) {
-        return new TrackReportPK(null, trackService.getTrack(trackSubjectId));
+        return trackReport;
+    }
+
+    public List<TrackReport> toEntityList(List<TrackReportCreationDto> trackReportCreationDtos) {
+        return trackReportCreationDtos.stream().map(this::toEntity).toList();
     }
 }

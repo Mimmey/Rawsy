@@ -21,4 +21,7 @@ public interface TrackReportRepository extends JpaRepository<TrackReport, TrackR
 
     @Query(value = "SELECT * FROM track_report WHERE report_id=:report_id", nativeQuery = true)
     Optional<TrackReport> findById(@Param("report_id") Long id);
+
+    @NotNull
+    Page<TrackReport> findAll(@NotNull Pageable pageable);
 }

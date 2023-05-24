@@ -22,5 +22,7 @@ public interface SubscriptionRepository extends PagingAndSortingRepository<Subsc
 
     @NotNull <S extends Subscription> S save(@NotNull S entity);
 
-    void deleteByPk(SubscriptionPK subscriptionPK);
+    @Query(value = "DELETE FROM subscription_list WHERE subscriber_id=:subscriber_id AND subject_id=:subject_id", nativeQuery = true)
+    void deleteBySubscriberIdAndSubjectId(@Param("subscriber_id") long subscriberId,
+                                          @Param("subject_id") long subjectId);
 }

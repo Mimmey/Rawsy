@@ -36,8 +36,7 @@ public class MultitrackDownloadingController {
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<String> getMultitrack(@PathVariable("id") long id) {
-        multitrackDownloadingService.getMultitrack(id);
-        return ResponseEntity.ok("OK");
+    public ResponseEntity<byte[]> getMultitrack(@PathVariable("id") long id) {
+        return ResponseEntity.ok(multitrackDownloadingService.getMultitrack(id));
     }
 }

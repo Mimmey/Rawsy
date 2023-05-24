@@ -10,11 +10,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface PurchaseRepository extends JpaRepository<Purchase, PurchasePK>, CrudRepository<Purchase, PurchasePK> {
 
     @Query(value = "SELECT * FROM purchase_list WHERE purchaser_id=:purchaser_id", nativeQuery = true)
-    <S extends Purchase> Page<Purchase> findAllByPurchaserId(@Param("purchaser_id") Long purchaserId,
-                                                             Pageable pageable);
+    Page<Purchase> findAllByPurchaserId(@Param("purchaser_id") Long purchaserId,
+                                        Pageable pageable);
 
     @NotNull <S extends Purchase> S save(@NotNull S entity);
+
+    @Query(value = "SELECT * FROM purchase_list WHERE purchaser_id=:purchaser_id AND track_id=:track_id", nativeQuery = true)
+    @NotNull Optional<Purchase> findByPurchaserIdAndTrackId(@Param("purchaser_id") long purchaserId,
+                                                            @Param("track_id") long trackId);
 }

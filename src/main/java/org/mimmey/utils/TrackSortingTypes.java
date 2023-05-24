@@ -7,7 +7,8 @@ import org.springframework.data.domain.Sort;
 @Getter
 @AllArgsConstructor
 public enum TrackSortingTypes {
-    NEW("new", Sort.by(Sort.Direction.DESC, "publishing_timestamp")),
+
+    NEW("new", Sort.by(Sort.Direction.DESC, "timestamp")),
     BEST("best", Sort.by(Sort.Direction.DESC, "rating"));
 
     private final String name;
@@ -15,7 +16,7 @@ public enum TrackSortingTypes {
 
     public static TrackSortingTypes getByName(String name) {
         for (TrackSortingTypes type : TrackSortingTypes.values()) {
-            if (type.name.equals(name)) {
+            if (type.name.equalsIgnoreCase(name)) {
                 return type;
             }
         }

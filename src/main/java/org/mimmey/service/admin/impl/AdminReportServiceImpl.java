@@ -1,6 +1,7 @@
 package org.mimmey.service.admin.impl;
 
-import org.mimmey.config.security.AuthorizedUserGetter;
+import jakarta.persistence.EntityNotFoundException;
+import org.mimmey.config.security.utils.AuthorizedUserGetter;
 import org.mimmey.entity.Report;
 import org.mimmey.entity.associative.TrackReport;
 import org.mimmey.entity.associative.UserReport;
@@ -17,7 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service("admin-report")
-public class AdminReportServiceImpl extends ReportServiceImpl implements AdminReportService {
+public final class AdminReportServiceImpl extends ReportServiceImpl implements AdminReportService {
 
     public AdminReportServiceImpl(@Autowired UserRepository userRepository,
                                   @Autowired ReportRepository reportRepository,
@@ -33,7 +34,7 @@ public class AdminReportServiceImpl extends ReportServiceImpl implements AdminRe
      */
     @Override
     public Report getReport(long id) {
-        return reportRepository.findById(id).orElseThrow(RuntimeException::new);
+        return reportRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     /**
@@ -41,7 +42,7 @@ public class AdminReportServiceImpl extends ReportServiceImpl implements AdminRe
      */
     @Override
     public UserReport getUserReport(long id) {
-        return userReportRepository.findById(id).orElseThrow(RuntimeException::new);
+        return userReportRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     /**
@@ -49,7 +50,7 @@ public class AdminReportServiceImpl extends ReportServiceImpl implements AdminRe
      */
     @Override
     public TrackReport getTrackReport(long id) {
-        return trackReportRepository.findById(id).orElseThrow(RuntimeException::new);
+        return trackReportRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     /**
@@ -64,7 +65,7 @@ public class AdminReportServiceImpl extends ReportServiceImpl implements AdminRe
      * {@inheritDoc}
      */
     @Override
-    public Page<UserReport> getUserReports(long userId, long page, long unitsOnPage) {
+    public Page<UserReport> getReportsAgainstUser(long userId, long page, long unitsOnPage) {
         Pageable pageable = PageRequest.of((int) page, (int) unitsOnPage);
         return userReportRepository.getUserReportsByUserSubjectId(userId, pageable);
     }
@@ -73,8 +74,26 @@ public class AdminReportServiceImpl extends ReportServiceImpl implements AdminRe
      * {@inheritDoc}
      */
     @Override
-    public Page<TrackReport> getTrackReports(long trackId, long page, long unitsOnPage) {
+    public Page<TrackReport> getReportsAgainstTrack(long trackId, long page, long unitsOnPage) {
         Pageable pageable = PageRequest.of((int) page, (int) unitsOnPage);
         return trackReportRepository.findAllByTrackSubjectId(trackId, pageable);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Page<UserReport> getUserReports(long page, long unitsOnPage) {
+        Pageable pageable = PageRequest.of((int) page, (int) unitsOnPage);
+        return userReportRepository.findAll(pageable);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Page<TrackReport> getTrackReports(long page, long unitsOnPage) {
+        Pageable pageable = PageRequest.of((int) page, (int) unitsOnPage);
+        return trackReportRepository.findAll(pageable);
     }
 }

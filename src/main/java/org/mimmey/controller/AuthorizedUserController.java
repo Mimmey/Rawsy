@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
+import jakarta.validation.Valid;
 import org.mimmey.dto.request.creation.TrackCreationDto;
 import org.mimmey.dto.request.creation.mappers.TrackCreationDtoMapper;
 import org.mimmey.dto.response.common.TrackCommonDto;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("authorized")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с авторизованным пользователем",
         version = "1.0.0"))
 public class AuthorizedUserController {
@@ -58,8 +59,8 @@ public class AuthorizedUserController {
     @Operation(
             summary = "Метод возвращает страницу списка подписок авторизованного пользователя",
             parameters = {
-                    @Parameter(name = "unitsOnPage", description = "Количество подписок на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество подписок на странице", required = true)
             }
     )
     @RequestMapping(
@@ -67,17 +68,19 @@ public class AuthorizedUserController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoCommonDto>> getSubscriptions(@RequestParam("unitsOnPage") int unitsOnPage,
-                                                                    @RequestParam("page") int page) {
-        List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(authorizedUserService.getSubscriptions(unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscriptions(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                    @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+        List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(
+                authorizedUserService.getSubscriptions(page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
             summary = "Метод возвращает страницу списка подписчиков авторизованного пользователя",
             parameters = {
-                    @Parameter(name = "unitsOnPage", description = "Количество подписчиков на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество подписчиков на странице", required = true)
             }
     )
     @RequestMapping(
@@ -86,16 +89,18 @@ public class AuthorizedUserController {
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<List<UserInfoCommonDto>> getSubscribers(@RequestParam("unitsOnPage") int unitsOnPage,
-                                                                  @RequestParam("page") int page) {
-        List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(authorizedUserService.getSubscribers(unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscribers(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                  @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+        List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(
+                authorizedUserService.getSubscribers(page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
             summary = "Метод подписывает авторизованного пользователя на другого пользователя",
             parameters = {
-                    @Parameter(name = "id", description = "Id пользователя, на которого" +
+                    @Parameter(name = "id", description = "Id пользователя, на которого " +
                             "необходимо подписаться", required = true)
             }
     )
@@ -113,7 +118,7 @@ public class AuthorizedUserController {
     @Operation(
             summary = "Метод отписывает авторизованного пользователя от другого пользователя",
             parameters = {
-                    @Parameter(name = "id", description = "Id пользователя, от которого" +
+                    @Parameter(name = "id", description = "Id пользователя, от которого " +
                             "необходимо отписаться", required = true)
             }
     )
@@ -131,76 +136,84 @@ public class AuthorizedUserController {
     @Operation(
             summary = "Метод возвращает страницу списка треков, опубликованных авторизованным пользователем",
             parameters = {
-                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true)
             }
     )
     @RequestMapping(
-            path = "/published-tracks",
+            path = "/published/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<List<TrackAuthorDto>> getPublishedTracks(@RequestParam("unitsOnPage") int unitsOnPage,
-                                                                   @RequestParam("page") int page) {
-        List<TrackAuthorDto> dtoList = trackAuthorDtoMapper.toDtoList(authorizedUserService.getPublishedTracks(unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<TrackAuthorDto>> getPublishedTracks(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                   @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+        List<TrackAuthorDto> dtoList = trackAuthorDtoMapper.toDtoList(
+                authorizedUserService.getPublishedTracks(page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
             summary = "Метод возвращает страницу списка треков, приобретенных авторизованным пользователем",
             parameters = {
-                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true)
             }
     )
     @RequestMapping(
-            path = "/purchased-tracks",
+            path = "/purchased/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<List<TrackCommonDto>> getPurchasedTracks(@RequestParam("unitsOnPage") int unitsOnPage,
-                                                                   @RequestParam("page") int page) {
-        List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(authorizedUserService.getPurchasedTracks(unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<TrackCommonDto>> getPurchasedTracks(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                   @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+        List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(
+                authorizedUserService.getPurchasedTracks(page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
             summary = "Метод возвращает страницу списка треков, находящихся в избранном у авторизованного пользователя",
             parameters = {
-                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true)
             }
     )
     @RequestMapping(
-            path = "/favourite-tracks",
+            path = "/favourite/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<List<TrackCommonDto>> getFavouriteTracks(@RequestParam("unitsOnPage") int unitsOnPage,
-                                                                   @RequestParam("page") int page) {
-        List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(authorizedUserService.getFavouriteTracks(unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<TrackCommonDto>> getFavouriteTracks(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                   @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+        List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(
+                authorizedUserService.getFavouriteTracks(page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
             summary = "Метод возвращает страницу списка треков, находящихся в корзине у авторизованного пользователя",
             parameters = {
-                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true)
             }
     )
     @RequestMapping(
-            path = "/basket",
+            path = "/basket/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<List<TrackCommonDto>> getBasketTracks(@RequestParam("unitsOnPage") int unitsOnPage,
-                                                                @RequestParam("page") int page) {
-        List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(authorizedUserService.getBasketTracks(unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<TrackCommonDto>> getBasketTracks(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+        List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(
+                authorizedUserService.getBasketTracks(page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
     }
 
@@ -208,25 +221,35 @@ public class AuthorizedUserController {
             summary = "Метод публикует трек",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
                     Трек:
+                                        
                         name — название трека;
+                        
                         typeId — ID типа трека;
+                        
                         about — описание трека;
+                        
                         invoice — инвойс (перечень того, какие версии трека входят в покупку);
+                        
                         hasVocal — присутствие вокала;
+                        
                         isCycled — зацикленность;
+                        
                         bpm — BPM трека;
+                        
                         cost — цена трека;
+                        
                         genreIds — список ID жанров трека;
+                        
                         moodIds — список ID настроений трека"""
             )
     )
     @RequestMapping(
-            path = "/publish-track",
+            path = "tracks/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('beingAnAuthor')")
-    public ResponseEntity<String> publishTrack(@RequestBody TrackCreationDto trackCreationDto) {
+    public ResponseEntity<String> publishTrack(@Valid @RequestBody TrackCreationDto trackCreationDto) {
         Track track = trackCreationDtoMapper.toEntity(trackCreationDto);
         authorizedUserService.publishTrack(track);
         return ResponseEntity.ok("OK");
@@ -235,102 +258,102 @@ public class AuthorizedUserController {
     @Operation(
             summary = "Метод производит покупку трека",
             parameters = {
-                    @Parameter(name = "trackId", description = "ID трека", required = true)
+                    @Parameter(name = "id", description = "ID трека", required = true)
             }
     )
     @RequestMapping(
-            path = "/purchase",
+            path = "tracks/{id}/purchase",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<String> purchaseTrack(@RequestParam("trackId") long trackId) {
-        authorizedUserService.purchaseTrack(trackId);
+    public ResponseEntity<String> purchaseTrack(@PathVariable("id") long id) {
+        authorizedUserService.purchaseTrack(id);
         return ResponseEntity.ok("OK");
     }
 
     @Operation(
             summary = "Метод добавляет трек в избранное",
             parameters = {
-                    @Parameter(name = "trackId", description = "ID трека", required = true)
+                    @Parameter(name = "id", description = "ID трека", required = true)
             }
     )
     @RequestMapping(
-            path = "/add-to-favourites",
+            path = "/tracks/{id}/add-to-favourites",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<String> addTrackToFavorites(@RequestParam("trackId") long trackId) {
-        authorizedUserService.addTrackToFavorites(trackId);
+    public ResponseEntity<String> addTrackToFavorites(@PathVariable("id") long id) {
+        authorizedUserService.addTrackToFavorites(id);
         return ResponseEntity.ok("OK");
     }
 
     @Operation(
             summary = "Метод добавляет трек в корзину",
             parameters = {
-                    @Parameter(name = "trackId", description = "ID трека", required = true)
+                    @Parameter(name = "id", description = "ID трека", required = true)
             }
     )
     @RequestMapping(
-            path = "/add-to-basket",
+            path = "/tracks/{id}/add-to-basket",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<String> addTrackToBasket(@RequestParam("trackId") long trackId) {
-        authorizedUserService.addTrackToBasket(trackId);
+    public ResponseEntity<String> addTrackToBasket(@PathVariable("id") long id) {
+        authorizedUserService.addTrackToBasket(id);
         return ResponseEntity.ok("OK");
     }
 
     @Operation(
             summary = "Метод удаляет опубликованный трек",
             parameters = {
-                    @Parameter(name = "trackId", description = "ID трека", required = true)
+                    @Parameter(name = "id", description = "ID трека", required = true)
             }
     )
     @RequestMapping(
-            path = "/track",
+            path = "/published/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
     @PreAuthorize("hasAuthority('beingAnAuthor')")
-    public ResponseEntity<String> deletePublishedTrack(@RequestParam("trackId") long trackId) {
-        authorizedUserService.deletePublishedTrack(trackId);
+    public ResponseEntity<String> deletePublishedTrack(@PathVariable("id") long id) {
+        authorizedUserService.deletePublishedTrack(id);
         return ResponseEntity.ok("OK");
     }
 
     @Operation(
             summary = "Метод удаляет трек из избранного",
             parameters = {
-                    @Parameter(name = "trackId", description = "ID трека", required = true)
+                    @Parameter(name = "id", description = "ID трека", required = true)
             }
     )
     @RequestMapping(
-            path = "/from-favourites",
+            path = "/favourite/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<String> removeTrackFromFavourites(@RequestParam("trackId") long trackId) {
-        authorizedUserService.removeTrackFromFavourites(trackId);
+    public ResponseEntity<String> removeTrackFromFavourites(@PathVariable("id") long id) {
+        authorizedUserService.removeTrackFromFavourites(id);
         return ResponseEntity.ok("OK");
     }
 
     @Operation(
             summary = "Метод удаляет трек из корзины",
             parameters = {
-                    @Parameter(name = "trackId", description = "ID трека", required = true)
+                    @Parameter(name = "id", description = "ID трека", required = true)
             }
     )
     @RequestMapping(
-            path = "/from-basket",
+            path = "/basket/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<String> removeTrackFromBasket(@RequestParam("trackId") long trackId) {
-        authorizedUserService.removeTrackFromBasket(trackId);
+    public ResponseEntity<String> removeTrackFromBasket(@PathVariable("id") long id) {
+        authorizedUserService.removeTrackFromBasket(id);
         return ResponseEntity.ok("OK");
     }
 
@@ -338,13 +361,40 @@ public class AuthorizedUserController {
             summary = "Метод очищает корзину"
     )
     @RequestMapping(
-            path = "/clear-basket",
+            path = "/basket/clear",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
     public ResponseEntity<String> clearBasket() {
         authorizedUserService.clearBasket();
+        return ResponseEntity.ok("OK");
+    }
+
+    @Operation(
+            summary = "Метод получает общую стоимость треков в корзине"
+    )
+    @RequestMapping(
+            path = "/basket/cost",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.GET
+    )
+    @PreAuthorize("hasAuthority('myProfileActions')")
+    public ResponseEntity<Long> getBasketCost() {
+        return ResponseEntity.ok(authorizedUserService.getBasketCost());
+    }
+
+    @Operation(
+            summary = "Метод производит покупку всех треков в корзине"
+    )
+    @RequestMapping(
+            path = "/basket/pay",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.POST
+    )
+    @PreAuthorize("hasAuthority('myProfileActions')")
+    public ResponseEntity<String> payForBasket() {
+        authorizedUserService.payForBasket();
         return ResponseEntity.ok("OK");
     }
 }

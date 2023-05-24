@@ -21,6 +21,7 @@ import java.util.List;
 public class UserCreationDto {
 
     @NotBlank
+    @Size(min = 5)
     @JsonProperty(value = "nickname", access = JsonProperty.Access.WRITE_ONLY)
     private String nickname;
 

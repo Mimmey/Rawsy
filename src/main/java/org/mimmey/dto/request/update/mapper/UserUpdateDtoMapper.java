@@ -1,27 +1,44 @@
 package org.mimmey.dto.request.update.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-import org.mapstruct.ReportingPolicy;
+import lombok.AllArgsConstructor;
 import org.mimmey.dto.request.update.UserUpdateDto;
 import org.mimmey.entity.MediaLink;
 import org.mimmey.entity.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public abstract class UserUpdateDtoMapper {
+@Component
+@AllArgsConstructor
+public class UserUpdateDtoMapper {
 
-    @Mapping(source = "mediaLinks", target = "mediaLinks", qualifiedByName = "stringsToMediaLinks")
-    public abstract User toEntity(UserUpdateDto userUpdateDto);
+    private final PasswordEncoder passwordEncoder;
 
-    @Mapping(source = "mediaLinks", target = "mediaLinks", qualifiedByName = "stringsToMediaLinks")
-    public abstract List<User> toEntityList(List<UserUpdateDto> userUpdateDtoList);
+    public User toEntity(UserUpdateDto userUpdateDto) {
+        User user = User.createEmpty();
+        user.setNickname(userUpdateDto.getNickname());
+        user.setEmail(userUpdateDto.getEmail());
+        user.setPassword(encode(userUpdateDto.getPassword()));
+        user.setAbout(userUpdateDto.getAbout());
+        user.setMediaLinks(stringsToMediaLinks(userUpdateDto.getMediaLinks()));
+        return user;
+    }
 
-    @Named("stringsToMediaLinks")
-    public List<MediaLink> stringsToMediaLinks(List<String> strings) {
+    public List<User> toEntityList(List<UserUpdateDto> userUpdateDtoList) {
+        return userUpdateDtoList.stream().map(this::toEntity).toList();
+    }
+
+    protected List<MediaLink> stringsToMediaLinks(List<String> strings) {
+        if (strings == null) {
+            return null;
+        }
+
         return strings.stream().map(MediaLink::new).collect(Collectors.toList());
+    }
+
+    protected String encode(String password) {
+        return password == null ? null : passwordEncoder.encode(password);
     }
 }

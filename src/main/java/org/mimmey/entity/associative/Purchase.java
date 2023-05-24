@@ -29,5 +29,5 @@ public class Purchase implements Serializable {
     private Long cost;
 
     @Column(name = "_timestamp")
-    private LocalDateTime timestamp;
+    private LocalDateTime timestamp = LocalDateTime.now();
 }

@@ -70,4 +70,11 @@ public interface TrackService {
      * @param id ID of the track
      */
     Track getTrack(long id);
+
+    /**
+     * The function that returns the track audio preview
+     *
+     * @param id ID of the track
+     */
+    byte[] getTrackPreview(long id);
 }

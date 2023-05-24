@@ -3,6 +3,7 @@ package org.mimmey.dto.request.creation.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import org.mimmey.dto.request.creation.TrackCreationDto;
 import org.mimmey.entity.Track;
 import org.mimmey.entity.TrackType;
@@ -18,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class TrackCreationDtoMapper {
 
     @Autowired
@@ -41,19 +42,19 @@ public abstract class TrackCreationDtoMapper {
     public abstract List<Track> toEntityList(List<TrackCreationDto> trackCreationDtoList);
 
     @Named("typeIdToType")
-    public TrackType typeIdToType(Integer typeId) {
+    protected TrackType typeIdToType(Integer typeId) {
         return trackTypeService.getType(typeId);
     }
 
     @Named("genreIdsToGenres")
-    public List<TrackToGenreMatching> genreIdsToGenres(List<Integer> genreIds) {
+    protected List<TrackToGenreMatching> genreIdsToGenres(List<Integer> genreIds) {
         return genreIds.stream()
                 .map((it) -> new TrackToGenreMatching(new TrackToGenreMatchingPK(null, trackGenreService.getGenre(it))))
                 .collect(Collectors.toList());
     }
 
     @Named("moodIdsToMoods")
-    public List<TrackToMoodMatching> moodIdsToMoods(List<Integer> moodIds) {
+    protected List<TrackToMoodMatching> moodIdsToMoods(List<Integer> moodIds) {
         return moodIds.stream()
                 .map((it) -> new TrackToMoodMatching(new TrackToMoodMatchingPK(null, trackMoodService.getMood(it))))
                 .collect(Collectors.toList());

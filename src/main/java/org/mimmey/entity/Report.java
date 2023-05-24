@@ -2,6 +2,8 @@ package org.mimmey.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -25,6 +27,7 @@ import java.time.LocalDateTime;
 public class Report implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -34,5 +37,5 @@ public class Report implements Serializable {
     private String content;
 
     @Column(name = "_timestamp")
-    private LocalDateTime timestamp;
+    private LocalDateTime timestamp = LocalDateTime.now();
 }

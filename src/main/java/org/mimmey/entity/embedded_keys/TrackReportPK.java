@@ -3,6 +3,7 @@ package org.mimmey.entity.embedded_keys;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ import java.io.Serializable;
 @Embeddable
 public class TrackReportPK implements Serializable {
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "report_id")
     private Report report;
 

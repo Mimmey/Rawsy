@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.mimmey.dto.response.common.CommentCommonDto;
 import org.mimmey.dto.response.common.TrackGenreCommonDto;
 import org.mimmey.dto.response.common.TrackMoodCommonDto;
 import org.mimmey.dto.response.common.TrackTypeCommonDto;
@@ -28,9 +27,9 @@ public class TrackAdminDto {
     @JsonProperty(value = "name", access = JsonProperty.Access.READ_ONLY)
     private String name;
 
-    @JsonProperty(value = "publishingTimestamp", access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(value = "timestamp", access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(pattern = "dd.MM.yyyy")
-    private LocalDateTime publishingTimestamp;
+    private LocalDateTime timestamp;
 
     @JsonProperty(value = "authorId", access = JsonProperty.Access.READ_ONLY)
     private Long authorId;
@@ -67,9 +66,6 @@ public class TrackAdminDto {
 
     @JsonProperty(value = "moods", access = JsonProperty.Access.READ_ONLY)
     private List<TrackMoodCommonDto> moods;
-
-    @JsonProperty(value = "comments", access = JsonProperty.Access.READ_ONLY)
-    private List<CommentCommonDto> comments;
 
     @JsonProperty(value = "favouriteAdditionsCount", access = JsonProperty.Access.READ_ONLY)
     private Long favouriteAdditionsCount;

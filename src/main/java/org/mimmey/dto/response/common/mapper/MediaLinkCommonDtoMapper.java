@@ -3,30 +3,24 @@ package org.mimmey.dto.response.common.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import org.mimmey.dto.response.common.MediaLinkCommonDto;
 import org.mimmey.entity.MediaLink;
-import org.mimmey.entity.embedded_keys.MediaLinkPK;
+import org.mimmey.entity.User;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MediaLinkCommonDtoMapper {
 
-    @Mapping(source = "pk", target = "id", qualifiedByName = "getIdFromPk")
-    @Mapping(source = "pk", target = "ownerId", qualifiedByName = "getOwnerIdFromPk")
+    @Mapping(source = "owner", target = "ownerId", qualifiedByName = "getOwnerId")
     MediaLinkCommonDto toDto(MediaLink mediaLink);
 
-    @Mapping(source = "pk", target = "id", qualifiedByName = "getIdFromPk")
-    @Mapping(source = "pk", target = "ownerId", qualifiedByName = "getOwnerIdFromPk")
+    @Mapping(source = "owner", target = "ownerId", qualifiedByName = "getOwnerId")
     List<MediaLinkCommonDto> toDtoList(List<MediaLink> mediaLinkList);
 
-    @Named("getIdFromPk")
-    default Long getIdFromPk(MediaLinkPK mediaLinkPK) {
-        return mediaLinkPK.getId();
-    }
-
-    @Named("getOwnerIdFromPk")
-    default Long getOwnerIdFromPk(MediaLinkPK mediaLinkPK) {
-        return mediaLinkPK.getOwner().getId();
+    @Named("getOwnerId")
+    default Long getOwnerId(User owner) {
+        return owner.getId();
     }
 }

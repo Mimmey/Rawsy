@@ -1,13 +1,11 @@
 package org.mimmey.service.common.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.mimmey.config.security.AuthorizedUserGetter;
+import org.mimmey.config.security.utils.AuthorizedUserGetter;
 import org.mimmey.entity.Report;
 import org.mimmey.entity.User;
 import org.mimmey.entity.associative.TrackReport;
 import org.mimmey.entity.associative.UserReport;
-import org.mimmey.entity.embedded_keys.TrackReportPK;
-import org.mimmey.entity.embedded_keys.UserReportPK;
 import org.mimmey.repository.ReportRepository;
 import org.mimmey.repository.TrackReportRepository;
 import org.mimmey.repository.UserReportRepository;
@@ -30,12 +28,13 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public void createUserReport(UserReport userReport) {
-        User currentUser = userRepository.findById(authorizedUserGetter.getAuthorizedUser().getId()).orElseThrow(RuntimeException::new);
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
+
         Report report = userReport.getPk().getReport();
         report.setAuthor(currentUser);
         reportRepository.save(report);
 
-        userReport.setPk(new UserReportPK(report, userReport.getPk().getUserSubject()));
+//        userReport.setPk(new UserReportPK(report, userReport.getPk().getUserSubject()));
         userReportRepository.save(userReport);
     }
 
@@ -44,12 +43,13 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public void createTrackReport(TrackReport trackReport) {
-        User currentUser = userRepository.findById(authorizedUserGetter.getAuthorizedUser().getId()).orElseThrow(RuntimeException::new);
+        User currentUser = authorizedUserGetter.getAuthorizedUser();
+
         Report report = trackReport.getPk().getReport();
         report.setAuthor(currentUser);
         reportRepository.save(report);
 
-        trackReport.setPk(new TrackReportPK(report, trackReport.getPk().getTrackSubject()));
+        //trackReport.setPk(new TrackReportPK(report, trackReport.getPk().getTrackSubject()));
         trackReportRepository.save(trackReport);
     }
 }

@@ -6,16 +6,14 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.mimmey.service.common.MultitrackDownloadingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("multitrack")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с мультитреками",
         version = "1.0.0"))
 public class MultitrackDownloadingController {
@@ -27,19 +25,18 @@ public class MultitrackDownloadingController {
     }
 
     @Operation(
-            summary = "Метод скачивает архив с мультитреком",
+            summary = "Метод возвращает архив с мультитреком",
             parameters = {
-                    @Parameter(name = "trackId", description = "Id трека", required = true)
+                    @Parameter(name = "id", description = "Id трека", required = true)
             }
     )
     @RequestMapping(
-            path = "/download",
-            produces = MediaType.APPLICATION_JSON_VALUE,
+            path = "track/{id}/multitrack",
+            produces = "application/zip",
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
-    public ResponseEntity<String> downloadMultitrack(@RequestParam("trackId") long trackId) {
-        multitrackDownloadingService.downloadMultitrack(trackId);
-        return ResponseEntity.ok("OK");
+    public ResponseEntity<byte[]> getMultitrack(@PathVariable("id") long id) {
+        return ResponseEntity.ok(multitrackDownloadingService.getMultitrack(id));
     }
 }

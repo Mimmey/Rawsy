@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("users")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с профилями",
         version = "1.0.0"))
 public class UserController {
@@ -43,76 +43,112 @@ public class UserController {
     @Operation(
             summary = "Метод возвращает информацию о пользователе",
             parameters = {
-                    @Parameter(name = "userId", description = "Id пользователя", required = true)
+                    @Parameter(name = "id", description = "Id пользователя", required = true)
             }
     )
     @RequestMapping(
-            path = "/user-info",
+            path = "/users/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<UserInfoCommonDto> getUser(@RequestParam("userId") long userId) {
-        UserInfoCommonDto dto = userInfoCommonDtoMapper.toDto(userService.getUser(userId));
+    public ResponseEntity<UserInfoCommonDto> getUser(@PathVariable("id") long id) {
+        UserInfoCommonDto dto = userInfoCommonDtoMapper.toDto(userService.getUser(id));
         return ResponseEntity.ok(dto);
     }
 
     @Operation(
             summary = "Метод возвращает страницу списка подписчиков пользователя",
             parameters = {
-                    @Parameter(name = "userId", description = "Id пользователя", required = true),
-                    @Parameter(name = "unitsOnPage", description = "Количество подписчиков на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "id", description = "Id пользователя", required = true),
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество подписчиков на странице", required = true)
             }
     )
     @RequestMapping(
-            path = "/subscribers",
+            path = "/users/{id}/subscribers",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoCommonDto>> getSubscriberList(@RequestParam("userId") long userId,
-                                                                     @RequestParam("unitsOnPage") int unitsOnPage,
-                                                                     @RequestParam("page") int page) {
-        List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(userService.getSubscribers(userId, unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscriberList(@PathVariable("id") long id,
+                                                                     @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                     @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+        List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(
+                userService.getSubscribers(id, page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
             summary = "Метод возвращает страницу списка аккаунтов-подписок пользователя",
             parameters = {
-                    @Parameter(name = "userId", description = "Id пользователя", required = true),
-                    @Parameter(name = "unitsOnPage", description = "Количество подписок на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "id", description = "Id пользователя", required = true),
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество подписок на странице", required = true)
             }
     )
     @RequestMapping(
-            path = "/subscriptions",
+            path = "/users/{id}/subscriptions",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoCommonDto>> getSubscriptionList(@RequestParam("userId") long userId,
-                                                                       @RequestParam("unitsOnPage") int unitsOnPage,
-                                                                       @RequestParam("page") int page) {
-        List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(userService.getSubscriptions(userId, unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscriptionList(@PathVariable("id") long id,
+                                                                       @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                       @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+        List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(
+                userService.getSubscriptions(id, page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
     }
 
     @Operation(
             summary = "Метод возвращает страницу списка треков, опубликованных пользователем",
             parameters = {
-                    @Parameter(name = "userId", description = "Id пользователя", required = true),
-                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true),
-                    @Parameter(name = "page", description = "Номер страницы", required = true)
+                    @Parameter(name = "id", description = "Id пользователя", required = true),
+                    @Parameter(name = "page", description = "Номер страницы", required = true),
+                    @Parameter(name = "unitsOnPage", description = "Количество треков на странице", required = true)
             }
     )
     @RequestMapping(
-            path = "/published-tracks",
+            path = "users/{id}/published/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackCommonDto>> getPublishedTrackList(@RequestParam("userId") long userId,
-                                                                      @RequestParam("unitsOnPage") int unitsOnPage,
-                                                                      @RequestParam("page") int page) {
-        List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(userService.getPublishedTracks(userId, unitsOnPage, page).stream().toList());
+    public ResponseEntity<List<TrackCommonDto>> getPublishedTrackList(@PathVariable("id") long id,
+                                                                      @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                      @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+        List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(
+                userService.getPublishedTracks(id, page - 1, unitsOnPage).stream().toList()
+        );
         return ResponseEntity.ok(dtoList);
+    }
+
+    @Operation(
+            summary = "Метод возвращает аватар пользователя",
+            parameters = {
+                    @Parameter(name = "id", description = "ID пользователя", required = true)
+            }
+    )
+    @RequestMapping(
+            path = "users/{id}/avatar",
+            produces = MediaType.IMAGE_JPEG_VALUE,
+            method = RequestMethod.GET
+    )
+    public ResponseEntity<byte[]> getAvatar(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getAvatar(id));
+    }
+
+    @Operation(
+            summary = "Метод возвращает джингл пользователя",
+            parameters = {
+                    @Parameter(name = "id", description = "Джингл пользователя", required = true)
+            }
+    )
+    @RequestMapping(
+            path = "users/{id}/jingle",
+            produces = "audio/wav",
+            method = RequestMethod.GET
+    )
+    public ResponseEntity<byte[]> getJingle(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getJingle(id));
     }
 }

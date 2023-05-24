@@ -40,22 +40,40 @@ public interface AdminReportService extends ReportService {
     void resolveReport(long id);
 
     /**
-     * The function that returns the page of the list of complaints against the given user
+     * The function that returns the page of the list of reports against the given user
      *
      * @param userId      ID of the user to get complaints against
      * @param page        index of complaint list's page
      * @param unitsOnPage number of complaints per one page
      * @return the page of the list of complaints against the user
      */
-    Page<UserReport> getUserReports(long userId, long page, long unitsOnPage);
+    Page<UserReport> getReportsAgainstUser(long userId, long page, long unitsOnPage);
 
     /**
-     * The function that returns the page of the list of complaints against the given track
+     * The function that returns the page of the list of reports against the given track
      *
      * @param trackId     ID of the track to get complaints against
      * @param page        index of complaint list's page
      * @param unitsOnPage number of complaints per one page
      * @return the page of the list of complaints against the track
      */
-    Page<TrackReport> getTrackReports(long trackId, long page, long unitsOnPage);
+    Page<TrackReport> getReportsAgainstTrack(long trackId, long page, long unitsOnPage);
+
+    /**
+     * The function that returns the page of the global list of user reports
+     *
+     * @param page        index of complaint list's page
+     * @param unitsOnPage number of complaints per one page
+     * @return the page of the list of complaints against the user
+     */
+    Page<UserReport> getUserReports(long page, long unitsOnPage);
+
+    /**
+     * The function that returns the page of the global list of track reports
+     *
+     * @param page        index of complaint list's page
+     * @param unitsOnPage number of complaints per one page
+     * @return the page of the list of complaints against the track
+     */
+    Page<TrackReport> getTrackReports(long page, long unitsOnPage);
 }

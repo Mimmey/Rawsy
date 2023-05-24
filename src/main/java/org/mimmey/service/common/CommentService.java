@@ -26,10 +26,9 @@ public interface CommentService {
     Page<Comment> getTrackComments(long trackId, int page, int unitsOnPage);
 
     /**
-     * The function that removes the comment from the database
+     * The function that removes the comment of the authorized user from the database
      *
-     * @param authorId ID of the author of the comment
-     * @param trackId  ID of the track that given comment belongs to
+     * @param trackId ID of the track that given comment belongs to
      */
-    void removeComment(long authorId, long trackId);
+    void removeComment(long trackId);
 }

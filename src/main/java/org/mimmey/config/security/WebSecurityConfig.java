@@ -27,7 +27,7 @@ public class WebSecurityConfig {
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/**").permitAll()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .logout(LogoutConfigurer::permitAll)
@@ -37,7 +37,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    protected PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
 

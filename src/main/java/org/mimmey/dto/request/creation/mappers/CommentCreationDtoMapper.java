@@ -3,6 +3,7 @@ package org.mimmey.dto.request.creation.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import org.mimmey.dto.request.creation.CommentCreationDto;
 import org.mimmey.entity.Comment;
 import org.mimmey.entity.embedded_keys.CommentPK;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class CommentCreationDtoMapper {
 
     @Autowired
@@ -26,7 +27,7 @@ public abstract class CommentCreationDtoMapper {
     public abstract List<Comment> toEntityList(List<CommentCreationDto> commentCreationDtoList);
 
     @Named("trackToCommentPk")
-    public CommentPK trackToCommentPk(Long trackId) {
+    protected CommentPK trackToCommentPk(Long trackId) {
         return new CommentPK(null, trackService.getTrack(trackId));
     }
 }

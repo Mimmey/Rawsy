@@ -5,6 +5,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -35,6 +37,7 @@ import java.util.List;
 public class User implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nickname;
@@ -43,11 +46,11 @@ public class User implements Serializable {
 
     private String password;
 
-    private Boolean isBanned;
+    private Boolean isBanned = false;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role")
-    private Role role;
+    private Role role = Role.USER;
 
     @ManyToOne
     @JoinColumn(name = "country_id")
@@ -59,11 +62,11 @@ public class User implements Serializable {
 
     private String avatarPath;
 
-    private Long tracksInOtherUsersFavouritesCount;
+    private Long tracksInOtherUsersFavouritesCount = 0L;
 
-    private Long tracksPurchasedByOtherUsersCount;
+    private Long tracksPurchasedByOtherUsersCount = 0L;
 
-    @OneToMany(mappedBy = "pk.owner", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<MediaLink> mediaLinks;
 
     @OneToMany(mappedBy = "pk.author", cascade = CascadeType.ALL)
@@ -92,4 +95,13 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "pk.owner", cascade = CascadeType.ALL)
     private List<TrackInBasket> tracksInBasket;
+
+    public static User createEmpty() {
+        User user = new User();
+        user.setIsBanned(null);
+        user.setRole(null);
+        user.setTracksInOtherUsersFavouritesCount(null);
+        user.setTracksPurchasedByOtherUsersCount(null);
+        return user;
+    }
 }

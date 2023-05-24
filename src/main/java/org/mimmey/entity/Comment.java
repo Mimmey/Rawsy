@@ -32,5 +32,5 @@ public class Comment implements Serializable {
     private Byte rate;
 
     @Column(name = "_timestamp")
-    private LocalDateTime timestamp;
+    private LocalDateTime timestamp = LocalDateTime.now();
 }

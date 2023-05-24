@@ -1,14 +1,18 @@
 package org.mimmey.entity;
 
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.mimmey.entity.embedded_keys.MediaLinkPK;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
@@ -21,12 +25,18 @@ import java.io.Serializable;
 @Table(name = "media_link")
 public class MediaLink implements Serializable {
 
-    @EmbeddedId
-    private MediaLinkPK pk;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    @NotNull
     private String content;
 
-    public MediaLink(String content) {
+    public MediaLink(@NotNull String content) {
         this.content = content;
     }
 }

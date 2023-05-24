@@ -3,6 +3,7 @@ package org.mimmey.controller;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
+import jakarta.validation.Valid;
 import org.mimmey.dto.request.creation.TrackReportCreationDto;
 import org.mimmey.dto.request.creation.UserReportCreationDto;
 import org.mimmey.dto.request.creation.mappers.TrackReportCreationDtoMapper;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("reports")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с жалобами",
         version = "1.0.0"))
 public class ReportController {
@@ -44,17 +44,19 @@ public class ReportController {
             summary = "Метод отправляет жалобу на пользователя",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
                     Жалоба:
+                                        
                         userSubjectId — ID пользователя-объекта жалобы;
+                        
                         content — содержание жалобы"""
             )
     )
     @RequestMapping(
-            path = "/publish-user-report",
+            path = "reports/user/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('beingAnAuthor')")
-    public ResponseEntity<String> publishUserReport(@RequestBody UserReportCreationDto userReportDto) {
+    public ResponseEntity<String> publishUserReport(@Valid @RequestBody UserReportCreationDto userReportDto) {
         UserReport userReport = userReportCreationDtoMapper.toEntity(userReportDto);
         reportService.createUserReport(userReport);
         return ResponseEntity.ok("OK");
@@ -64,17 +66,19 @@ public class ReportController {
             summary = "Метод отправляет жалобу на трек",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = """
                     Жалоба:
+                                        
                         trackSubjectId — ID трека-объекта жалобы;
+                        
                         content — содержание жалобы"""
             )
     )
     @RequestMapping(
-            path = "/publish-track-report",
+            path = "reports/track/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('beingAnAuthor')")
-    public ResponseEntity<String> publishTrackReport(@RequestBody TrackReportCreationDto trackReportDto) {
+    public ResponseEntity<String> publishTrackReport(@Valid @RequestBody TrackReportCreationDto trackReportDto) {
         TrackReport trackReport = trackReportCreationDtoMapper.toEntity(trackReportDto);
         reportService.createTrackReport(trackReport);
         return ResponseEntity.ok("OK");

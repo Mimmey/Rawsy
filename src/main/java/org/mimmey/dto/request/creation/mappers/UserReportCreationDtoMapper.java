@@ -1,32 +1,34 @@
 package org.mimmey.dto.request.creation.mappers;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mimmey.dto.request.creation.UserReportCreationDto;
+import org.mimmey.entity.Report;
 import org.mimmey.entity.associative.UserReport;
 import org.mimmey.entity.embedded_keys.UserReportPK;
 import org.mimmey.service.common.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
-public abstract class UserReportCreationDtoMapper {
+@Component
+public class UserReportCreationDtoMapper {
 
     @Autowired
     @Qualifier("common-user")
     protected UserService userService;
 
-    @Mapping(source = "userSubjectId", target = "pk", qualifiedByName = "dtoToPk")
-    public abstract UserReport toEntity(UserReportCreationDto userReportCreationDto);
+    public UserReport toEntity(UserReportCreationDto userReportCreationDto) {
+        Report report = new Report();
+        report.setContent(userReportCreationDto.getContent());
 
-    @Mapping(source = "userSubjectId", target = "pk", qualifiedByName = "dtoToPk")
-    public abstract List<UserReport> toEntityList(List<UserReportCreationDto> trackReportCreationDto);
+        UserReport userReport = new UserReport();
+        userReport.setPk(new UserReportPK(report, userService.getUser(userReportCreationDto.getUserSubjectId())));
 
-    @Named("dtoToPk")
-    public UserReportPK dtoToPk(Long userSubjectId) {
-        return new UserReportPK(null, userService.getUser(userSubjectId));
+        return userReport;
+    }
+
+    public List<UserReport> toEntityList(List<UserReportCreationDto> trackReportCreationDtos) {
+        return trackReportCreationDtos.stream().map(this::toEntity).toList();
     }
 }

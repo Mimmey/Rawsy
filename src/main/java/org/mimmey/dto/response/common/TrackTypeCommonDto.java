@@ -15,7 +15,7 @@ import lombok.ToString;
 public class TrackTypeCommonDto {
 
     @JsonProperty(value = "id", access = JsonProperty.Access.READ_ONLY)
-    private Long id;
+    private Integer id;
 
     @JsonProperty(value = "name", access = JsonProperty.Access.READ_ONLY)
     private String name;

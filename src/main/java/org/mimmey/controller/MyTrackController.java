@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.mimmey.dto.request.update.TrackUpdateDto;
 import org.mimmey.dto.request.update.mapper.TrackUpdateDtoMapper;
 import org.mimmey.dto.response.special.TrackAuthorDto;
@@ -15,13 +16,15 @@ import org.mimmey.service.special.MyTrackService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с треками",
         version = "1.0.0"))
@@ -40,7 +43,7 @@ public class MyTrackController {
             }
     )
     @RequestMapping(
-            path = "/published/tracks/{id}",
+            path = "/my/published/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -83,7 +86,7 @@ public class MyTrackController {
             )
     )
     @RequestMapping(
-            path = "/published/tracks/{id}",
+            path = "/my/published/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.PATCH
     )
@@ -99,42 +102,40 @@ public class MyTrackController {
     @Operation(
             summary = "Метод устанавливает новое превью для заданного трека",
             parameters = {
-                    @Parameter(name = "id", description = "ID трека", required = true)
-            },
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Новое превью трека в формате wav в виде последовательности байтов"
-            )
+                    @Parameter(name = "id", description = "ID трека", required = true),
+                    @Parameter(name = "preview", description = "Новое превью трека в формате wav", required = true)
+            }
     )
     @RequestMapping(
-            path = "/published/tracks/{id}/preview",
+            path = "/my/published/tracks/{id}/preview",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.PUT
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
+    @SneakyThrows
     public ResponseEntity<String> setPreview(@PathVariable("id") long id,
-                                             @RequestBody byte[] preview) {
-        myTrackService.setPreview(id, preview);
+                                             @RequestParam("preview") MultipartFile preview) {
+        myTrackService.setPreview(id, preview.getBytes());
         return ResponseEntity.ok("OK");
     }
 
     @Operation(
             summary = "Метод устанавливает новый архив-мультитрек для заданного трека",
             parameters = {
-                    @Parameter(name = "id", description = "ID трека", required = true)
-            },
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Новый мультитрек в формате zip-архива в виде последовательности байт"
-            )
+                    @Parameter(name = "id", description = "ID трека", required = true),
+                    @Parameter(name = "multitrack", description = "Новый мультитрек в формате zip-архива", required = true)
+            }
     )
     @RequestMapping(
-            path = "/published/tracks/{id}/multitrack",
+            path = "/my/published/tracks/{id}/multitrack",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.PUT
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
+    @SneakyThrows
     public ResponseEntity<String> setMultitrack(@PathVariable("id") long id,
-                                                @RequestBody byte[] multitrack) {
-        myTrackService.setMultitrack(id, multitrack);
+                                                @RequestParam("multitrack") MultipartFile multitrack) {
+        myTrackService.setMultitrack(id, multitrack.getBytes());
         return ResponseEntity.ok("OK");
     }
 }

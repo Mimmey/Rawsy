@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface SubscriptionRepository extends PagingAndSortingRepository<Subscription, SubscriptionPK>, CrudRepository<Subscription, SubscriptionPK> {
 
     @Query(value = "SELECT * FROM subscription_list WHERE subject_id=:subject_id", nativeQuery = true)

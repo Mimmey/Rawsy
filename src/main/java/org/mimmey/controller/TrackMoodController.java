@@ -9,13 +9,13 @@ import org.mimmey.service.common.TrackMoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@Controller
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с настроениями треков",
         version = "1.0.0"))
 public class TrackMoodController {
@@ -34,7 +34,7 @@ public class TrackMoodController {
             summary = "Метод возвращает список настроений треков"
     )
     @RequestMapping(
-            path = "/tracks/moods",
+            path = "/public/tracks/moods",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )

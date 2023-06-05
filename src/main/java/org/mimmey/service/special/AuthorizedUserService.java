@@ -142,6 +142,8 @@ public interface AuthorizedUserService extends UserService {
 
     /**
      * The function that returns the resulting cost of all tracks in the basket
+     *
+     * @return the resulting cost of all tracks in the basket
      */
     Long getBasketCost();
 

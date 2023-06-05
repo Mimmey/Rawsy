@@ -17,15 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@Controller
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с треками",
         version = "1.0.0"))
 public class TrackController {
@@ -76,7 +76,7 @@ public class TrackController {
             )
     )
     @RequestMapping(
-            path = "/tracks",
+            path = "/public/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -117,7 +117,7 @@ public class TrackController {
             )
     )
     @RequestMapping(
-            path = "/tracks/week-hottest",
+            path = "/public/tracks/week-hottest",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -156,7 +156,7 @@ public class TrackController {
             )
     )
     @RequestMapping(
-            path = "/tracks/week-new",
+            path = "/public/tracks/week-new",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -179,7 +179,7 @@ public class TrackController {
             }
     )
     @RequestMapping(
-            path = "/tracks/{id}",
+            path = "/public/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -195,7 +195,7 @@ public class TrackController {
             }
     )
     @RequestMapping(
-            path = "/tracks/{id}/preview",
+            path = "/public/tracks/{id}/preview",
             produces = "audio/wav",
             method = RequestMethod.GET
     )

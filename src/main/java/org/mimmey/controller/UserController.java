@@ -13,15 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@Controller
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с профилями",
         version = "1.0.0"))
 public class UserController {
@@ -47,7 +47,7 @@ public class UserController {
             }
     )
     @RequestMapping(
-            path = "/users/{id}",
+            path = "/public/users/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -65,13 +65,13 @@ public class UserController {
             }
     )
     @RequestMapping(
-            path = "/users/{id}/subscribers",
+            path = "/public/users/{id}/subscribers",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoCommonDto>> getSubscriberList(@PathVariable("id") long id,
-                                                                     @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                     @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscribers(@PathVariable("id") long id,
+                                                                  @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                  @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(
                 userService.getSubscribers(id, page - 1, unitsOnPage).stream().toList()
         );
@@ -87,13 +87,13 @@ public class UserController {
             }
     )
     @RequestMapping(
-            path = "/users/{id}/subscriptions",
+            path = "/public/users/{id}/subscriptions",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoCommonDto>> getSubscriptionList(@PathVariable("id") long id,
-                                                                       @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                       @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+    public ResponseEntity<List<UserInfoCommonDto>> getSubscriptions(@PathVariable("id") long id,
+                                                                    @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                    @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<UserInfoCommonDto> dtoList = userInfoCommonDtoMapper.toDtoList(
                 userService.getSubscriptions(id, page - 1, unitsOnPage).stream().toList()
         );
@@ -109,13 +109,13 @@ public class UserController {
             }
     )
     @RequestMapping(
-            path = "users/{id}/published/tracks",
+            path = "/public/users/{id}/published/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<TrackCommonDto>> getPublishedTrackList(@PathVariable("id") long id,
-                                                                      @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                      @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+    public ResponseEntity<List<TrackCommonDto>> getPublishedTracks(@PathVariable("id") long id,
+                                                                   @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                   @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<TrackCommonDto> dtoList = trackCommonDtoMapper.toDtoList(
                 userService.getPublishedTracks(id, page - 1, unitsOnPage).stream().toList()
         );
@@ -129,7 +129,7 @@ public class UserController {
             }
     )
     @RequestMapping(
-            path = "users/{id}/avatar",
+            path = "/public/users/{id}/avatar",
             produces = MediaType.IMAGE_JPEG_VALUE,
             method = RequestMethod.GET
     )
@@ -144,7 +144,7 @@ public class UserController {
             }
     )
     @RequestMapping(
-            path = "users/{id}/jingle",
+            path = "/public/users/{id}/jingle",
             produces = "audio/wav",
             method = RequestMethod.GET
     )

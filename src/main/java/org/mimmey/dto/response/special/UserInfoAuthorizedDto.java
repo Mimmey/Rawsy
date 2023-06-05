@@ -29,6 +29,10 @@ public class UserInfoAuthorizedDto {
     @JsonProperty(value = "email", access = JsonProperty.Access.READ_ONLY)
     private String email;
 
+    @Email
+    @JsonProperty(value = "role", access = JsonProperty.Access.READ_ONLY)
+    private String role;
+
     @JsonProperty(value = "country", access = JsonProperty.Access.READ_ONLY)
     private CountryCommonDto country;
 

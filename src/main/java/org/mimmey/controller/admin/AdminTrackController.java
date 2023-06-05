@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("admin")
+@Controller
+@RequestMapping("/admin")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с профилями от лица администратора",
         version = "1.0.0"))
 public class AdminTrackController {
@@ -41,7 +41,7 @@ public class AdminTrackController {
     )
     @PreAuthorize("hasAuthority('adminActions')")
     @RequestMapping(
-            path = "tracks/{id}",
+            path = "/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -58,7 +58,7 @@ public class AdminTrackController {
     )
     @PreAuthorize("hasAuthority('adminActions')")
     @RequestMapping(
-            path = "tracks/{id}",
+            path = "/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )

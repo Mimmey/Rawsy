@@ -15,16 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@Controller
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с комментариями",
         version = "1.0.0"))
 public class CommentController {
@@ -57,7 +57,7 @@ public class CommentController {
             )
     )
     @RequestMapping(
-            path = "comments/publish",
+            path = "/public/comments/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
@@ -77,13 +77,13 @@ public class CommentController {
             }
     )
     @RequestMapping(
-            path = "/tracks/{id}/comments",
+            path = "/public/tracks/{id}/comments",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<CommentCommonDto>> getTrackCommentList(@PathVariable("id") long id,
-                                                                      @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                      @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+    public ResponseEntity<List<CommentCommonDto>> getTrackComments(@PathVariable("id") long id,
+                                                                   @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                   @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<CommentCommonDto> dtoList = commentCommonDtoMapper.toDtoList(
                 commentService.getTrackComments(id, page - 1, unitsOnPage).stream().toList()
         );
@@ -97,7 +97,7 @@ public class CommentController {
             }
     )
     @RequestMapping(
-            path = "/tracks/{trackId}/comment/my",
+            path = "/public/tracks/{trackId}/comment/my",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )

@@ -85,7 +85,7 @@ public final class ExceptionController {
     @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
     @ExceptionHandler(TransactionSystemException.class)
     public ExceptionResponse error(TransactionSystemException e) {
-        String message = "Входящие значения не соответствуют предъявленным к ним требованиям";
+        String message = "Введенные данные некорректны";
         return new ExceptionResponse(message);
     }
 

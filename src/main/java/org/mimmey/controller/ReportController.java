@@ -16,12 +16,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с жалобами",
         version = "1.0.0"))
 public class ReportController {
@@ -51,7 +51,7 @@ public class ReportController {
             )
     )
     @RequestMapping(
-            path = "reports/user/publish",
+            path = "/public/reports/user/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
@@ -73,7 +73,7 @@ public class ReportController {
             )
     )
     @RequestMapping(
-            path = "reports/track/publish",
+            path = "/public/reports/track/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )

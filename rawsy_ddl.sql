@@ -169,9 +169,6 @@ CREATE TABLE IF NOT EXISTS track_report
     FOREIGN KEY (track_subject_id) REFERENCES track (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-
--- Когда автор удален, его треки сносятся, а за них уже заплатили
-
 CREATE OR REPLACE FUNCTION increment_tracks_in_other_users_favourites_count() RETURNS TRIGGER
 AS
 $$

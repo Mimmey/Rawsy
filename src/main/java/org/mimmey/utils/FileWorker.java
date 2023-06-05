@@ -9,24 +9,31 @@ import java.nio.file.Path;
 
 public class FileWorker {
 
-    public final static String DATA_PATH = ".." + File.separator + "rawsy_data";
-
+    public final static String DATA_PATH = "." + File.separator + "src"
+            + File.separator + "main" + File.separator + "resources" + File.separator + "data";
+    public final static String AVATARS_PATH = DATA_PATH + File.separator + "avatar";
+    public final static String JINGLES_PATH = DATA_PATH + File.separator + "jingle";
+    public final static String ARCHIVE_PATH = DATA_PATH + File.separator + "archive";
+    public final static String PREVIEW_PATH = DATA_PATH + File.separator + "preview";
 
     public static String getAvatarPath(long userId) {
-        return DATA_PATH + File.separator + "avatar" + File.separator + userId + ".jpg";
+        return getFilePath(AVATARS_PATH, String.valueOf(userId), ".jpg");
     }
 
     public static String getJinglePath(long userId) {
-        return DATA_PATH + File.separator + "jingle" + File.separator + userId + ".wav";
+        return getFilePath(JINGLES_PATH, String.valueOf(userId), ".wav");
     }
 
     public static String getArchivePath(long trackId) {
-        return DATA_PATH + File.separator + "archive" + File.separator + trackId + ".zip";
-
+        return getFilePath(ARCHIVE_PATH, String.valueOf(trackId), ".zip");
     }
 
     public static String getPreviewPath(long trackId) {
-        return DATA_PATH + File.separator + "preview" + File.separator + trackId + ".wav";
+        return getFilePath(PREVIEW_PATH, String.valueOf(trackId), ".wav");
+    }
+
+    private static String getFilePath(String parentDirPath, String fileName, String extension) {
+        return parentDirPath + File.separator + fileName + extension;
     }
 
     public static void tryCreateDefault(String targetPath, FileTypes fileType) {

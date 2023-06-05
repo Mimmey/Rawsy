@@ -68,6 +68,7 @@ public interface TrackService {
      * The function that returns the track got by ID
      *
      * @param id ID of the track
+     * @return the track with the given ID
      */
     Track getTrack(long id);
 

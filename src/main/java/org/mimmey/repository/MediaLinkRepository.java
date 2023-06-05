@@ -5,7 +5,9 @@ import org.mimmey.entity.MediaLink;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface MediaLinkRepository extends CrudRepository<MediaLink, Long> {
 
     @NotNull <S extends MediaLink> S save(@NotNull S entity);

@@ -8,12 +8,12 @@ import org.mimmey.service.common.MultitrackDownloadingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с мультитреками",
         version = "1.0.0"))
 public class MultitrackDownloadingController {
@@ -31,7 +31,7 @@ public class MultitrackDownloadingController {
             }
     )
     @RequestMapping(
-            path = "track/{id}/multitrack",
+            path = "/public/track/{id}/multitrack",
             produces = "application/zip",
             method = RequestMethod.POST
     )

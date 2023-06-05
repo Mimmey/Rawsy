@@ -14,16 +14,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("admin")
+@Controller
+@RequestMapping("/admin")
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с профилями от лица администратора",
         version = "1.0.0"))
 public class AdminUserController {
@@ -50,7 +50,7 @@ public class AdminUserController {
     )
     @PreAuthorize("hasAuthority('adminActions')")
     @RequestMapping(
-            path = "users/{id}",
+            path = "/users/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -67,7 +67,7 @@ public class AdminUserController {
     )
     @PreAuthorize("hasAuthority('adminActions')")
     @RequestMapping(
-            path = "users/{id}/ban",
+            path = "/users/{id}/ban",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
@@ -84,7 +84,7 @@ public class AdminUserController {
     )
     @PreAuthorize("hasAuthority('adminActions')")
     @RequestMapping(
-            path = "users/{id}/unban",
+            path = "/users/{id}/unban",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
@@ -103,13 +103,13 @@ public class AdminUserController {
     )
     @PreAuthorize("hasAuthority('adminActions')")
     @RequestMapping(
-            path = "users/{id}/subscribers",
+            path = "/users/{id}/subscribers",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
-    public ResponseEntity<List<UserInfoAdminDto>> getSubscriberList(@PathVariable("id") long id,
-                                                                    @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                    @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+    public ResponseEntity<List<UserInfoAdminDto>> getSubscribers(@PathVariable("id") long id,
+                                                                 @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                 @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<UserInfoAdminDto> dtoList = userInfoAdminDtoMapper.toDtoList(
                 adminUserService.getSubscribers(id, page - 1, unitsOnPage).stream().toList()
         );
@@ -125,14 +125,14 @@ public class AdminUserController {
             }
     )
     @RequestMapping(
-            path = "users/{id}/subscriptions",
+            path = "/users/{id}/subscriptions",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('adminActions')")
-    public ResponseEntity<List<UserInfoAdminDto>> getSubscriptionList(@PathVariable("id") long id,
-                                                                      @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                      @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+    public ResponseEntity<List<UserInfoAdminDto>> getSubscriptions(@PathVariable("id") long id,
+                                                                   @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                   @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<UserInfoAdminDto> dtoList = userInfoAdminDtoMapper.toDtoList(
                 adminUserService.getSubscriptions(id, page - 1, unitsOnPage).stream().toList()
         );
@@ -148,14 +148,14 @@ public class AdminUserController {
             }
     )
     @RequestMapping(
-            path = "users/{id}/published/tracks",
+            path = "/users/{id}/published/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
     @PreAuthorize("hasAuthority('adminActions')")
-    public ResponseEntity<List<TrackAdminDto>> getPublishedTrackList(@PathVariable("id") long id,
-                                                                     @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                     @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
+    public ResponseEntity<List<TrackAdminDto>> getPublishedTracks(@PathVariable("id") long id,
+                                                                  @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                  @RequestParam(value = "unitsOnPage", defaultValue = "2147483647") int unitsOnPage) {
         List<TrackAdminDto> dtoList = trackAdminDtoMapper.toDtoList(
                 adminUserService.getPublishedTracks(id, page - 1, unitsOnPage).stream().toList()
         );

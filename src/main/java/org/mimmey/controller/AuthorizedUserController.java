@@ -20,16 +20,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@Controller
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с авторизованным пользователем",
         version = "1.0.0"))
 public class AuthorizedUserController {
@@ -64,7 +64,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/subscriptions",
+            path = "/my/subscriptions",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -84,7 +84,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/subscribers",
+            path = "/my/subscribers",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -141,7 +141,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/published/tracks",
+            path = "/my/published/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -162,7 +162,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/purchased/tracks",
+            path = "/my/purchased/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -183,7 +183,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/favourite/tracks",
+            path = "/my/favourites/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -204,7 +204,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/basket/tracks",
+            path = "/my/basket/tracks",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -244,7 +244,7 @@ public class AuthorizedUserController {
             )
     )
     @RequestMapping(
-            path = "tracks/publish",
+            path = "/public/tracks/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
@@ -262,7 +262,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "tracks/{id}/purchase",
+            path = "/public/tracks/{id}/purchase",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
@@ -279,7 +279,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/tracks/{id}/add-to-favourites",
+            path = "/public/tracks/{id}/add-to-favourites",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
@@ -296,7 +296,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/tracks/{id}/add-to-basket",
+            path = "/public/tracks/{id}/add-to-basket",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
@@ -313,7 +313,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/published/tracks/{id}",
+            path = "/my/published/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
@@ -330,7 +330,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/favourite/tracks/{id}",
+            path = "/my/favourites/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
@@ -347,7 +347,7 @@ public class AuthorizedUserController {
             }
     )
     @RequestMapping(
-            path = "/basket/tracks/{id}",
+            path = "/my/basket/tracks/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE
     )
@@ -361,7 +361,7 @@ public class AuthorizedUserController {
             summary = "Метод очищает корзину"
     )
     @RequestMapping(
-            path = "/basket/clear",
+            path = "/my/basket/clear",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
@@ -375,7 +375,7 @@ public class AuthorizedUserController {
             summary = "Метод получает общую стоимость треков в корзине"
     )
     @RequestMapping(
-            path = "/basket/cost",
+            path = "/my/basket/cost",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )
@@ -388,7 +388,7 @@ public class AuthorizedUserController {
             summary = "Метод производит покупку всех треков в корзине"
     )
     @RequestMapping(
-            path = "/basket/pay",
+            path = "/my/basket/pay",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )

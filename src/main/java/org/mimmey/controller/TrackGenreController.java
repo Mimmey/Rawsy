@@ -9,13 +9,13 @@ import org.mimmey.service.common.TrackGenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@Controller
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с жанрами треков",
         version = "1.0.0"))
 public class TrackGenreController {
@@ -34,7 +34,7 @@ public class TrackGenreController {
             summary = "Метод возвращает список жанров треков"
     )
     @RequestMapping(
-            path = "/tracks/genres",
+            path = "/public/tracks/genres",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET
     )

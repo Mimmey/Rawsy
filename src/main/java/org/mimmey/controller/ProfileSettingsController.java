@@ -2,10 +2,10 @@ package org.mimmey.controller;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.validation.Valid;
 import lombok.SneakyThrows;
+import org.mimmey.dto.multipart_dto.MultipartFileDto;
 import org.mimmey.dto.request.update.UserUpdateDto;
 import org.mimmey.dto.request.update.mapper.UserUpdateDtoMapper;
 import org.mimmey.dto.response.special.UserInfoAuthorizedDto;
@@ -18,11 +18,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @OpenAPIDefinition(info = @Info(title = "RestController для работы с настройками профиля",
@@ -104,37 +103,39 @@ public class ProfileSettingsController {
 
     @Operation(
             summary = "Метод устанавливает новый джингл авторизованного пользователя",
-            parameters = {
-                    @Parameter(name = "jingle", description = "Новый джингл пользователя в формате wav", required = true)
-            }
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Новый джингл пользователя в формате wav"
+            )
     )
     @RequestMapping(
             path = "/my/jingle",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.PUT
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
     @SneakyThrows
-    public ResponseEntity<String> setJingle(@RequestParam("jingle") MultipartFile jingle) {
-        profileSettingsService.setJingle(jingle.getBytes());
+    public ResponseEntity<String> setJingle(@ModelAttribute MultipartFileDto jingle) {
+        profileSettingsService.setJingle(jingle.getFile().getBytes());
         return ResponseEntity.ok("OK");
     }
 
     @Operation(
             summary = "Метод устанавливает новый аватар авторизованного пользователя",
-            parameters = {
-                    @Parameter(name = "avatar", description = "Новый аватар пользователя в формате jpg", required = true)
-            }
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Новый аватар пользователя в формате jpg"
+            )
     )
     @RequestMapping(
             path = "/my/avatar",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.PUT
     )
     @PreAuthorize("hasAuthority('myProfileActions')")
     @SneakyThrows
-    public ResponseEntity<String> setAvatar(@RequestParam("avatar") MultipartFile avatar) {
-        profileSettingsService.setAvatar(avatar.getBytes());
+    public ResponseEntity<String> setAvatar(@ModelAttribute MultipartFileDto avatar) {
+        profileSettingsService.setAvatar(avatar.getFile().getBytes());
         return ResponseEntity.ok("OK");
     }
 }

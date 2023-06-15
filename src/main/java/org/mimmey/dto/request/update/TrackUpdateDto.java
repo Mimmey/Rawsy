@@ -24,7 +24,7 @@ public class TrackUpdateDto {
     @JsonProperty(value = "name", access = JsonProperty.Access.WRITE_ONLY)
     private String name;
 
-    @JsonProperty(value = "type", access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(value = "typeId", access = JsonProperty.Access.WRITE_ONLY)
     private Integer typeId;
 
     @JsonProperty(value = "about", access = JsonProperty.Access.WRITE_ONLY)

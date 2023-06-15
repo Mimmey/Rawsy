@@ -185,7 +185,7 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
      * {@inheritDoc}
      */
     @Override
-    public void publishTrack(Track track) {
+    public long publishTrack(Track track) {
         List<TrackToGenreMatching> trackGenres = track.getGenres();
         List<TrackToMoodMatching> trackMoods = track.getMoods();
         track.setGenres(Collections.emptyList());
@@ -212,6 +212,8 @@ public class AuthorizedUserServiceImpl extends UserServiceImpl implements Author
 
         FileWorker.tryCreateDefault(trackArchivePath, FileTypes.ARCHIVE);
         FileWorker.tryCreateDefault(previewPath, FileTypes.PREVIEW);
+
+        return createdTrack.getId();
     }
 
     /**

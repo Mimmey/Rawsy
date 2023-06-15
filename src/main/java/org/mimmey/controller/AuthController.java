@@ -56,8 +56,7 @@ public class AuthController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
-    public ResponseEntity<String> register(@Valid @RequestBody UserCreationDto userCreationDto) {
-        userService.createUser(userCreationDtoMapper.toEntity(userCreationDto));
-        return ResponseEntity.ok("OK");
+    public ResponseEntity<Long> register(@Valid @RequestBody UserCreationDto userCreationDto) {
+        return ResponseEntity.ok(userService.createUser(userCreationDtoMapper.toEntity(userCreationDto)));
     }
 }

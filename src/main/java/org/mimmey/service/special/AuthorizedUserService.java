@@ -90,8 +90,9 @@ public interface AuthorizedUserService extends UserService {
      * The function that publishes the given track if the authorized user is a track author
      *
      * @param track track to be published
+     * @return the id of the created track
      */
-    void publishTrack(Track track);
+    long publishTrack(Track track);
 
     /**
      * The function that makes a purchase

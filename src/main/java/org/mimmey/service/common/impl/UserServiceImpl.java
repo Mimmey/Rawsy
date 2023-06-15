@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public void createUser(User user) {
+    public long createUser(User user) {
         List<MediaLink> mediaLinks = user.getMediaLinks();
         user.setAvatarPath("temp");
         user.setJinglePath("temp");
@@ -58,6 +58,8 @@ public class UserServiceImpl implements UserService {
 
         FileWorker.tryCreateDefault(avatarPath, FileTypes.AVATAR);
         FileWorker.tryCreateDefault(jinglePath, FileTypes.JINGLE);
+
+        return createdUser.getId();
     }
 
     /**

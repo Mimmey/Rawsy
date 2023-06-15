@@ -249,10 +249,9 @@ public class AuthorizedUserController {
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('beingAnAuthor')")
-    public ResponseEntity<String> publishTrack(@Valid @RequestBody TrackCreationDto trackCreationDto) {
+    public ResponseEntity<Long> publishTrack(@Valid @RequestBody TrackCreationDto trackCreationDto) {
         Track track = trackCreationDtoMapper.toEntity(trackCreationDto);
-        authorizedUserService.publishTrack(track);
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(authorizedUserService.publishTrack(track));
     }
 
     @Operation(

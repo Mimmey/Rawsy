@@ -78,6 +78,8 @@ public class ProfileSettingsController {
                         nickname — имя пользователя;
                                         
                         email — электронная почта пользователя;
+                        
+                        countryId — ID страны пользователя;
                                         
                         password — пароль пользователя;
                                         

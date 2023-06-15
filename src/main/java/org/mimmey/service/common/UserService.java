@@ -13,8 +13,9 @@ public interface UserService {
      * The function that saves the user in the database
      *
      * @param user user to be saved
+     * @return id of the created user
      */
-    void createUser(User user);
+    long createUser(User user);
 
     /**
      * The function that returns the information about the given user

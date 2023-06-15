@@ -23,6 +23,9 @@ public class UserUpdateDto {
     @JsonProperty(value = "email", access = JsonProperty.Access.WRITE_ONLY)
     private String email;
 
+    @JsonProperty(value = "country", access = JsonProperty.Access.WRITE_ONLY)
+    private Integer countryId;
+
     @Size(min = 8)
     @JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY)
     private String password;

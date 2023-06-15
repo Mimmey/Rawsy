@@ -2,6 +2,7 @@ package org.mimmey.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -69,10 +70,10 @@ public class Track implements Serializable {
 
     private String trackArchivePath;
 
-    @OneToMany(mappedBy = "pk.track", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pk.track", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TrackToGenreMatching> genres;
 
-    @OneToMany(mappedBy = "pk.track", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pk.track", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TrackToMoodMatching> moods;
 
     @OneToMany(mappedBy = "pk.track", cascade = CascadeType.ALL)

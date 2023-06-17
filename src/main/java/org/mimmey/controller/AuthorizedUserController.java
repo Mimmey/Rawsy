@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.validation.Valid;
 import org.mimmey.dto.request.creation.TrackCreationDto;
 import org.mimmey.dto.request.creation.mappers.TrackCreationDtoMapper;
+import org.mimmey.dto.response.IdDto;
+import org.mimmey.dto.response.IdDtoMapper;
 import org.mimmey.dto.response.common.TrackCommonDto;
 import org.mimmey.dto.response.common.UserInfoCommonDto;
 import org.mimmey.dto.response.common.mapper.TrackCommonDtoMapper;
@@ -42,17 +44,21 @@ public class AuthorizedUserController {
 
     private final TrackCreationDtoMapper trackCreationDtoMapper;
 
+    private final IdDtoMapper<Long> idDtoMapper;
+
     private final AuthorizedUserService authorizedUserService;
 
     public AuthorizedUserController(@Autowired UserInfoCommonDtoMapper userInfoCommonDtoMapper,
                                     @Autowired TrackAuthorDtoMapper trackAuthorDtoMapper,
                                     @Autowired TrackCommonDtoMapper trackCommonDtoMapper,
                                     @Autowired TrackCreationDtoMapper trackCreationDtoMapper,
+                                    @Autowired IdDtoMapper<Long> idDtoMapper,
                                     @Autowired @Qualifier("authorized-user") AuthorizedUserService authorizedUserService) {
         this.userInfoCommonDtoMapper = userInfoCommonDtoMapper;
         this.trackAuthorDtoMapper = trackAuthorDtoMapper;
         this.trackCommonDtoMapper = trackCommonDtoMapper;
         this.trackCreationDtoMapper = trackCreationDtoMapper;
+        this.idDtoMapper = idDtoMapper;
         this.authorizedUserService = authorizedUserService;
     }
 
@@ -249,9 +255,9 @@ public class AuthorizedUserController {
             method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('beingAnAuthor')")
-    public ResponseEntity<Long> publishTrack(@Valid @RequestBody TrackCreationDto trackCreationDto) {
+    public ResponseEntity<IdDto<Long>> publishTrack(@Valid @RequestBody TrackCreationDto trackCreationDto) {
         Track track = trackCreationDtoMapper.toEntity(trackCreationDto);
-        return ResponseEntity.ok(authorizedUserService.publishTrack(track));
+        return ResponseEntity.ok(idDtoMapper.toDto(authorizedUserService.publishTrack(track)));
     }
 
     @Operation(

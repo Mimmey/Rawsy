@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.validation.Valid;
 import org.mimmey.dto.request.creation.UserCreationDto;
 import org.mimmey.dto.request.creation.mappers.UserCreationDtoMapper;
+import org.mimmey.dto.response.IdDto;
+import org.mimmey.dto.response.IdDtoMapper;
 import org.mimmey.service.common.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,11 +26,15 @@ public class AuthController {
 
     private final UserCreationDtoMapper userCreationDtoMapper;
 
+    private final IdDtoMapper<Long> idDtoMapper;
+
     private final UserService userService;
 
     public AuthController(@Autowired UserCreationDtoMapper userCreationDtoMapper,
+                          @Autowired IdDtoMapper<Long> idDtoMapper,
                           @Autowired @Qualifier("common-user") UserService userService) {
         this.userCreationDtoMapper = userCreationDtoMapper;
+        this.idDtoMapper = idDtoMapper;
         this.userService = userService;
     }
 
@@ -56,7 +62,7 @@ public class AuthController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST
     )
-    public ResponseEntity<Long> register(@Valid @RequestBody UserCreationDto userCreationDto) {
-        return ResponseEntity.ok(userService.createUser(userCreationDtoMapper.toEntity(userCreationDto)));
+    public ResponseEntity<IdDto<Long>> register(@Valid @RequestBody UserCreationDto userCreationDto) {
+        return ResponseEntity.ok(idDtoMapper.toDto(userService.createUser(userCreationDtoMapper.toEntity(userCreationDto))));
     }
 }
